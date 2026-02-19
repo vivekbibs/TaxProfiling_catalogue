@@ -1,0 +1,14 @@
+{
+  "name": "AMXMAG",
+  "@id": "amxmag",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "category": "metabolic",
+  "host": null,
+  "context": "anammox",
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "doi": "10.1016/j.watres.2024.122356d"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "cFMD",
+  "@id": "cfmd",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "category": "food",
+  "host": null,
+  "context": null,
+  "isPartOf": ["globdb","metaphlan"],
+  "doi" : "10.1016/j.cell.2024.07.039"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "MRGM",
+  "@id": "mrgm",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "category": "animal",
+  "host": ["mouse"],
+  "context": "gut",
+  "doi":"10.1080/19490976.2024.2393791"
+}

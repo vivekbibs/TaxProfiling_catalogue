@@ -1,0 +1,33 @@
+{
+  "name": "Canis lupus familiaris",
+  "@id": "clf_1_0_gut",
+  "release": null,
+  "environment": "specific",
+  "category": "animal",
+  "host": ["dog"],
+  "context": "gut",
+  "doi": "10.5281/zenodo.10672305",
+  "compatible_tools": 
+  [
+      {
+        "@id": "meteor",
+        "DB": [
+          {
+            "name": "default",
+            "access_method": "cli",
+            "download": "meteor download -i -c clf_1_0_gut -o <refdir>",
+            "size": 1.4,
+            "ifb_server": null
+          },
+          {
+            "name": "fast",
+            "access_method": "cli",
+            "download": "meteor download -i -c clf_1_0_gut --fast -o <refdir>",
+            "size": 0.1,
+            "ifb_server": null
+          }
+        ]
+      }
+    ]
+}
+

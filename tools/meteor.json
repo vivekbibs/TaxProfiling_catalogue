@@ -1,0 +1,68 @@
+{
+  "name": "meteor",
+  "@id": "meteor",
+  "type": "Taxonomic Profiler",
+  "latest_release": "2.0.22",
+  "to_update": true,
+  "supports_longreads": true,
+  "supports_shortreads": true,
+  "additional_functionality": "",
+  "taxonomy": "GTDB",
+
+    
+  "uses_databases": [
+
+    {
+      "name": "Canis lupus familiaris",
+      "@id": "clf_1_0_gut",
+      "release": null
+    },
+    {
+      "name": "Felis catus",
+      "@id": "fc_1_3_gut",
+      "release": null
+    },
+    {
+      "name": "Gallus gallus domesticus",
+      "@id": "gg_13_6_caecal",
+      "release": null
+    },
+    {
+      "name": "Homo sapiens gut",
+      "@id": "hs_10_4_gut",
+      "release": null
+
+    },
+    {
+      "name": "Homo sapiens oral",
+      "@id": "hs_8_4_oral",
+      "release": null
+    },
+    {
+      "name": "Homo sapiens skin",
+      "@id": "hs_2_9_skin",
+      "release": null
+    },
+    {
+      "name": "Mus musculus",
+      "@id": "mm_5_0_gut",
+      "release": null
+    },
+    {
+      "name":"Oryctolagus cuniculus",
+      "@id": "oc_5_7_gut",
+      "release": null
+    },
+    {
+      "name": "Rattus norvegicus",
+      "@id": "rn_5_9_gut",
+      "release": null
+    },
+    {
+      "name": "Sus domesticus",
+      "@id": "ssc_9_3_gut",
+      "release": null
+    }
+
+  ]
+}

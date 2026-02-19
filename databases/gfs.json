@@ -1,0 +1,15 @@
+{
+  "name": "GFS",
+  "@id": "gfs",
+  "virus": true,
+  "eukaryotes": true,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "category": "environmental",
+  "environment": "aquatic",
+  "host": null,
+  "context": "glacier-fed streams",
+  "doi":"10.1038/s41564-024-01874-9"
+}

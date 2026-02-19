@@ -1,0 +1,14 @@
+{
+  "name": "SMAG",
+  "@id": "smag",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "category": "environmental",
+  "host": null,
+  "environment": "soil",
+  "doi":"10.1038/s41467-023-43000-z"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "MGnify",
+  "@id": "mgnify",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "category": "general",
+  "host": null,
+  "context": null,
+  "doi":"10.1016/j.jmb.2023.168016"
+}

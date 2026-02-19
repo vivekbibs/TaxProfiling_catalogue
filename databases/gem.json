@@ -1,0 +1,14 @@
+{
+  "name": "GEM",
+  "@id": "gem",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "category": "general",
+  "host": null,
+  "context": null,
+  "doi":"10.1038/s41587-020-0718-6"
+}

@@ -1,0 +1,58 @@
+{
+  "name": "GTDB",
+
+  "@id":"gtdb",
+
+  "virus": false,
+
+  "eukaryotes": false,
+
+  "bacteria": true,
+
+  "archaea": true,
+
+  "latest_release": "226",
+
+  "to_update": true,
+
+  "isPartOf": ["globdb"],
+  "category": "general",
+  "environment": null,
+  "host": null,
+  "context": null,
+  "doi":"10.1093/nar/gkaf1040",
+
+  "homepage": "https://gtdb.ecogenomic.org/",
+
+  "compatible_tools": 
+  [
+      {
+        "@id": "sylph",
+        "DB": [
+          {
+            "name": "lighter",
+            "download": "http://faust.compbio.cs.cmu.edu/sylph-stuff/gtdb-r226-c1000-dbv1.syldb",
+            "size": 3.7,
+            "ifb_server": {"name": "core-cluster", "path": "/data/sylph/databases/sylph/globdb/globdb_r226_sylph_c1000.syldb"}
+          },
+          {
+            "name": "default",
+            "download": "https://fileshare.lisc.univie.ac.at/globdb/globdb_r226/taxonomic_profiling/globdb_r226_sylph_c200.syldb",
+            "size": 5.6,
+            "ifb_server": {"name": "core-cluster", "path": "/data/sylph/databases/sylph/globdb/globdb_r226_sylph_c200.syldb"}
+          }
+        ]
+      },
+      {
+        "@id": "singlem",
+        "DB": [
+          {
+            "name": "default",
+            "download": "https://fileshare.lisc.univie.ac.at/globdb/globdb_r226/taxonomic_profiling/globdb_r226_SingleM_metapackage.tar.gz",
+            "size": 2.3,
+            "ifb_server": null
+          }
+        ]
+      }
+    ]
+}

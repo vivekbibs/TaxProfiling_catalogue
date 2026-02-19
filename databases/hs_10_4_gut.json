@@ -1,0 +1,31 @@
+{
+  "name": "Homo sapiens gut",
+  "@id": "hs_10_4_gut",
+  "release": null,
+  "category": "human",
+  "host": null,
+  "context": "gut",
+  "doi":"10.5281/zenodo.10681121",
+  "compatible_tools": 
+  [
+      {
+        "@id": "meteor",
+        "DB": [
+          {
+            "name": "default",
+            "access_method": "cli",
+            "download": "meteor download -i -c hs_10_4_gut -o <refdir>",
+            "size": 12.6,
+            "ifb_server": null
+          },
+          {
+            "name": "fast",
+            "access_method": "cli",
+            "download": "meteor download -i -c hs_10_4_gut --fast -o <refdir>",
+            "size": 0.7,
+            "ifb_server": null
+          }
+        ]
+      }
+    ]
+}

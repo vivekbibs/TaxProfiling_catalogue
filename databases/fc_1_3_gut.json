@@ -1,0 +1,32 @@
+{
+  "name": "Felis catus",
+  "@id": "fc_1_3_gut",
+  "release": null,
+  "category": "animal",
+  "host": ["cat"],
+  "context": "gut",
+  "doi": "10.5281/zenodo.10656834",
+  "compatible_tools": 
+  [
+      {
+        "@id": "meteor",
+        "DB": [
+          {
+            "name": "default",
+            "access_method": "cli",
+            "download": "meteor download -i -c fc_1_3_gut -o <refdir>",
+            "size": 2.0,
+            "ifb_server": null
+          },
+          {
+            "name": "fast",
+            "access_method": "cli",
+            "download": "meteor download -i -c fc_1_3_gut --fast -o <refdir>",
+            "size": 0.2,
+            "ifb_server": null
+          }
+        ]
+      }
+    ]
+  
+}

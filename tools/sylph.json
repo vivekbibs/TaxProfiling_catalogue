@@ -1,0 +1,47 @@
+{
+  "name": "sylph",
+  "@id": "sylph",
+  "type": "Taxonomic Profiler",
+  "latest_release": "0.9.0",
+  "to_update": true,
+  "supports_longreads": true,
+  "supports_shortreads": true,
+  "uses_databases": [
+    {
+      "name": "GTDB",
+      "@id": "gtdb",
+      "release": ["226","220","214"]
+
+    },
+    {
+      "name": "GlobDB",
+      "@id": "globdb",
+      "release": "226"
+    },
+    {
+      "name": "IMG/VR",
+      "@id": "imgvr",
+      "release": "4.1"
+    },
+    {
+      "name": "UHGV",
+      "@id": "uhgv"
+    },
+    {
+      "name": "UHGG",
+      "@id": "uhgg",
+      "release": "2.0.1"
+
+    },
+    {
+      "name": "RefSeq Fungi",
+      "@id": "refseqfungi",
+      "release": "2025-10-11"
+    },
+    {
+      "name": "TARA Oceans eukaryotic MAGs/SAGs",
+      "@id": "tara_oceans"
+    }
+
+  ]
+}

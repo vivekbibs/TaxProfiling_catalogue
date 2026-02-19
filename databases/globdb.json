@@ -1,0 +1,74 @@
+{
+  "name": "GlobDB",
+
+  "@id":"globdb",
+
+  "virus": false,
+
+  "eukaryotes": false,
+
+  "bacteria": true,
+
+  "archaea": true,
+
+  "latest_release": "226",
+
+  "to_update": true,
+
+  "category": "general",
+
+  "homepage": "https://globdb.org/",
+
+  "doi":"10.1093/bioadv/vbaf280",
+
+  "hasPart": [
+    { "@id": "gtdb", "name": "GTDB", "release" : 226},
+    { "@id": "motus-db", "name": "mOTUs-db" , "release" : "0.0.1"},
+    { "@id": "spire", "name": "SPIRE" },
+    { "@id": "rbg", "name": "RBG" },
+    {"@id":"gem","name":"GEM"},
+    {"@id":"mgnify","name":"MGnify"},
+    { "@id": "gomc", "name": "GOMC" },
+    { "@id": "smag", "name": "SMAG" },
+    { "@id": "tpmc", "name": "TPMC" },
+    { "@id": "hrgm2", "name": "HRGM2" },
+    {"@id":"mrgm","name":"MRGM"},
+    { "@id": "cfmd", "name": "cFMD" },
+    { "@id": "shgo", "name": "SHGO" },
+    { "@id": "amxmag", "name": "AMXMAG" },
+    { "@id": "gfs", "name": "GFS" }
+  ],
+
+  "compatible_tools": 
+  [
+      {
+        "@id": "sylph",
+        "DB": [
+          {
+            "name": "lighter",
+            "download": "https://fileshare.lisc.univie.ac.at/globdb/globdb_r226/taxonomic_profiling/globdb_r226_sylph_c1000.syldb",
+            "size": 6.5,
+            "ifb_server": {"name": "core-cluster", "path": "/data/sylph/databases/sylph/globdb/globdb_r226_sylph_c1000.syldb"}
+          },
+          {
+            "name": "default",
+            "download": "https://fileshare.lisc.univie.ac.at/globdb/globdb_r226/taxonomic_profiling/globdb_r226_sylph_c200.syldb",
+            "size": 32,
+            "ifb_server": {"name": "core-cluster", "path": "/data/sylph/databases/sylph/globdb/globdb_r226_sylph_c200.syldb"}
+          }
+        ]
+      },
+      {
+        "@id": "singlem",
+        "release": 1.0,
+        "DB": [
+          {
+            "name": "default",
+            "download": "https://fileshare.lisc.univie.ac.at/globdb/globdb_r226/taxonomic_profiling/globdb_r226_SingleM_metapackage.tar.gz",
+            "size": 2.3,
+            "ifb_server": {"name": "core-cluster", "path": "/shared/bank/singlem/glob_db/GlobDB_r226.metapackage_v1.smpkg"}
+          }
+        ]
+      }
+    ]
+}

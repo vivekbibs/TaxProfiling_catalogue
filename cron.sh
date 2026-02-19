@@ -1,0 +1,1 @@
+echo "00 11 * * 1 /home/vashokan/miniforge3/envs/biohack/bin/python3 /home/vashokan/Bureau/IS4/catalogue/update_tools_sheets.py >> /home/vashokan/Bureau/IS4/catalogue/cron_log.log 2>&1" > my_cron_job.txt

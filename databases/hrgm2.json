@@ -1,0 +1,14 @@
+{
+  "name": "HRGM2",
+  "@id": "hrgm2",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "isPartOf": ["globdb"],
+  "category": "human",
+  "host": null,
+  "context": "gut",
+  "doi":"10.1038/s41564-025-02206-1"
+}

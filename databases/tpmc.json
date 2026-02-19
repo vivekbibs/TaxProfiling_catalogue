@@ -1,0 +1,15 @@
+{
+  "name": "TPMC",
+  "@id": "tpmc",
+  "virus": false,
+  "eukaryotes": false,
+  "bacteria": true,
+  "archaea": true,
+  "release": "unknown",
+  "environment": "specific",
+  "isPartOf": ["globdb"],
+  "category": "environmental",
+  "host": null, 
+  "context": "Tibetan Plateau",
+  "doi":"10.1038/s41467-024-45895-8"  
+}
