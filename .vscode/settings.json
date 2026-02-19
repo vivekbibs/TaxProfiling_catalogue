@@ -1,0 +1,22 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "isort.path": [
+        "conda",
+        "run",
+        "-n",
+        "biohack",
+        "python",
+        "-m",
+        "isort"
+    ],
+    "isort.args": ["--profile", "black"],   // ← ajoute cette ligne
+    "mypy-type-checker.path": [          // ← remplace mypy.dmypyExecutable
+        "/home/vashokan/miniforge3/envs/biohack/bin/mypy"
+    ]
+}
