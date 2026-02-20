@@ -1,10 +1,12 @@
 {
   "name": "MRGM",
   "@id": "mrgm",
-  "virus": false,
-  "eukaryotes": false,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "label": "Bacteria"
+    }
+  ],
   "release": "unknown",
   "isPartOf": ["globdb"],
   "category": "animal",

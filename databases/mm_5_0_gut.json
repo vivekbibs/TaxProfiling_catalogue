@@ -2,8 +2,22 @@
   "name": "Mus musculus",
   "@id": "mm_5_0_gut",
   "release": null,
+  "taxonomic_scope": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "label": "Archaea"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
+      "label": "Eukaryota"
+    }
+  ],
   "category": "animal",
-  "host": ["mouse"],
+  "host": "mouse",
   "context": "gut",
   "doi":"10.5281/zenodo.10658547",
   "compatible_tools": [

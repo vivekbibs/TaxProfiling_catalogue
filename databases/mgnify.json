@@ -1,14 +1,45 @@
 {
-  "name": "MGnify",
+  "name": "MGnify Genomes",
   "@id": "mgnify",
-  "virus": false,
-  "eukaryotes": false,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "label": "Archaea"
+    }
+  ],
   "release": "unknown",
   "isPartOf": ["globdb"],
   "category": "general",
   "host": null,
   "context": null,
+  "compatible_tools": 
+  [
+      {
+        "@id": "kraken",
+        "DB": [
+          {
+            "name": "",
+            "download": "",
+            "size": 0,
+            "ifb_server": {"name": "core-cluster", "path": ""}
+          }
+        ]
+      },
+      {
+        "@id": "bracken",
+        "DB": [
+          {
+            "name": "",
+            "download": "",
+            "size": 0,
+            "ifb_server": null
+          }
+        ]
+      }
+    ],
   "doi":"10.1016/j.jmb.2023.168016"
 }
