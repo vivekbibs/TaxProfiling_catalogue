@@ -3,19 +3,19 @@
   "@id": "gfs",
   "taxonomic_scope": [
     {
-      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
       "label": "Bacteria"
     },
     {
-      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
       "label": "Archaea"
     },
     {
-      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_4751)",
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
       "label": "Fungi"
     },
     {
-      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_10239)",
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_10239",
       "label": "Viruses"
     }
 

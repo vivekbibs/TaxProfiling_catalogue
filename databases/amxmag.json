@@ -3,7 +3,7 @@
   "@id": "amxmag",
   "taxonomic_scope": [
     {
-      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
       "label": "Bacteria"
     }
   ],
