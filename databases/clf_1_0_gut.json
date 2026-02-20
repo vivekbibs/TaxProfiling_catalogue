@@ -2,6 +2,20 @@
   "name": "Canis lupus familiaris",
   "@id": "clf_1_0_gut",
   "release": null,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "label": "Archaea"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_2759)",
+      "label": "Eukaryota"
+    }
+  ],
   "environment": "specific",
   "category": "animal",
   "host": ["dog"],

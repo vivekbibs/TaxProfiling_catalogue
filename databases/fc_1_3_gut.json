@@ -2,6 +2,20 @@
   "name": "Felis catus",
   "@id": "fc_1_3_gut",
   "release": null,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "label": "Archaea"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_2759)",
+      "label": "Eukaryota"
+    }
+  ],
   "category": "animal",
   "host": ["cat"],
   "context": "gut",

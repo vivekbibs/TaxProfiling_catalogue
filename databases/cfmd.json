@@ -1,14 +1,25 @@
 {
-  "name": "cFMD",
+  "name": "curatedFoodMetagenomicData",
+  "short": "CFMD",
   "@id": "cfmd",
-  "virus": false,
-  "eukaryotes": false,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "label": "Archaea"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_2759)",
+      "label": "Eukaryota"
+    }
+  ],
   "release": "unknown",
   "category": "food",
   "host": null,
   "context": null,
-  "isPartOf": ["globdb","metaphlan"],
+  "isPartOf": ["globdb","chocophlan"],
   "doi" : "10.1016/j.cell.2024.07.039"
 }

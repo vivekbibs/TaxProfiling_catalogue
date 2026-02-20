@@ -1,14 +1,16 @@
 {
   "name": "AMXMAG",
   "@id": "amxmag",
-  "virus": false,
-  "eukaryotes": false,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    }
+  ],
   "category": "metabolic",
   "host": null,
   "context": "anammox",
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "doi": "10.1016/j.watres.2024.122356d"
+  "doi": "10.1016/j.watres.2024.122356"
 }

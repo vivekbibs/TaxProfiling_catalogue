@@ -1,10 +1,17 @@
 {
-  "name": "GEM",
+  "name": "Genomes from Earth’s Microbiomes",
   "@id": "gem",
   "virus": false,
-  "eukaryotes": false,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "label": "Archaea"
+    }
+  ],
   "release": "unknown",
   "isPartOf": ["globdb"],
   "category": "general",
