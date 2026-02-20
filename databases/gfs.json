@@ -1,10 +1,25 @@
 {
   "name": "GFS",
   "@id": "gfs",
-  "virus": true,
-  "eukaryotes": true,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "label": "Archaea"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_4751)",
+      "label": "Fungi"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_10239)",
+      "label": "Viruses"
+    }
+
+  ],
   "release": "unknown",
   "isPartOf": ["globdb"],
   "category": "environmental",

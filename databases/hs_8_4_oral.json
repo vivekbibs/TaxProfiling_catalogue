@@ -2,7 +2,20 @@
   "name": "Homo sapiens oral",
   "@id": "hs_8_4_oral",
   "release": null,
-  "scope": "oral",
+  "taxonomic_scope": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "label": "Archaea"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
+      "label": "Eukaryota"
+    }
+  ],
   "category": "human",
   "host": null,
   "context": "oral",

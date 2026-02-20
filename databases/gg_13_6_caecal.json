@@ -2,6 +2,20 @@
   "name": "Gallus gallus domesticus",
   "@id": "gg_13_6_caecal",
   "release": null,
+  "taxonomic_scope": [
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2](http://purl.obolibrary.org/obo/NCBITaxon_2)",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2157](http://purl.obolibrary.org/obo/NCBITaxon_2157)",
+      "label": "Archaea"
+    },
+    {
+      "@id": "[http://purl.obolibrary.org/obo/NCBITaxon_2759](http://purl.obolibrary.org/obo/NCBITaxon_2759)",
+      "label": "Eukaryota"
+    }
+  ],
   "category": "animal",
   "host": ["chicken"],
   "context": "caecal",
