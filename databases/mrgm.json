@@ -10,7 +10,7 @@
   "release": "unknown",
   "isPartOf": ["globdb"],
   "category": "animal",
-  "host": ["mouse"],
+  "host": "mouse",
   "context": "gut",
   "doi":"10.1080/19490976.2024.2393791"
 }

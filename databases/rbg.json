@@ -1,10 +1,16 @@
 {
   "name": "RBG",
   "@id": "rbg",
-  "virus": false,
-  "eukaryotes": false,
-  "bacteria": true,
-  "archaea": true,
+  "taxonomic_scope": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "label": "Bacteria"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "label": "Archaea"
+    }
+  ],
   "release": "unknown",
   "isPartOf": ["globdb"],
   "category": "general",
