@@ -19,3 +19,10 @@
   "context": "Tibetan Plateau",
   "doi":"10.1038/s41467-024-45895-8"  
 }
+saline lakes, freshwater lakes, rivers, hot springs, wetlands and glaciers of Tibetan Plateau aquatic microbiome’s
+http://purl.obolibrary.org/obo/ENVO_00000019 saline lake
+http://purl.obolibrary.org/obo/ENVO_00000021 freshwater lake
+http://purl.obolibrary.org/obo/ENVO_00000022 river
+http://purl.obolibrary.org/obo/ENVO_00000051 hot spring
+http://purl.obolibrary.org/obo/ENVO_01001209 wetland ecosystem
+http://purl.obolibrary.org/obo/ENVO_00000133 glacier
