@@ -7,7 +7,7 @@
       "label": "Bacteria"
     }
   ],
-  "category": "metabolic",
+  "category": "metabolism-specific",
   "host": null,
   "context": "anammox",
   "release": "unknown",

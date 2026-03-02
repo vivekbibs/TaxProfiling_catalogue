@@ -17,11 +17,12 @@
     }
   ],
   "release": "unknown",
-  "category": "food",
-  "host": null,
-  "context": null,
+  "sample_type": "other",
+  "origin": {
+    "@id": "http://purl.obolibrary.org/obo/FOODON_00002403",
+    "label": "food material"
+  },
   "isPartOf": ["globdb","chocophlan"],
   "doi" : "10.1016/j.cell.2024.07.039"
 }
-// http://purl.obolibrary.org/obo/FOODON_00002403 food material
  

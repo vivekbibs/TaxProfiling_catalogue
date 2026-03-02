@@ -16,10 +16,14 @@
       "label": "Eukaryota"
     }
   ],
-  "environment": "specific",
-  "category": "animal",
-  "host": ["dog"],
-  "context": "gut",
+  "sample_type": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
+    "label": "fecal material"
+  },
+  "origin": {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9615",
+    "label": "dog"
+  },
   "doi": "10.5281/zenodo.10672305",
   "compatible_tools": 
   [
@@ -44,5 +48,3 @@
       }
     ]
 }
-
-http://purl.obolibrary.org/obo/NCBITaxon_9615
