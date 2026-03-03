@@ -18,7 +18,9 @@
 
   "to_update": true,
 
-  "category": "general",
+  "sample_type": "other",
+  "origin": null,   
+
 
   "homepage": "https://globdb.org/",
 

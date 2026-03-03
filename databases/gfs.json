@@ -1,5 +1,5 @@
 {
-  "name": "GFS",
+  "name": "glacier-fed streams",
   "@id": "gfs",
   "taxonomic_scope": [
     {
@@ -22,9 +22,7 @@
   ],
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "category": "environmental",
-  "environment": "aquatic",
-  "host": null,
-  "context": "glacier-fed streams",
+  "sample_type": "other",
+  "origin": null,
   "doi":"10.1038/s41564-024-01874-9"
 }

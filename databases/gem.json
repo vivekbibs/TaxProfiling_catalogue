@@ -14,8 +14,7 @@
   ],
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "category": "general",
-  "host": null,
-  "context": null,
+  "sample_type": "other",
+  "origin": null,
   "doi":"10.1038/s41587-020-0718-6"
 }
