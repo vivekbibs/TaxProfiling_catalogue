@@ -13,9 +13,8 @@
   ],
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "category": "general",
-  "host": null,
-  "context": null,
+  "sample_type": null,
+  "origin": null,
   "compatible_tools": 
   [
       {

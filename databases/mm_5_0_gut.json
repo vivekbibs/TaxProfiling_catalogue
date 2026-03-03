@@ -16,9 +16,14 @@
       "label": "Eukaryota"
     }
   ],
-  "category": "animal",
-  "host": "mouse",
-  "context": "gut",
+  "sample_type": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
+    "label": "fecal material"
+  },
+  "origin": {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_10090",
+    "label": "mus musculus"
+  },
   "doi":"10.5281/zenodo.10658547",
   "compatible_tools": [
       {
@@ -41,6 +46,4 @@
         ]
       }
     ]
-}
-http://purl.obolibrary.org/obo/NCBITaxon_10090 mus musculus
-fecal material  http://purl.obolibrary.org/obo/ENVO_00002003   
+}  

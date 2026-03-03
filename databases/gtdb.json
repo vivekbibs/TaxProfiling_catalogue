@@ -1,5 +1,5 @@
 {
-  "name": "GTDB",
+  "name": "Genome Taxonomy Database",
 
   "@id":"gtdb",
 
@@ -19,10 +19,8 @@
   "to_update": true,
 
   "isPartOf": ["globdb"],
-  "category": "general",
-  "environment": null,
-  "host": null,
-  "context": null,
+  "sample_type": null,
+  "origin": null,
   "doi":"10.1093/nar/gkaf1040",
 
   "homepage": "https://gtdb.ecogenomic.org/",

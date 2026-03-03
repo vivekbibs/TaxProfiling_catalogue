@@ -16,9 +16,14 @@
       "label": "Eukaryota"
     }
   ],
-  "category": "human",
-  "host": null,
-  "context": "skin",
+  "sample_type": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_2100003",
+    "label": "skin environment"
+  },
+  "origin": {
+    "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
+    "label": "Homo sapiens"
+  },
   "doi":"10.5281/zenodo.10679308",
 
   "compatible_tools": 
@@ -44,5 +49,3 @@
       }
     ]
 }
-http://purl.bioontology.org/ontology/NCBITAXON/9606  
-http://purl.obolibrary.org/obo/ENVO_2100003 skin environment

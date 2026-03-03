@@ -16,9 +16,15 @@
       "label": "Eukaryota"
     }
   ],
-  "category": "human",
-  "host": null,
-  "context": "oral",
+
+  "sample_type": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_08000002",
+    "label": "mouth environment"
+  },
+  "origin": {
+    "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
+    "label": "Homo sapiens"
+  },
   "doi":"10.5281/zenodo.10685509",
   "compatible_tools": 
   [
@@ -43,6 +49,3 @@
       }
     ]
 }
-http://purl.bioontology.org/ontology/NCBITAXON/9606  
-http://purl.obolibrary.org/obo/UBERON_0000165 mouth
-http://purl.obolibrary.org/obo/ENVO_08000002 mouth environment

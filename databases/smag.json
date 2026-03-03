@@ -13,9 +13,10 @@
   ],
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "category": "environmental",
-  "host": null,
-  "environment": "soil",
+  "sample_type": null,
+  "origin": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00001998",
+    "label": "soil"
+  },
   "doi":"10.1038/s41467-023-43000-z"
 }
-http://purl.obolibrary.org/obo/ENVO_00001998 soil 

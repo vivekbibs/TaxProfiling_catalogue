@@ -16,9 +16,14 @@
       "label": "Eukaryota"
     }
   ],
-  "category": "animal",
-  "host": "rabbit",
-  "context": "gut",
+  "sample_type": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
+    "label": "fecal material"
+  },
+  "origin": {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9986",
+    "label": "Oryctolagus cuniculus"
+  },
   "doi":"10.5281/zenodo.10659710",
   "compatible_tools": [
       {
@@ -42,5 +47,3 @@
       }
     ]
 }
-http://purl.obolibrary.org/obo/NCBITaxon_9986 Oryctolagus cuniculus
-fecal material  http://purl.obolibrary.org/obo/ENVO_00002003

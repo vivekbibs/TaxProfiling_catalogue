@@ -13,11 +13,20 @@
   ],
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "category": "animal",
-  "host": ["sheep","goat"],
-  "context": null,
+  "sample_type": {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
+    "label": "fecal material"
+  },
+  "origin": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9925",
+      "label": "Capra hircus"
+    },
+    {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9940",
+    "label": "Ovis aries"
+  }
+  ],
   "doi":"10.1186/s40168-024-01806-z"
 }
-http://purl.obolibrary.org/obo/NCBITaxon_9940 Ovis aries
-http://purl.obolibrary.org/obo/NCBITaxon_9925 Capra hircus
-fecal material  http://purl.obolibrary.org/obo/ENVO_00002003  
+ 
