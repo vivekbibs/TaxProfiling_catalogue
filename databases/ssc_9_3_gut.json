@@ -16,9 +16,11 @@
       "label": "Eukaryota"
     }
   ],
-  "category": "animal",
-  "host": "pig",
-  "context": "gut",
+  "sample_type": "fecal material",
+  "origin": {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9825",
+    "label": "Sus scrofa domesticus"
+  },
   "doi":"10.5281/zenodo.10674273",
   "compatible_tools": [
       {
@@ -42,5 +44,3 @@
       }
     ]
 }
-http://purl.obolibrary.org/obo/NCBITaxon_9825 Sus scrofa domesticus Exact Synonyms domestic pig
-fecal material  http://purl.obolibrary.org/obo/ENVO_00002003 

@@ -14,8 +14,7 @@
   "release": "unknown",
   "environment": "specific",
   "isPartOf": ["globdb"],
-  "category": "general",
-  "host": null,
-  "context": null,
+  "sample_type": null,
+  "origin": null,
   "doi":"10.1093/nar/gkad943"     
 }

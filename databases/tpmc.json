@@ -12,17 +12,37 @@
     }
   ],
   "release": "unknown",
-  "environment": "specific",
   "isPartOf": ["globdb"],
-  "category": "environmental",
-  "host": null, 
-  "context": "Tibetan Plateau",
+  "sample_type": null,
+  "origin": [
+    {
+      "@id": "http://purl.obolibrary.org/obo/ENVO_00000019",
+      "label": "saline lake"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/ENVO_00000021",
+      "label": "freshwater lake"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/ENVO_00000022",
+      "label": "river"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/ENVO_00000051",
+      "label": "hot spring"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/ENVO_01001209",
+      "label": "wetland ecosystem"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/ENVO_00000133",
+      "label": "glacier"
+    }
+  ],
+  "location": {
+    "@id": "http://purl.obolibrary.org/obo/GAZ_00011732",
+    "label": "Tibetan Plateau"
+  },
   "doi":"10.1038/s41467-024-45895-8"  
 }
-saline lakes, freshwater lakes, rivers, hot springs, wetlands and glaciers of Tibetan Plateau aquatic microbiome’s
-http://purl.obolibrary.org/obo/ENVO_00000019 saline lake
-http://purl.obolibrary.org/obo/ENVO_00000021 freshwater lake
-http://purl.obolibrary.org/obo/ENVO_00000022 river
-http://purl.obolibrary.org/obo/ENVO_00000051 hot spring
-http://purl.obolibrary.org/obo/ENVO_01001209 wetland ecosystem
-http://purl.obolibrary.org/obo/ENVO_00000133 glacier
