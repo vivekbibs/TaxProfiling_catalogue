@@ -1,9 +1,11 @@
 {
-  "name": "annamox genomes and MAGs catalogue",
-  "@id": "amxmag",
-  "description": "Catalogue of genome and MAGs associated with anaerobic ammonium oxidation (anammox) metabolism.",
-  "release": "unknown",
-  "doi": "10.1016/j.watres.2024.122356",
+  "@context": "https://raw.githubusercontent.com/toi/mon-projet/main/catalogue-schema.json",
+  "@type": "bio:Dataset",
+  "@id": "https://your-lab.org/data/amxmag",
+  "name": "anammox genomes and MAGs catalogue",
+  "description": "Catalogue of genomes and MAGs associated with anaerobic ammonium oxidation (anammox) metabolism.",
+  "release": null,
+  "doi": "https://doi.org/10.1016/j.watres.2024.122356",
   "taxonomic_scope": [
     {
       "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
@@ -11,14 +13,13 @@
     }
   ],
   "is_about": {
-    "label": "anammox",
-    "comment": "Metabolism-specific catalogue describing genomes involved in anaerobic ammonium oxidation."
+    "@id": "http://purl.obolibrary.org/obo/GO_0019331",
+    "label": "anaerobic ammonia oxidation"
   },
-  "origin": null,
-  "sample": null,
   "isPartOf": [
     {
-      "@id": "globdb"
+      "@id": "https://globdb.org",
+      "label": "GlobDB"
     }
   ]
 }
