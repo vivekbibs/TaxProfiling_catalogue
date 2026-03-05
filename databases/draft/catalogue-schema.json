@@ -1,0 +1,65 @@
+{
+  "@context": {
+    "schema": "http://schema.org/",
+    "bio": "https://bioschemas.org/",
+    "obo": "http://purl.obolibrary.org/obo/",
+
+    "name": {
+      "@id": "schema:name",
+      "comment": "Short name or acronym of the catalogue (e.g. TPMC, GTDB, mOTUs-db)."
+    },
+    "description": {
+      "@id": "schema:description",
+      "comment": "Free-text description of the catalogue scope and content."
+    },
+    "release": {
+      "@id": "schema:version",
+      "comment": "Version or release identifier (e.g. r220, v3.1). Omit if unknown."
+    },
+    "doi": {
+      "@id": "schema:identifier",
+      "comment": "DOI or persistent URL of the associated publication or dataset."
+    },
+    "license": {
+      "@id": "schema:license",
+      "comment": "License URL (e.g. https://creativecommons.org/licenses/by/4.0/)."
+    },
+    "datePublished": {
+      "@id": "schema:datePublished",
+      "comment": "Publication or release year (e.g. 2024)."
+    },
+
+    "taxonomic_scope": {
+      "@id": "bio:taxonomicRange",
+      "@type": "@id",
+      "comment": "Taxonomic group(s) covered. Use NCBITaxon terms: NCBITaxon_2 (Bacteria), NCBITaxon_2157 (Archaea), NCBITaxon_4751 (Fungi), NCBITaxon_2759 (Eukaryota)."
+    },
+
+    "sample": {
+      "@id": "obo:ENVO_00010483",
+      "label": "Environmental Material",
+      "@type": "@id",
+      "comment": "Environmental material sampled. Use ENVO subclasses: ENVO:00000873 (freshwater), ENVO:00002149 (marine water), ENVO:00001998 (soil), ENVO:00002007 (sediment), ENVO:00002003 (fecal material), ENVO:02000023 (intestinal content), ENVO:00002073 (food material), ENVO:00000428 (biosphere for multi-environment catalogues). Use UBERON:0001003 for skin."
+    },
+
+    "origin": {
+      "@id": "obo:RO_0001025",
+      "label": "located in",
+      "@type": "@id",
+      "comment": "Location where samples were collected. Can be geographical or describe hosts (for example human for human skin samples, or food for food-associated samples)."
+    },
+    "is_about": {
+      "@id": "http://purl.obolibrary.org/obo/IAO_0000136",
+      "label": "is about",
+      "comment": "to describe databases not describable by sample_type and origin (e.g. databases of genomes specific to a metabolic pathway)."
+    },
+
+    "isPartOf": {
+      "@id": "schema:isPartOf",
+      "@type": "@id",
+      "comment": "Parent database or consortium (e.g. GlobDB, MGnify). Use a resolvable URI."
+    }
+  }
+}
+
+  
