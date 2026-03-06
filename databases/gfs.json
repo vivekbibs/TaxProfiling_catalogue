@@ -32,8 +32,8 @@
       "label": "stream"
     },
     {
-       "@id": "http://purl.obolibrary.org/obo/ENVO_00000133",
-       "label": "glacier"
+       "@id": "http://purl.obolibrary.org/obo/ENVO_01001529",
+       "label": "glacier snout"
      }
   ],
   "doi":"10.1038/s41564-024-01874-9"
