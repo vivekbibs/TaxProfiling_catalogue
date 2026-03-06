@@ -1,5 +1,5 @@
 {
-  "name": "curatedFoodMetagenomicData",
+  "name": "curated Food Metagenomic Data",
   "short": "CFMD",
   "@id": "cfmd",
   "taxonomic_scope": [
@@ -17,11 +17,11 @@
     }
   ],
   "release": "unknown",
-  "sample_type": "other",
-  "origin": {
+  "sample_type": {
     "@id": "http://purl.obolibrary.org/obo/FOODON_00002403",
     "label": "food material"
   },
+  "origin": null,
   "isPartOf": ["globdb","chocophlan"],
   "doi" : "10.1016/j.cell.2024.07.039"
 }

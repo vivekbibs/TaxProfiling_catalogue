@@ -13,10 +13,10 @@
   ],
   "release": "unknown",
   "isPartOf": ["globdb"],
-  "sample_type": null,
-  "origin": {
+  "sample_type": {
     "@id": "http://purl.obolibrary.org/obo/ENVO_00001998",
     "label": "soil"
   },
+  "origin": null,
   "doi":"10.1038/s41467-023-43000-z"
 }

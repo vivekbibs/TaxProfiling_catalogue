@@ -26,15 +26,10 @@
     "@id": "http://purl.obolibrary.org/obo/ENVO_00002007",
     "label": "sediment"
   },
-  "origin": [
-     {
-      "@id": "http://purl.obolibrary.org/obo/ENVO_00000023",
-      "label": "stream"
-    },
+  "origin":
     {
        "@id": "http://purl.obolibrary.org/obo/ENVO_01001529",
        "label": "glacier snout"
-     }
-  ],
+     },
   "doi":"10.1038/s41564-024-01874-9"
 }
