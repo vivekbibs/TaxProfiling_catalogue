@@ -1,7 +1,7 @@
 {
-  "@context": "https://raw.githubusercontent.com/toi/mon-projet/main/catalogue-schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
   "@type": "bio:Dataset",
-  "@id": "https://your-lab.org/data/amxmag",
+  "@id": "amxmag",
   "name": "anammox genomes and MAGs catalogue",
   "description": "Catalogue of genomes and MAGs associated with anaerobic ammonium oxidation (anammox) metabolism.",
   "release": null,
@@ -18,7 +18,7 @@
   },
   "isPartOf": [
     {
-      "@id": "https://globdb.org",
+      "@id": "globdb",
       "label": "GlobDB"
     }
   ]

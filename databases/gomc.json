@@ -14,13 +14,13 @@
   "release": "unknown",
   "isPartOf": ["globdb"],
   "sample_type": {
-    "@id": "http://purl.obolibrary.org/obo/ENVO_00002030",
-    "label": "aquatic biome"
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00002006",
+    "label": "liquid water"
   },
 
   "origin": {
-    "@id": "http://purl.obolibrary.org/obo/ENVO_00000447",
-    "label": "marine biome"
+    "@id": "http://purl.obolibrary.org/obo/ENVO_00002149",
+    "label": "sea water"
   },
   "doi":"10.1038/s41586-024-07891-2"
 }

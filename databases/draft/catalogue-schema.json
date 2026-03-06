@@ -32,14 +32,14 @@
     "taxonomic_scope": {
       "@id": "bio:taxonomicRange",
       "@type": "@id",
-      "comment": "Taxonomic group(s) covered. Use NCBITaxon terms: NCBITaxon_2 (Bacteria), NCBITaxon_2157 (Archaea), NCBITaxon_4751 (Fungi), NCBITaxon_2759 (Eukaryota)."
+      "comment": "Taxonomic group(s) covered. Use NCBITaxon terms."
     },
 
     "sample": {
       "@id": "obo:ENVO_00010483",
       "label": "Environmental Material",
       "@type": "@id",
-      "comment": "Environmental material sampled. Use ENVO subclasses: ENVO:00000873 (freshwater), ENVO:00002149 (marine water), ENVO:00001998 (soil), ENVO:00002007 (sediment), ENVO:00002003 (fecal material), ENVO:02000023 (intestinal content), ENVO:00002073 (food material), ENVO:00000428 (biosphere for multi-environment catalogues). Use UBERON:0001003 for skin."
+      "comment": "Environmental material sampled. Use ENVO subclasses: ENVO:1001787 (aquatic ecosystem), ENVO:00001998 (soil), ENVO:00002003 (fecal material), ENVO:00002073 (food material), ENVO:2100003 (skin). null if not specific to one specific sample type (GTDB,mOTUs-db)."
     },
 
     "origin": {
