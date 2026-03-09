@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
   "name": "TPMC",
   "@id": "tpmc",
   "taxonomic_scope": [

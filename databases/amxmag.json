@@ -1,6 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
-  "@type": "bio:Dataset",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
   "@id": "amxmag",
   "name": "anammox genomes and MAGs catalogue",
   "description": "Catalogue of genomes and MAGs associated with anaerobic ammonium oxidation (anammox) metabolism.",
