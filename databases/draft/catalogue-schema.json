@@ -46,7 +46,7 @@
       "@id": "obo:RO_0001025",
       "label": "located in",
       "@type": "@id",
-      "comment": "Location where samples were collected. Can be geographical or describe hosts (for example human for human skin samples, or food for food-associated samples)."
+      "comment": "Location where samples were collected. Can be geographical (Tibetan Plateau or describe hosts (for example human for human skin or stool samples, or food for food-associated samples)."
     },
     "is_about": {
       "@id": "http://purl.obolibrary.org/obo/IAO_0000136",
