@@ -17,12 +17,15 @@
     }
   ],
   "release": "unknown",
-  "sample_type": {
+  "sample": {
     "@id": "http://purl.obolibrary.org/obo/FOODON_00002403",
     "label": "food material"
   },
   "origin": null,
-  "isPartOf": ["globdb","chocophlan"],
+  "isPartOf": [
+    {"@id": "globdb"},
+    {"@id": "chocophlan"}
+  ],
   "doi" : "10.1016/j.cell.2024.07.039"
 }
  

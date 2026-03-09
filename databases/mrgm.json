@@ -8,8 +8,10 @@
     }
   ],
   "release": "unknown",
-  "isPartOf": ["globdb"],
-  "sample_type": {
+  "isPartOf": [
+    {"@id": "globdb"}
+  ],
+  "sample": {
     "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
     "label": "fecal material"
   },

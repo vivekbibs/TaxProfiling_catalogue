@@ -13,8 +13,10 @@
     }
   ],
   "release": "unknown",
-  "isPartOf": ["globdb"],
-  "sample_type": "other",
+  "isPartOf": [
+    {"@id": "globdb"}
+  ],
+  "sample": "other",
   "origin": null,
   "doi":"10.1038/s41587-020-0718-6"
 }

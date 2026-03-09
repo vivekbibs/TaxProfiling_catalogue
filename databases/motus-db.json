@@ -12,8 +12,10 @@
     }
   ],
   "release": "0.0.1",
-  "isPartOf": ["globdb"],
-  "sample_type": null,
+  "isPartOf": [
+    {"@id": "globdb"}
+  ],
+  "sample": null,
   "origin": null,
   "doi":"10.1093/nar/gkae1004",
   "compatible_tools": ["motus"]

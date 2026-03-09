@@ -12,8 +12,10 @@
     }
   ],
   "release": "unknown",
-  "isPartOf": ["globdb"],
-  "sample_type": null,
+  "isPartOf": [
+    {"@id": "globdb"}
+  ],
+  "sample": null,
   "origin": null,
   "compatible_tools": 
   [
