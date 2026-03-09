@@ -10,7 +10,7 @@
     },
     "description": {
       "@id": "schema:description",
-      "comment": "Free-text description of the catalogue scope and content."
+      "comment": "Free-text description of the database scope and content."
     },
     "release": {
       "@id": "schema:version",
@@ -18,7 +18,7 @@
     },
     "doi": {
       "@id": "schema:identifier",
-      "comment": "DOI or persistent URL of the associated publication or dataset."
+      "comment": "DOI or persistent URL of the associated publication or dataset, e.g. https://doi.org/10.1038/s41467-024-45895-8. Omit if unknown."
     },
     "license": {
       "@id": "schema:license",
@@ -39,19 +39,19 @@
       "@id": "obo:ENVO_00010483",
       "label": "Environmental Material",
       "@type": "@id",
-      "comment": "Environmental material sampled. Use ENVO subclasses: ENVO:1001787 (aquatic ecosystem), ENVO:00001998 (soil), ENVO:00002003 (fecal material), ENVO:00002073 (food material), ENVO:2100003 (skin). null if not specific to one specific sample type (GTDB,mOTUs-db)."
+      "comment": "Environmental material sampled. Use ENVO subclasses: ENVO:1001787 (aquatic ecosystem), ENVO:00001998 (soil), ENVO:00002003 (fecal material), ENVO:00002073 (food material), ENVO:2100003 (skin). null if not specific to one specific sample type (GTDB,mOTUs-db...)."
     },
 
     "origin": {
       "@id": "obo:RO_0001025",
       "label": "located in",
       "@type": "@id",
-      "comment": "Location where samples were collected. Can be geographical (Tibetan Plateau or describe hosts (for example human for human skin or stool samples, or food for food-associated samples)."
+      "comment": "Location where samples were collected. Can be geographical (Tibetan Plateau or describe hosts (for example human for human skin or stool samples, or food for food-associated samples). null if not specific to one specific origin (GTDB, mOTUs-db...)."
     },
     "is_about": {
       "@id": "http://purl.obolibrary.org/obo/IAO_0000136",
       "label": "is about",
-      "comment": "to describe databases not describable by sample_type and origin (e.g. databases of genomes specific to a metabolic pathway)."
+      "comment": "to describe databases not describable by sample and origin (e.g. databases of genomes specific to a metabolic pathway)."
     },
 
     "isPartOf": {

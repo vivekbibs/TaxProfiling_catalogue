@@ -24,7 +24,7 @@
     "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9615",
     "label": "dog"
   },
-  "doi": "10.5281/zenodo.10672305",
+  "doi": "https://doi.org/10.5281/zenodo.10672305",
   "compatible_tools": 
   [
       {

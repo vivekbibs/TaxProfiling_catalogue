@@ -24,7 +24,7 @@
     "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9031",
     "label": "chicken"
   },
-  "doi": "10.5281/zenodo.10673723",
+  "doi": "https://doi.org/10.5281/zenodo.10673723",
   "compatible_tools": 
   [
       {

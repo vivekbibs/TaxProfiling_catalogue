@@ -23,6 +23,6 @@
     "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
     "label": "Homo sapiens"
   },
-  "doi":"10.1038/s41564-025-02206-1",
+  "doi":"https://doi.org/10.1038/s41564-025-02206-1",
   "homepage": "https://www.decodebiome.org/HRGM2/"
 }

@@ -24,7 +24,7 @@
     "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9986",
     "label": "Oryctolagus cuniculus"
   },
-  "doi":"10.5281/zenodo.10659710",
+  "doi":"https://doi.org/10.5281/zenodo.10659710",
   "compatible_tools": [
       {
         "@id": "meteor",

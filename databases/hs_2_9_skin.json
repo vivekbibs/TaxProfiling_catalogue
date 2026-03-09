@@ -24,7 +24,7 @@
     "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
     "label": "Homo sapiens"
   },
-  "doi":"10.5281/zenodo.10679308",
+  "doi":"https://doi.org/10.5281/zenodo.10679308",
 
   "compatible_tools": 
   [

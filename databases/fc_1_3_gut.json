@@ -24,7 +24,7 @@
     "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9685",
     "label": "cat"
   },
-  "doi": "10.5281/zenodo.10656834",
+  "doi": "https://doi.org/10.5281/zenodo.10656834",
   "compatible_tools": 
   [
       {

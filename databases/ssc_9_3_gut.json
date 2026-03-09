@@ -21,7 +21,7 @@
     "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9825",
     "label": "Sus scrofa domesticus"
   },
-  "doi":"10.5281/zenodo.10674273",
+  "doi":"https://doi.org/10.5281/zenodo.10674273",
   "compatible_tools": [
       {
         "@id": "meteor",
