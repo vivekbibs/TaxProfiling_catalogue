@@ -17,7 +17,7 @@
     }
   ],
 
-  "sample_type": {
+  "sample": {
     "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
     "label": "fecal material"
   },
