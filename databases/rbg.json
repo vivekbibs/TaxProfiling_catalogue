@@ -1,4 +1,5 @@
 {
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
   "name": "RBG",
   "@id": "rbg",
   "taxonomic_scope": [

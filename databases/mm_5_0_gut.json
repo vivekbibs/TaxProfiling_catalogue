@@ -1,4 +1,5 @@
 {
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
   "name": "Mus musculus",
   "@id": "mm_5_0_gut",
   "release": null,

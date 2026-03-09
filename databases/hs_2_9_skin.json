@@ -1,4 +1,5 @@
 {
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
   "name": "Homo sapiens skin",
   "@id": "hs_2_9_skin",
   "release": null,

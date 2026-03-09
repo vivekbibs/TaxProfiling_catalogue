@@ -1,4 +1,5 @@
 {
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
   "name": "Canis lupus familiaris",
   "@id": "clf_1_0_gut",
   "release": null,

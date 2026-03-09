@@ -1,4 +1,5 @@
 {
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/catalogue-schema.json",
   "name": "Genomes from Earth’s Microbiomes",
   "@id": "gem",
   "virus": false,
