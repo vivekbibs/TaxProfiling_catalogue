@@ -47,10 +47,6 @@
       "@type": "@id",
       "comment": "List of database identifiers that the tool can use. Each item: object with name, @id and optional release."
     },
-    "release": {
-      "@id": "schema:version",
-      "comment": "Version or release identifier."
-    },
     "@id": {
       "@id": "@id"
     }
