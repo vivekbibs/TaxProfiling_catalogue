@@ -1,0 +1,15 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "mOTUs",
+  "@id": "motus",
+  "type": "Taxonomic Profiler",
+  "latest_release": "unknown",
+  "to_update": true,
+  "supports_longreads": false,
+  "supports_shortreads": true,
+  "additional_functionality": "marker-gene-based profiling tailored for mOTUs reference sets",
+  "uses_databases": [
+    {"name": "mOTUs-db", "@id": "motus-db"},
+    {"name": "GlobDB", "@id": "globdb"}
+  ]
+}

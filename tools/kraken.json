@@ -1,0 +1,16 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "Kraken",
+  "@id": "kraken",
+  "type": "Taxonomic Classifier",
+  "latest_release": "unknown",
+  "to_update": true,
+  "supports_longreads": false,
+  "supports_shortreads": true,  
+  "additional_functionality": "k-mer based exact alignment classifier; very fast classification",
+  "uses_databases": [
+    {"name": "GTDB", "@id": "gtdb"},
+    {"name": "GlobDB", "@id": "globdb"},
+    {"name": "MGnify", "@id": "mgnify"}
+  ]
+}

@@ -32,7 +32,7 @@
     "taxonomic_scope": {
       "@id": "bio:taxonomicRange",
       "@type": "@id",
-      "comment": "Taxonomic group(s) covered. Use NCBITaxon terms."
+      "comment": "Taxonomic group(s) (Bacteria, Archae, Fungi...) covered by the database. Use NCBITaxon terms."
     },
 
     "sample": {
@@ -46,7 +46,7 @@
       "@id": "obo:RO_0001025",
       "label": "located in",
       "@type": "@id",
-      "comment": "Location where samples were collected. Can be geographical (GAZ ontology), or describe hosts (NCBITaxon) : for example human (NCBITaxon:1060) for human skin or stool samples)."
+      "comment": "Location where samples are from. Can be geographical (GAZ ontology), or describe hosts (NCBITaxon) : for example human (NCBITaxon:1060) for human skin or stool samples)."
     },
     "is_about": {
       "@id": "http://purl.obolibrary.org/obo/IAO_0000136",

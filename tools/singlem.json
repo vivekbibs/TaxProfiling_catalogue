@@ -3,7 +3,6 @@
   "@id": "singlem",
   "type": "Taxonomic Profiler",
   "latest_release": "0.20.3",
-  "to_update": true,
   "supports_longreads": true,
   "supports_shortreads": true,
   "sub-module":

@@ -1,0 +1,16 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "MetaPhlAn",
+  "@id": "metaphlan",
+  "type": "Taxonomic Profiler",
+  "latest_release": "unknown",
+  "to_update": true,
+  "supports_longreads": false,
+  "supports_shortreads": true,
+  "additional_functionality": "marker-gene-based profiling; species and strain-level resolution",
+  "uses_databases": [
+    {"name": "mOTUs-db", "@id": "motus-db"},
+    {"name": "GTDB", "@id": "gtdb"},
+    {"name": "MGnify", "@id": "mgnify"}
+  ]
+}
