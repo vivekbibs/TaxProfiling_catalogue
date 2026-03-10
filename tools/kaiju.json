@@ -1,15 +1,15 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
-  "name": "Centrifuge",
-  "@id": "centrifuge",
+  "name": "Kaiju",
+  "@id": "kaiju",
   "type": "Taxonomic Classifier",
   "latest_release": "unknown",
   "to_update": true,
   "supports_longreads": false,
   "supports_shortreads": true,
-  "additional_functionality": "Lightweight FM-index based classifier (distinct from Centrifuger)",
+  "additional_functionality": "Protein-level classification using translated search; good for divergent sequences",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb" },
-    { "name": "GlobDB", "@id": "globdb" }
+    { "name": "RefSeq (protein)", "@id": "refseq" },
+    { "name": "GEM", "@id": "gem" }
   ]
 }

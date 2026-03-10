@@ -1,0 +1,15 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "sourmash",
+  "@id": "sourmash",
+  "type": "Sketching / Similarity Search",
+  "latest_release": "unknown",
+  "to_update": true,
+  "supports_longreads": true,
+  "supports_shortreads": true,
+  "additional_functionality": "MinHash sketching for fast similarity searches and containment estimation",
+  "uses_databases": [
+    { "name": "GEM", "@id": "gem" },
+    { "name": "MGnify", "@id": "mgnify" }
+  ]
+}
