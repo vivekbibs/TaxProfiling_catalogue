@@ -1,0 +1,15 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "KMCP",
+  "@id": "kmcp",
+  "type": "Taxonomic Classifier",
+  "latest_release": "unknown",
+  "to_update": true,
+  "supports_longreads": false,
+  "supports_shortreads": true,
+  "additional_functionality": "k-mer based pseudoalignment for fast and memory-efficient classification",
+  "uses_databases": [
+    { "name": "MGnify", "@id": "mgnify" },
+    { "name": "GEM", "@id": "gem" }
+  ]
+}

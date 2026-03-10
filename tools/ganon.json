@@ -1,0 +1,15 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "Ganon",
+  "@id": "ganon",
+  "type": "Taxonomic Classifier",
+  "latest_release": "unknown",
+  "to_update": true,
+  "supports_longreads": false,
+  "supports_shortreads": true,
+  "additional_functionality": "compact k-mer indices with incremental updates; fast database building and classification",
+  "uses_databases": [
+    { "name": "GTDB", "@id": "gtdb" },
+    { "name": "GlobDB", "@id": "globdb" }
+  ]
+}
