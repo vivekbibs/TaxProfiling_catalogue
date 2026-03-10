@@ -9,7 +9,7 @@
   "supports_shortreads": true,
   "additional_functionality": "marker-gene-based profiling tailored for mOTUs reference sets",
   "uses_databases": [
-    {"name": "mOTUs-db", "@id": "motus-db"},
-    {"name": "GlobDB", "@id": "globdb"}
+    { "name": "mOTUs-db", "@id": "motus-db" },
+    { "name": "GlobDB", "@id": "globdb" }
   ]
 }

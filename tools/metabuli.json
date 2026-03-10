@@ -9,7 +9,7 @@
   "supports_shortreads": true,
   "additional_functionality": "taxonomy-aware abundance estimation; supports curated reference sets",
   "uses_databases": [
-    {"name": "GEM", "@id": "gem"},
-    {"name": "GTDB", "@id": "gtdb"}
+    { "name": "GEM", "@id": "gem" },
+    { "name": "GTDB", "@id": "gtdb" }
   ]
 }

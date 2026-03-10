@@ -2,7 +2,7 @@
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
   "name": "Ganon",
   "@id": "ganon",
-  "type": "Taxonomic Classifier",
+  "type": "Taxonomic Profiler",
   "latest_release": "unknown",
   "to_update": true,
   "supports_longreads": false,

@@ -9,8 +9,8 @@
   "supports_shortreads": true,
   "additional_functionality": "marker-gene-based profiling; species and strain-level resolution",
   "uses_databases": [
-    {"name": "mOTUs-db", "@id": "motus-db"},
-    {"name": "GTDB", "@id": "gtdb"},
-    {"name": "MGnify", "@id": "mgnify"}
+    { "name": "mOTUs-db", "@id": "motus-db" },
+    { "name": "GTDB", "@id": "gtdb" },
+    { "name": "MGnify", "@id": "mgnify" }
   ]
 }
