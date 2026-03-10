@@ -1,22 +1,27 @@
 {
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        }
-    },
-    "isort.path": [
-        "conda",
-        "run",
-        "-n",
-        "biohack",
-        "python",
-        "-m",
-        "isort"
-    ],
-    "isort.args": ["--profile", "black"],   // ← ajoute cette ligne
-    "mypy-type-checker.path": [          // ← remplace mypy.dmypyExecutable
-        "/home/vashokan/miniforge3/envs/biohack/bin/mypy"
-    ]
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "editor.detectIndentation": false,
+  "isort.path": ["conda", "run", "-n", "biohack", "python", "-m", "isort"],
+  "isort.args": ["--profile", "black"],
+  "mypy-type-checker.path": [
+    "/home/vashokan/miniforge3/envs/biohack/bin/mypy"
+  ]
 }
