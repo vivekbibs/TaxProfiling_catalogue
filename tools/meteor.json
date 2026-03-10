@@ -1,15 +1,4 @@
 {
-  "@context": {
-    "schema": "http://schema.org/",
-    "bio": "https://bioschemas.org/",
-    "obo": "http://purl.obolibrary.org/obo/",
-    "uses_databases": {"@id": "schema:softwareRequirements", "@type": "@id"},
-    "latest_release": {"@id": "schema:softwareVersion"},
-    "type": {"@id": "schema:softwareApplication"},
-    "name": {"@id": "schema:name"},
-    "description": {"@id": "schema:description"},
-    "@id": {"@id": "@id"}
-  },
   "name": "meteor",
   "@id": "meteor",
   "type": "Taxonomic Profiler",
@@ -20,7 +9,7 @@
   "additional_functionality": "",
   "taxonomy": "GTDB",
 
-    
+
   "uses_databases": [
 
     {
@@ -60,7 +49,7 @@
       "release": null
     },
     {
-      "name":"Oryctolagus cuniculus",
+      "name": "Oryctolagus cuniculus",
       "@id": "oc_5_7_gut",
       "release": null
     },
