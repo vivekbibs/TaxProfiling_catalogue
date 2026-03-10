@@ -4,6 +4,7 @@
   "@id": "metaphlan",
   "type": "Taxonomic Profiler",
   "latest_release": "v4.2.4",
+  "curated_release": "",
   "to_update": true,
   "supports_longreads": true,
   "supports_shortreads": true,

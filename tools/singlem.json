@@ -4,6 +4,7 @@
   "@id": "singlem",
   "type": "Taxonomic Profiler",
   "latest_release": "0.20.3",
+  "curated_release": "",
   "supports_longreads": true,
   "supports_shortreads": true,
   "to_update": true,

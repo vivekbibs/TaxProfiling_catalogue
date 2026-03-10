@@ -24,10 +24,6 @@
       "@id": "schema:license",
       "comment": "License URL (e.g. https://creativecommons.org/licenses/by/4.0/)."
     },
-    "datePublished": {
-      "@id": "schema:datePublished",
-      "comment": "Publication or release year (e.g. 2024)."
-    },
 
     "taxonomic_scope": {
       "@id": "bio:taxonomicRange",

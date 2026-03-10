@@ -4,6 +4,7 @@
   "@id": "sourmash",
   "type": "Taxonomic Profiler",
   "latest_release": "unknown",
+  "curated_release": "",
   "to_update": true,
   "supports_longreads": true,
   "supports_shortreads": true,
