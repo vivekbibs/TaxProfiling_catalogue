@@ -24,5 +24,5 @@
     "@id": "http://purl.obolibrary.org/obo/GAZ_00011732",
     "label": "Tibetan Plateau"
   },
-  "doi":"10.1038/s41467-024-45895-8"  
+  "doi":"https://doi.org/10.1038/s41467-024-45895-8"    
 }
