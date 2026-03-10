@@ -2,14 +2,16 @@
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
   "name": "Centrifuge",
   "@id": "centrifuge",
-  "type": "Taxonomic Profiler",
-  "latest_release": "unknown",
+  "type": "Taxonomic Classifier",
+  "latest_release": "v1.0.11",
   "to_update": true,
   "supports_longreads": false,
   "supports_shortreads": true,
-  "additional_functionality": "Lightweight FM-index based classifier (distinct from Centrifuger)",
+  "additional_functionality": "Lightweight FM-index based classifier (mourisl Centrifuger entry)",
+  "repo": "https://github.com/mourisl/centrifuger",
+  "doi": "https://doi.org/10.1186/s13059-024-03244-4",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb" },
-    { "name": "GlobDB", "@id": "globdb" }
+    { "name": "GTDB", "@id": "gtdb", "release": "226" },
+    { "name": "RefSeq", "@id": "refseq" }
   ]
 }

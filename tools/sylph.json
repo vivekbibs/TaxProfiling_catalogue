@@ -3,10 +3,13 @@
   "name": "sylph",
   "@id": "sylph",
   "type": "Taxonomic Profiler",
-  "latest_release": "0.9.0",
+  "latest_release": "v0.8.1",
   "to_update": true,
   "supports_longreads": true,
   "supports_shortreads": true,
+  "repo": "https://github.com/bluenote-1577/sylph",
+  "doc": "http://faust.compbio.cs.cmu.edu/sylph-stuff",
+  "doi": "https://doi.org/10.1038/s41587-024-02412-y",
   "uses_databases": [
     {
       "name": "GTDB",

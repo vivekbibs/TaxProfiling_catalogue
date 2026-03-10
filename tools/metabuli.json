@@ -3,13 +3,16 @@
   "name": "Metabuli",
   "@id": "metabuli",
   "type": "Taxonomic Profiler",
-  "latest_release": "unknown",
+  "latest_release": "v1.1.1",
   "to_update": true,
-  "supports_longreads": false,
+  "supports_longreads": true,
   "supports_shortreads": true,
-  "additional_functionality": "taxonomy-aware abundance estimation; supports curated reference sets",
+  "repo": "https://github.com/steineggerlab/Metabuli",
+  "doc": "https://metabuli.steineggerlab.workers.dev/",
+  "doi": "https://doi.org/10.1038/s41592-024-02273-y",
+  "additional_functionality": "novel k-mer structure (metamer) allowing combined DNA+AA analysis for sensitive detection and strain discrimination",
   "uses_databases": [
-    { "name": "GEM", "@id": "gem" },
-    { "name": "GTDB", "@id": "gtdb" }
+    { "name": "GTDB", "@id": "gtdb", "release": "214" },
+    { "name": "GEM", "@id": "gem" }
   ]
 }

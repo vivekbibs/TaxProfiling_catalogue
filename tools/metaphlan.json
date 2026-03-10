@@ -3,14 +3,18 @@
   "name": "MetaPhlAn",
   "@id": "metaphlan",
   "type": "Taxonomic Profiler",
-  "latest_release": "unknown",
+  "latest_release": "v4.2.4",
   "to_update": true,
-  "supports_longreads": false,
+  "supports_longreads": true,
   "supports_shortreads": true,
   "additional_functionality": "marker-gene-based profiling; species and strain-level resolution",
+  "repo": "https://github.com/biobakery/MetaPhlAn",
+  "doc": "http://segatalab.cibio.unitn.it/tools/metaphlan/index.html",
+  "doi": "https://doi.org/10.1038/s41587-023-01688-w",
+  "bio_tools": "https://bio.tools/metaphlan",
   "uses_databases": [
     { "name": "mOTUs-db", "@id": "motus-db" },
-    { "name": "GTDB", "@id": "gtdb" },
+    { "name": "GTDB", "@id": "gtdb", "release": "220" },
     { "name": "MGnify", "@id": "mgnify" }
   ]
 }

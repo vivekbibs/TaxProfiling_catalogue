@@ -2,14 +2,16 @@
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
   "name": "Ganon",
   "@id": "ganon",
-  "type": "Taxonomic Profiler",
-  "latest_release": "unknown",
+  "type": "Taxonomic Classifier",
+  "latest_release": "v2.1.1",
   "to_update": true,
   "supports_longreads": false,
   "supports_shortreads": true,
-  "additional_functionality": "compact k-mer indices with incremental updates; fast database building and classification",
+  "repo": "https://github.com/pirovc/ganon",
+  "doi": "https://doi.org/10.1093/nargab/lqaf094",
+  "additional_functionality": "compact k-mer indices with incremental updates; fast database building and classification (HIBF index)",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb" },
+    { "name": "GTDB", "@id": "gtdb", "release": "226" },
     { "name": "GlobDB", "@id": "globdb" }
   ]
 }
