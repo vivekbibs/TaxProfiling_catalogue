@@ -24,6 +24,38 @@
       "@id": "schema:version",
       "comment": "Release version recorded at the time of last curation of this entry."
     },
+    citation_count: {
+      "@id": "schema:citation",
+      "comment": "Number of citations for the tool (from Google Scholar)."
+    },
+    "number_github_issues": {
+      "@id": "schema:issueCount",
+      "comment": "Number of issues on GitHub repository (if applicable)."
+    },
+    "host_reads_removal": {
+      "@id": "http://example.org/vocab#host_reads_removal",
+      "comment": "Indicates whether the tool can remove host reads (e.g. human) as part of its workflow."
+    },
+    "memory": {
+      "@id": "http://example.org/vocab#memory_requirement",
+      "comment": "Memory requirement for running the tool (in GB)."
+    },
+    "quality_control": {
+      "@id": "http://example.org/vocab#quality_control",
+      "comment": "Indicates whether the tool performs quality control on input reads."
+    },
+    "functional_profiling": {
+      "@id": "http://example.org/vocab#functional_profiling",
+      "comment": "Indicates whether the tool can perform functional profiling in addition to taxonomic profiling."
+    },
+    "strain_level": {
+      "@id": "http://example.org/vocab#strain_level_resolution",
+      "comment": "Indicates the level of strain resolution the tool can achieve."
+    },
+    "approach_detail": {
+      "@id": "schema:algorithm",
+      "comment": "Free-text description of the underlying approach or algorithm used by the tool."
+    },
     "supports_longreads": {
       "@id": "http://example.org/vocab#supports_longreads",
       "comment": "Indicates support for long-read sequencing data."
