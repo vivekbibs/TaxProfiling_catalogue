@@ -1,0 +1,10 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "name": "Lyrebird",
+  "@id": "lyrebird",
+  "type": "Sub-tool",
+  "latest_release": "unknown",
+  "curated_release": "",
+  "description": "Sub-module of singleM; small wrapper/helper module (add details as needed)",
+  "to_update": false
+}

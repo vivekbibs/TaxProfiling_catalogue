@@ -3,6 +3,7 @@
   "name": "sylph",
   "@id": "sylph",
   "type": "Taxonomic Profiler",
+  "description": "",
   "latest_release": "v0.8.1",
   "curated_release": "",
   "citations_count": 82,

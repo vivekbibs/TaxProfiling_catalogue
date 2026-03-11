@@ -3,6 +3,7 @@
   "name": "sourmash",
   "@id": "sourmash",
   "type": "Taxonomic Profiler",
+  "description": "MinHash sketching for fast similarity searches and containment estimation",
   "latest_release": "unknown",
   "curated_release": "",
   "citations_count": 52,

@@ -3,6 +3,7 @@
   "name": "Centrifuge",
   "@id": "centrifuge",
   "type": "Taxonomic Profiler",
+  "description": "Lightweight FM-index based classifier (mourisl Centrifuger entry)",
   "latest_release": "v1.0.11",
   "curated_release": "",
   "citations_count": 1300,

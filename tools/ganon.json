@@ -3,6 +3,7 @@
   "name": "Ganon",
   "@id": "ganon",
   "type": "Taxonomic Profiler",
+  "description": "compact k-mer indices with incremental updates; fast database building and classification (HIBF index)",
   "latest_release": "v2.1.1",
   "curated_release": "",
   "citations_count": 8,

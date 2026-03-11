@@ -3,6 +3,7 @@
   "name": "meteor",
   "@id": "meteor",
   "type": "Taxonomic Profiler",
+  "description": "",
   "latest_release": "2.0.22",
   "curated_release": "",
   "citations_count": 6,

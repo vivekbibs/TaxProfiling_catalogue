@@ -3,6 +3,7 @@
   "name": "MetaPhlAn",
   "@id": "metaphlan",
   "type": "Taxonomic Profiler",
+  "description": "marker-gene-based profiling; species and strain-level resolution",
   "latest_release": "v4.2.4",
   "curated_release": "",
   "citations_count": 1270,

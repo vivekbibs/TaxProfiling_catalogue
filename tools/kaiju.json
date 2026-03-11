@@ -3,6 +3,7 @@
   "name": "Kaiju",
   "@id": "kaiju",
   "type": "Taxonomic Profiler",
+  "description": "Protein-level classification using translated search; good for divergent sequences",
   "latest_release": "unknown",
   "curated_release": "",
   "citations_count": 1989,

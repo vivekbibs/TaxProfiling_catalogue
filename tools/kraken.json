@@ -3,6 +3,7 @@
   "name": "Kraken",
   "@id": "kraken",
   "type": "Taxonomic profiler",
+  "description": "k-mer based exact alignment classifier; very fast classification",
   "latest_release": "v2.1.6",
   "curated_release": "",
   "citations_count": 6994,
@@ -19,6 +20,10 @@
   "repo": "https://github.com/DerrickWood/kraken2",
   "doi": "https://doi.org/10.1186/s13059-019-1891-0",
   "additional_functionality": "k-mer based exact alignment classifier; very fast classification",
+  "sub_module": {
+    "name": "Bracken",
+    "@id": "bracken"
+  },
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb", "release": "226" },
     { "name": "GlobDB", "@id": "globdb" },

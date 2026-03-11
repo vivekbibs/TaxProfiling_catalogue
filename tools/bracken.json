@@ -3,6 +3,7 @@
   "name": "Bracken",
   "@id": "bracken",
   "type": "Abundance Estimator",
+  "description": "Post-processing abundance estimator that refines Kraken/Kraken2 classifications",
   "latest_release": "v3.1",
   "curated_release": "",
   "citations_count": 1977,
