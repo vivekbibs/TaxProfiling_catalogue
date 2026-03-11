@@ -13,6 +13,7 @@
   "functional_profiling": null,
   "strain_level": null,
   "approach_detail": "finding the minimum set of reference genomes that accounts for all known k-mers in a metagenome",
+  "repo": "https://github.com/sourmash-bio/sourmash",
   "to_update": true,
   "supports_longreads": true,
   "supports_shortreads": true,
