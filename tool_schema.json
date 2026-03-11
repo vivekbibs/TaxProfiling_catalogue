@@ -24,13 +24,33 @@
       "@id": "schema:version",
       "comment": "Release version recorded at the time of last curation of this entry."
     },
-    "citation_count": {
-      "@id": "schema:citation",
-      "comment": "Number of citations for the tool (from Google Scholar)."
+    "citations_count": {
+      "@id": "http://example.org/vocab#citations_count",
+      "comment": "Number of citations for the tool (extracted as integer where available)."
     },
-    "number_github_issues": {
-      "@id": "schema:issueCount",
+    "issues_count": {
+      "@id": "http://example.org/vocab#issues_count",
       "comment": "Number of issues on GitHub repository (if applicable)."
+    },
+    "repo": {
+      "@id": "schema:codeRepository",
+      "comment": "URL of the code repository (GitHub, GitLab, etc)."
+    },
+    "doc": {
+      "@id": "schema:documentation",
+      "comment": "Documentation or manual URL for the tool."
+    },
+    "doi": {
+      "@id": "schema:identifier",
+      "comment": "DOI or persistent identifier for the tool entry."
+    },
+    "bio_tools": {
+      "@id": "http://example.org/vocab#bio_tools",
+      "comment": "Link to the bio.tools registry entry if present."
+    },
+    "to_update": {
+      "@id": "http://example.org/vocab#to_update",
+      "comment": "Boolean flag indicating whether the entry should be updated."
     },
     "host_reads_removal": {
       "@id": "http://example.org/vocab#host_reads_removal",
