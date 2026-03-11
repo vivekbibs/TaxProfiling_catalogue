@@ -24,7 +24,7 @@
       "@id": "schema:version",
       "comment": "Release version recorded at the time of last curation of this entry."
     },
-    citation_count: {
+    "citation_count": {
       "@id": "schema:citation",
       "comment": "Number of citations for the tool (from Google Scholar)."
     },
