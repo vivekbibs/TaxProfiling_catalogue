@@ -1,0 +1,10 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "name": "UHGG",
+  "@id": "uhgg",
+  "type": "Database",
+  "latest_release": null,
+  "to_update": false,
+  "description": "Unified Human Gut Genome collection (UHGG) placeholder.",
+  "isPartOf": null
+}

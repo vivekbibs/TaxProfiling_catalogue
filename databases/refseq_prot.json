@@ -1,0 +1,10 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "name": "RefSeq Protein",
+  "@id": "refseq_prot",
+  "type": "Database",
+  "latest_release": null,
+  "to_update": false,
+  "description": "RefSeq protein collection (placeholder).",
+  "isPartOf": null
+}

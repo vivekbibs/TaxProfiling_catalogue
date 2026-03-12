@@ -1,0 +1,10 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "name": "UHGV",
+  "@id": "uhgv",
+  "type": "Database",
+  "latest_release": null,
+  "to_update": false,
+  "description": "Unified Human Gut Viral genomes (UHGV) placeholder.",
+  "isPartOf": null
+}

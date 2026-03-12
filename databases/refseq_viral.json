@@ -1,0 +1,10 @@
+{
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "name": "RefSeq Viral",
+  "@id": "refseq_viral",
+  "type": "Database",
+  "latest_release": null,
+  "to_update": false,
+  "description": "RefSeq viral sequences (placeholder).",
+  "isPartOf": null
+}
