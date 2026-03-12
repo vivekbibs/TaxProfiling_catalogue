@@ -27,8 +27,12 @@
       "label": "Viruses"
     },
     {
-      "@id": "x",
+      "@id": "http://purl.obolibrary.org/obo/SO_0000155",
       "label": "Plasmids"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/SO_0000440",
+      "label": "vector_replicon"
     }
   ],
   "sample": null,

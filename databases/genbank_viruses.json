@@ -1,17 +1,17 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
-  "name": "NCBI Eukaryotes",
-  "@id": "ncbi_euk",
+  "name": "GenBank Viruses",
+  "@id": "genbank_viruses",
   "type": "Database",
   "release": null,
   "latest_release": null,
   "to_update": false,
-  "description": "NCBI eukaryotic sequences (placeholder).",
+  "description": "NCBI viral sequences (placeholder).",
   "doi": null,
   "license": null,
   "taxonomic_scope": {
-    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
-    "label": "Eukaryota"
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_10239",
+    "label": "Viruses"
   },
   "sample": null,
   "origin": null,

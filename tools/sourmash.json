@@ -21,7 +21,7 @@
   "additional_functionality": "MinHash sketching for fast similarity searches and containment estimation",
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb", "release": "226" },
-    { "name": "NCBI_viruses", "@id": "ncbi_viruses" },
-    { "name": "NCBI_eukaryotes", "@id": "ncbi_euk" }
+    { "name": "GenBank Viruses", "@id": "genbank_viruses", "release": "Jan 2025" },
+    { "name": "RefSeq Eukaryotes", "@id": "refseq_euk", "release": "Jan 2025" }
   ]
 }
