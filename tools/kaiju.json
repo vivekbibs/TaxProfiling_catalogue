@@ -20,7 +20,15 @@
   "supports_shortreads": true,
   "additional_functionality": "Protein-level classification using translated search; good for divergent sequences",
   "uses_databases": [
+    { "name": "RefSeq", "@id": "refseq" },
+    { "name": "RefSeq nr", "@id": "refseq_nr" },
     { "name": "RefSeq proteins", "@id": "refseq_prot" },
-    { "name": "Blast-nr", "@id": "blast_nr" }
+    { "name": "progenomes", "@id": "progenomes" },
+    { "name": "RefSeq Viruses", "@id": "refseq_viruses" },
+    { "name": "RefSeq Plasmids", "@id": "refseq_plasmids" },
+    { "name": "RefSeq Fungi", "@id": "refseq_fungi" },
+    { "name": "Blast-nr", "@id": "blast_nr" },
+    { "name": "Blast-nr eukaryotes", "@id": "blast_nr_eukaryotes" },
+    { "name": "RVDB-prot", "@id": "rvdb" }
   ]
 }

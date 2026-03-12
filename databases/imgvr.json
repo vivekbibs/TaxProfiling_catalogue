@@ -9,7 +9,10 @@
   "description": "IMG/VR viral reference database (IMG/VR).",
   "doi": null,
   "license": null,
-  "taxonomic_scope": null,
+  "taxonomic_scope": {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_10239",
+    "label": "Viruses"
+  },
   "sample": null,
   "origin": null,
   "is_about": null,
