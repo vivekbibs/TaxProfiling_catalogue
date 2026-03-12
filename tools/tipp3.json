@@ -20,7 +20,6 @@
   "supports_shortreads": true,
   "additional_functionality": "Phylogenetic placement-based taxonomic profiling; marker-gene driven",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb" },
-    { "name": "GEM", "@id": "gem" }
+    { "name": "TIPP3 reference package", "@id": "tipp3_refpkg" }
   ]
 }
