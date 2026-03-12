@@ -26,6 +26,7 @@
   },
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb", "release": "226" },
-    { "name": "RefSeq", "@id": "refseq" }
+    { "name": "refseq viral", "@id": "refseq_viral", "release": "02/2026" },
+    { "name": "kraken_standard", "@id": "kraken_standard" }
   ]
 }
