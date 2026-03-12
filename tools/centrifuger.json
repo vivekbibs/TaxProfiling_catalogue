@@ -22,6 +22,6 @@
   "doi": "https://doi.org/10.1186/s13059-024-03244-4",
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb" },
-    { "name": "GlobDB", "@id": "globdb" }
+    { "name": "Refseq", "@id": "refseq" }
   ]
 }

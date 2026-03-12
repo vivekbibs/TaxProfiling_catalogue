@@ -21,7 +21,6 @@
   "repo": "https://github.com/shenwei356/kmcp",
   "doi": "https://doi.org/10.1093/bioinformatics/btac845",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "214" },
-    { "name": "MGnify", "@id": "mgnify" }
+    { "name": "GTDB", "@id": "gtdb", "release": "214" }
   ]
 }

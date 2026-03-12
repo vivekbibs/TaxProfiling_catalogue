@@ -21,7 +21,6 @@
   "doi": "https://doi.org/10.1093/nargab/lqaf094",
   "additional_functionality": "compact k-mer indices with incremental updates; fast database building and classification (HIBF index)",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "226" },
-    { "name": "GlobDB", "@id": "globdb" }
+    { "name": "GTDB", "@id": "gtdb", "release": "226" }
   ]
 }

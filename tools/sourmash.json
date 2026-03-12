@@ -20,7 +20,8 @@
   "supports_shortreads": true,
   "additional_functionality": "MinHash sketching for fast similarity searches and containment estimation",
   "uses_databases": [
-    { "name": "GEM", "@id": "gem" },
-    { "name": "MGnify", "@id": "mgnify" }
+    { "name": "GTDB", "@id": "gtdb", "release": "226" },
+    { "name": "NCBI_viruses", "@id": "ncbi_viruses" },
+    { "name": "NCBI_eukaryotes", "@id": "ncbi_euk" }
   ]
 }

@@ -20,7 +20,7 @@
   "supports_shortreads": true,
   "additional_functionality": "Protein-level classification using translated search; good for divergent sequences",
   "uses_databases": [
-    { "name": "RefSeq (protein)", "@id": "refseq" },
-    { "name": "GEM", "@id": "gem" }
+    { "name": "RefSeq proteins", "@id": "refseq_prot" },
+    { "name": "Blast-nr", "@id": "blast_nr" }
   ]
 }

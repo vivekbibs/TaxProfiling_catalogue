@@ -26,7 +26,6 @@
   },
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb", "release": "226" },
-    { "name": "GlobDB", "@id": "globdb" },
-    { "name": "MGnify", "@id": "mgnify" }
+    { "name": "RefSeq", "@id": "refseq" }
   ]
 }
