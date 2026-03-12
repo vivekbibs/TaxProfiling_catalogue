@@ -3,8 +3,15 @@
   "name": "NCBI Viruses",
   "@id": "ncbi_viruses",
   "type": "Database",
+  "release": null,
   "latest_release": null,
   "to_update": false,
   "description": "NCBI viral sequences (placeholder).",
+  "doi": null,
+  "license": null,
+  "taxonomic_scope": null,
+  "sample": null,
+  "origin": null,
+  "is_about": null,
   "isPartOf": null
 }

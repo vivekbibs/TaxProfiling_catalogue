@@ -3,8 +3,15 @@
   "name": "ChocoPhlAn",
   "@id": "chocophlan",
   "type": "Database",
+  "release": null,
   "latest_release": null,
   "to_update": false,
   "description": "Marker database used by MetaPhlAn (ChocoPhlAn).",
+  "doi": null,
+  "license": null,
+  "taxonomic_scope": null,
+  "sample": null,
+  "origin": null,
+  "is_about": null,
   "isPartOf": null
 }

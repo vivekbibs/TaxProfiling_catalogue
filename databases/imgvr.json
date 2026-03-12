@@ -3,8 +3,15 @@
   "name": "IMG/VR",
   "@id": "imgvr",
   "type": "Database",
+  "release": null,
   "latest_release": null,
   "to_update": false,
   "description": "IMG/VR viral reference database (IMG/VR).",
+  "doi": null,
+  "license": null,
+  "taxonomic_scope": null,
+  "sample": null,
+  "origin": null,
+  "is_about": null,
   "isPartOf": null
 }

@@ -3,8 +3,15 @@
   "name": "Tara Oceans",
   "@id": "tara_oceans",
   "type": "Database",
+  "release": null,
   "latest_release": null,
   "to_update": false,
   "description": "Tara Oceans marine metagenomic reference dataset (placeholder).",
+  "doi": null,
+  "license": null,
+  "taxonomic_scope": null,
+  "sample": null,
+  "origin": null,
+  "is_about": null,
   "isPartOf": null
 }
