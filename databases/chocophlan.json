@@ -6,7 +6,7 @@
   "release": null,
   "latest_release": null,
   "to_update": false,
-  "description": "Marker database used by MetaPhlAn (ChocoPhlAn).",
+  "description": "Marker database used by MetaPhlAn",
   "doi": null,
   "license": null,
   "taxonomic_scope": [

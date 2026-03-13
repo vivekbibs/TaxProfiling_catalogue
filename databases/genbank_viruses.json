@@ -6,7 +6,7 @@
   "release": null,
   "latest_release": null,
   "to_update": false,
-  "description": "NCBI viral sequences (placeholder).",
+  "description": "NCBI GenBank viral sequences.",
   "doi": null,
   "license": null,
   "taxonomic_scope": {
