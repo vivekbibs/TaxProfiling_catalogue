@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/tool_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/tool_schema.json",
   "name": "sourmash",
   "@id": "sourmash",
   "type": "Taxonomic Profiler",
@@ -22,6 +22,6 @@
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb", "release": "226" },
     { "name": "GenBank Viruses", "@id": "genbank_viruses", "release": "Jan 2025" },
-    { "name": "RefSeq Eukaryotes", "@id": "refseq_euk", "release": "Jan 2025" }
+    { "name": "RefSeq Eukaryotes", "@id": "refseq_eukaryotes", "release": "Jan 2025" }
   ]
 }
