@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "Homo sapiens skin",
   "@id": "hs_2_9_skin",
   "release": null,
@@ -25,28 +25,28 @@
     "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
     "label": "Homo sapiens"
   },
-  "doi":"https://doi.org/10.5281/zenodo.10679308",
+  "doi": "https://doi.org/10.5281/zenodo.10679308",
 
-  "compatible_tools": 
+  "compatible_tools":
   [
-      {
-        "@id": "meteor",
-        "DB": [
-          {
-            "name": "default",
-            "access_method": "cli",
-            "download": "meteor download -i -c hs_2_9_skin -o <refdir>",
-            "size": 3.9,
-            "ifb_server": null
-          },
-          {
-            "name": "fast",
-            "access_method": "cli",
-            "download": "meteor download -i -c hs_2_9_skin --fast -o <refdir>",
-            "size": 0.2,
-            "ifb_server": null
-          }
-        ]
-      }
-    ]
+    {
+      "@id": "meteor",
+      "DB": [
+        {
+          "name": "default",
+          "access_method": "cli",
+          "download": "meteor download -i -c hs_2_9_skin -o <refdir>",
+          "size": 3.9,
+          "ifb_server": null
+        },
+        {
+          "name": "fast",
+          "access_method": "cli",
+          "download": "meteor download -i -c hs_2_9_skin --fast -o <refdir>",
+          "size": 0.2,
+          "ifb_server": null
+        }
+      ]
+    }
+  ]
 }

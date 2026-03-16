@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "SPIRE",
   "@id": "spire",
   "taxonomic_scope": [
@@ -15,9 +15,9 @@
   "release": "unknown",
   "environment": "specific",
   "isPartOf": [
-    {"@id": "globdb"}
+    { "@id": "globdb" }
   ],
   "sample": null,
   "origin": null,
-  "doi":"https://doi.org/10.1093/nar/gkad943"     
+  "doi": "https://doi.org/10.1093/nar/gkad943"
 }

@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "glacier-fed streams",
   "@id": "gfs",
   "taxonomic_scope": [
@@ -23,16 +23,16 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    {"@id": "globdb"}
+    { "@id": "globdb" }
   ],
   "sample": {
     "@id": "http://purl.obolibrary.org/obo/ENVO_00002007",
     "label": "sediment"
   },
   "origin":
-    {
-       "@id": "http://purl.obolibrary.org/obo/ENVO_01001529",
-       "label": "glacier snout"
-     },
-  "doi":"https://doi.org/10.1038/s41564-024-01874-9"
+  {
+    "@id": "http://purl.obolibrary.org/obo/ENVO_01001529",
+    "label": "glacier snout"
+  },
+  "doi": "https://doi.org/10.1038/s41564-024-01874-9"
 }

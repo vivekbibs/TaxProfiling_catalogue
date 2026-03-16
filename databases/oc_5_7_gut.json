@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "Oryctolagus cuniculus",
   "@id": "oc_5_7_gut",
   "release": null,
@@ -25,26 +25,26 @@
     "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9986",
     "label": "Oryctolagus cuniculus"
   },
-  "doi":"https://doi.org/10.5281/zenodo.10659710",
+  "doi": "https://doi.org/10.5281/zenodo.10659710",
   "compatible_tools": [
-      {
-        "@id": "meteor",
-        "DB": [
-          {
-            "name": "default",
-            "access_method": "cli",
-            "download": "meteor download -i -c oc_5_7_gut -o <refdir>",
-            "size": 8.0,
-            "ifb_server": null
-          },
-          {
-            "name": "fast",
-            "access_method": "cli",
-            "download": "meteor download -i -c oc_5_7_gut --fast -o <refdir>",
-            "size": 0.4,
-            "ifb_server": null
-          }
-        ]
-      }
-    ]
+    {
+      "@id": "meteor",
+      "DB": [
+        {
+          "name": "default",
+          "access_method": "cli",
+          "download": "meteor download -i -c oc_5_7_gut -o <refdir>",
+          "size": 8.0,
+          "ifb_server": null
+        },
+        {
+          "name": "fast",
+          "access_method": "cli",
+          "download": "meteor download -i -c oc_5_7_gut --fast -o <refdir>",
+          "size": 0.4,
+          "ifb_server": null
+        }
+      ]
+    }
+  ]
 }

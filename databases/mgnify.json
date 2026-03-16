@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "MGnify Genomes",
   "@id": "mgnify",
   "taxonomic_scope": [
@@ -14,34 +14,34 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    {"@id": "globdb"}
+    { "@id": "globdb" }
   ],
   "sample": null,
   "origin": null,
-  "compatible_tools": 
+  "compatible_tools":
   [
-      {
-        "@id": "kraken",
-        "DB": [
-          {
-            "name": "",
-            "download": "",
-            "size": 0,
-            "ifb_server": {"name": "core-cluster", "path": ""}
-          }
-        ]
-      },
-      {
-        "@id": "bracken",
-        "DB": [
-          {
-            "name": "",
-            "download": "",
-            "size": 0,
-            "ifb_server": null
-          }
-        ]
-      }
-    ],
-  "doi":"https://doi.org/10.1016/j.jmb.2023.168016"
+    {
+      "@id": "kraken",
+      "DB": [
+        {
+          "name": "",
+          "download": "",
+          "size": 0,
+          "ifb_server": { "name": "core-cluster", "path": "" }
+        }
+      ]
+    },
+    {
+      "@id": "bracken",
+      "DB": [
+        {
+          "name": "",
+          "download": "",
+          "size": 0,
+          "ifb_server": null
+        }
+      ]
+    }
+  ],
+  "doi": "https://doi.org/10.1016/j.jmb.2023.168016"
 }

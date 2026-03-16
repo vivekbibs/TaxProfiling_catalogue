@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "curated Food Metagenomic Data",
   "short": "CFMD",
   "@id": "cfmd",
@@ -24,9 +24,8 @@
   },
   "origin": null,
   "isPartOf": [
-    {"@id": "globdb"},
-    {"@id": "chocophlan"}
+    { "@id": "globdb" },
+    { "@id": "chocophlan" }
   ],
-  "doi" : "https://doi.org/10.1016/j.cell.2024.07.039"
+  "doi": "https://doi.org/10.1016/j.cell.2024.07.039"
 }
- 

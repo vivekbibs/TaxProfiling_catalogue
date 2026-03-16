@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "mOTUs-db",
   "@id": "motus-db",
   "taxonomic_scope": [
@@ -14,10 +14,10 @@
   ],
   "release": "0.0.1",
   "isPartOf": [
-    {"@id": "globdb"}
+    { "@id": "globdb" }
   ],
   "sample": null,
   "origin": null,
-  "doi":"https://doi.org/10.1093/nar/gkae1004",
-  "compatible_tools": ["motus"]
+  "doi": "https://doi.org/10.1093/nar/gkae1004",
+  "compatible_tools": [ "motus" ]
 }

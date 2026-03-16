@@ -1,5 +1,5 @@
 {
-  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue.git/main/database_schema.json",
+  "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
   "name": "SHGO",
   "@id": "shgo",
   "taxonomic_scope": [
@@ -14,7 +14,7 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    {"@id": "globdb"}
+    { "@id": "globdb" }
   ],
   "sample": {
     "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
@@ -26,10 +26,9 @@
       "label": "Capra hircus"
     },
     {
-    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9940",
-    "label": "Ovis aries"
-  }
+      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9940",
+      "label": "Ovis aries"
+    }
   ],
-  "doi":"https://doi.org/10.1186/s40168-024-01806-z"
+  "doi": "https://doi.org/10.1186/s40168-024-01806-z"
 }
- 
