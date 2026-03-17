@@ -25,8 +25,8 @@
     "@id": "bracken"
   },
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "226" },
-    { "name": "refseq viral", "@id": "refseq_viral", "release": "02/2026" },
-    { "name": "kraken_standard", "@id": "kraken_standard" }
+    { "name": "GTDB", "@id": "gtdb", "release": "226", "taxonomy_system": "gtdb" },
+    { "name": "refseq viral", "@id": "refseq_viral", "release": "02/2026", "taxonomy_system": "ncbi" },
+    { "name": "kraken_standard", "@id": "kraken_standard", "taxonomy_system": "ncbi" }
   ]
 }

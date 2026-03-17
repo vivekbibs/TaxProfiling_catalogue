@@ -5,6 +5,6 @@
   "type": "Sub-tool",
   "latest_release": "unknown",
   "curated_release": "",
-  "description": "Sub-module of singleM; small wrapper/helper module (add details as needed)",
+  "description": "Sub-module of singleM;specialized towards the profiling of viruses in metagenomic data. Currently, Lyrebird profiles dsDNA phages belonging to the Caudoviricetes. ",
   "to_update": false
 }

@@ -20,6 +20,6 @@
   "supports_shortreads": true,
   "additional_functionality": "Phylogenetic placement-based taxonomic profiling; marker-gene driven",
   "uses_databases": [
-    { "name": "TIPP3 reference package", "@id": "tipp3_refpkg" }
+    { "name": "TIPP3 reference package", "@id": "tipp3_refpkg", "taxonomy_system": "ncbi" }
   ]
 }

@@ -30,53 +30,63 @@
     {
       "name": "Canis lupus familiaris",
       "@id": "clf_1_0_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Felis catus",
       "@id": "fc_1_3_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Gallus gallus domesticus",
       "@id": "gg_13_6_caecal",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Homo sapiens gut",
       "@id": "hs_10_4_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
 
     },
     {
       "name": "Homo sapiens oral",
       "@id": "hs_8_4_oral",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Homo sapiens skin",
       "@id": "hs_2_9_skin",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Mus musculus",
       "@id": "mm_5_0_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Oryctolagus cuniculus",
       "@id": "oc_5_7_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Rattus norvegicus",
       "@id": "rn_5_9_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "Sus domesticus",
       "@id": "ssc_9_3_gut",
-      "release": null
+      "release": null,
+      "taxonomy_system": "gtdb"
     }
 
   ]

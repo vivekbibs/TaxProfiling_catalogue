@@ -24,37 +24,44 @@
     {
       "name": "GTDB",
       "@id": "gtdb",
-      "release": [ "226", "220", "214" ]
+      "release": [ "226", "220", "214" ],
+      "taxonomy_system": "gtdb"
 
     },
     {
       "name": "GlobDB",
       "@id": "globdb",
-      "release": "226"
+      "release": "226",
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "IMG/VR",
       "@id": "imgvr",
-      "release": "4.1"
+      "release": "4.1",
+      "taxonomy_system": "ncbi"
     },
     {
       "name": "UHGV",
-      "@id": "uhgv"
+      "@id": "uhgv",
+      "taxonomy_system": "ncbi"
     },
     {
       "name": "UHGG",
       "@id": "uhgg",
-      "release": "2.0.1"
+      "release": "2.0.1",
+      "taxonomy_system": "gtdb"
 
     },
     {
       "name": "RefSeq Fungi",
       "@id": "refseqfungi",
-      "release": "2025-10-11"
+      "release": "2025-10-11",
+      "taxonomy_system": "ncbi"
     },
     {
       "name": "TARA Oceans eukaryotic MAGs/SAGs",
-      "@id": "tara_oceans"
+      "@id": "tara_oceans",
+      "taxonomy_system": "ncbi"
     }
 
   ]

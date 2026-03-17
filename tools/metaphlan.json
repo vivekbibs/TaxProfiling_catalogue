@@ -23,6 +23,6 @@
   "doi": "https://doi.org/10.1038/s41587-023-01688-w",
   "bio_tools": "https://bio.tools/metaphlan",
   "uses_databases": [
-    { "name": "ChocoPhlan", "@id": "chocophlan" }
+    { "name": "ChocoPhlan", "@id": "chocophlan", "taxonomy_system": [ "ncbi", "gtdb" ] }
   ]
 }

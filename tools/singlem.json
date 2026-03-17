@@ -36,12 +36,14 @@
         "226",
         "220",
         "214"
-      ]
+      ],
+      "taxonomy_system": "gtdb"
     },
     {
       "name": "GlobDB",
       "@id": "globdb",
-      "release": "226"
+      "release": "226",
+      "taxonomy_system": "gtdb"
     }
   ]
 }

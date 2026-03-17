@@ -20,8 +20,8 @@
   "supports_shortreads": true,
   "additional_functionality": "MinHash sketching for fast similarity searches and containment estimation",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "226" },
-    { "name": "GenBank Viruses", "@id": "genbank_viruses", "release": "Jan 2025" },
-    { "name": "RefSeq Eukaryotes", "@id": "refseq_eukaryotes", "release": "Jan 2025" }
+    { "name": "GTDB", "@id": "gtdb", "release": "226", "taxonomy_system": "gtdb" },
+    { "name": "GenBank Viruses", "@id": "genbank_viruses", "release": "Jan 2025", "taxonomy_system": "ncbi" },
+    { "name": "RefSeq Eukaryotes", "@id": "refseq_eukaryotes", "release": "Jan 2025", "taxonomy_system": "ncbi" }
   ]
 }

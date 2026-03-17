@@ -20,15 +20,15 @@
   "supports_shortreads": true,
   "additional_functionality": "Protein-level classification using translated search; good for divergent sequences",
   "uses_databases": [
-    { "name": "RefSeq", "@id": "refseq" },
-    { "name": "RefSeq nr", "@id": "refseq_nr" },
-    { "name": "RefSeq proteins", "@id": "refseq_prot" },
-    { "name": "progenomes", "@id": "progenomes" },
-    { "name": "RefSeq Viruses", "@id": "refseq_viruses" },
-    { "name": "RefSeq Plasmids", "@id": "refseq_plasmids" },
-    { "name": "RefSeq Fungi", "@id": "refseq_fungi" },
-    { "name": "Blast-nr", "@id": "blast_nr" },
-    { "name": "Blast-nr eukaryotes", "@id": "blast_nr_eukaryotes" },
-    { "name": "RVDB-prot", "@id": "rvdb" }
+    { "name": "RefSeq", "@id": "refseq", "taxonomy_system": "ncbi" },
+    { "name": "RefSeq nr", "@id": "refseq_nr", "taxonomy_system": "ncbi" },
+    { "name": "RefSeq proteins", "@id": "refseq_prot", "taxonomy_system": "ncbi" },
+    { "name": "progenomes", "@id": "progenomes", "taxonomy_system": "ncbi" },
+    { "name": "RefSeq Viruses", "@id": "refseq_viruses", "taxonomy_system": "ncbi" },
+    { "name": "RefSeq Plasmids", "@id": "refseq_plasmids", "taxonomy_system": "ncbi" },
+    { "name": "RefSeq Fungi", "@id": "refseq_fungi", "taxonomy_system": "ncbi" },
+    { "name": "Blast-nr", "@id": "blast_nr", "taxonomy_system": "ncbi" },
+    { "name": "Blast-nr eukaryotes", "@id": "blast_nr_eukaryotes", "taxonomy_system": "ncbi" },
+    { "name": "RVDB-prot", "@id": "rvdb", "taxonomy_system": "ncbi" }
   ]
 }
