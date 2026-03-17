@@ -19,9 +19,9 @@
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "editor.detectIndentation": false,
-  "isort.path": ["conda", "run", "-n", "biohack", "python", "-m", "isort"],
-  "isort.args": ["--profile", "black"],
+  "isort.path": [ "conda", "run", "-n", "biohack", "python", "-m", "isort" ],
+  "isort.args": [ "--profile", "black" ],
   "mypy-type-checker.path": [
-    "/home/vashokan/miniforge3/envs/biohack/bin/mypy"
+    "/home/vashokan/miniforge3/envs/catalogue/bin/mypy"
   ]
 }
