@@ -20,6 +20,10 @@
       "@id": "schema:version",
       "comment": "Latest release of the tool/database as of today."
     },
+    "release": {
+      "@id": "schema:version",
+      "comment": "Release or version identifier (used in uses_databases entries)."
+    },
     "curated_release": {
       "@id": "schema:version",
       "comment": "Release version recorded at the time of last curation of this entry."
@@ -101,6 +105,10 @@
       "@id": "x",
       "@type": "@id",
       "comment": "Taxonomy used by the tool (NCBI or GTDB)"
+    },
+    "taxonomy_system": {
+      "@id": "http://example.org/vocab#taxonomy_system",
+      "comment": "Taxonomic system used by the referenced database (e.g., NCBI, GTDB). Leave empty if unknown."
     },
     "uses_databases": {
       "@id": "obo:RO_0002233",
