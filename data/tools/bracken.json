@@ -22,6 +22,6 @@
   "additional_functionality": "Post-processing abundance estimator that refines Kraken/Kraken2 classifications",
   "uses_databases": [
     { "name": "GTDB", "@id": "gtdb", "release": "226", "taxonomy_system": "gtdb" },
-    { "name": "RefSeq", "@id": "refseq", "taxonomy_system": "" }
+    { "name": "RefSeq", "@id": "refseq", "taxonomy_system": "ncbi" }
   ]
 }
