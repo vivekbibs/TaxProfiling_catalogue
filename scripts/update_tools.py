@@ -2,31 +2,33 @@
 """
 update_tools.py
 ───────────────
-Deux fonctions principales :
+Deux fonctions :
 
 1. sync_latest_releases(tools_dir, token)
-   Pour chaque JSON dans tools/, interroge l'API GitHub,
-   compare avec latest_release, et met à jour le JSON si différent.
+   Pour chaque JSON dans tools_dir/, interroge l'API GitHub via le champ
+   'repo', récupère la dernière release, et met à jour 'latest_release'
+   dans le JSON si la valeur a changé.
 
-2. curation_report(tools_dir)
-   Pour chaque JSON dans tools/, compare latest_release et curated_release.
-   Génère un rapport des outils à recurer manuellement.
+2. curation_report(tools_dir, output_path)
+   Pour chaque JSON dans tools_dir/, compare 'latest_release' et
+   'curated_release'. Génère un rapport des outils à recurer manuellement.
+
+Hypothèses minimales sur les JSONs :
+  - Tout fichier .json dans tools_dir est un outil.
+  - Les champs utilisés sont : name, repo, latest_release, curated_release.
+  - Si un champ est absent, il est traité comme vide/inconnu.
+  - Si un fichier est invalide (JSON malformé), il est signalé et ignoré.
 
 Usage :
-    # Les deux d'un coup (recommandé)
     python update_tools.py --tools data/tools/
 
-    # Seulement sync GitHub
     python update_tools.py --tools data/tools/ --only-sync
-
-    # Seulement le rapport de curation
     python update_tools.py --tools data/tools/ --only-report
+    python update_tools.py --tools data/tools/ --report-output mon_rapport.txt
 
-    # Avec token GitHub (évite le rate limiting à 60 req/h)
+    # Token GitHub (évite la limite 60 req/h anonyme)
     python update_tools.py --tools data/tools/ --token ghp_xxxx
-    # ou via variable d'environnement :
-    export GITHUB_TOKEN=ghp_xxxx
-    python update_tools.py --tools data/tools/
+    export GITHUB_TOKEN=ghp_xxxx && python update_tools.py --tools data/tools/
 """
 
 import argparse
@@ -43,69 +45,23 @@ GITHUB_API = "https://api.github.com"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# UTILITAIRES
+# I/O
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-def get_headers(token: str | None) -> dict:
-    headers = {"Accept": "application/vnd.github+json"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    return headers
-
-
-def extract_owner_repo(repo_url: str) -> tuple[str, str] | None:
-    """Extrait (owner, repo) depuis une URL GitHub."""
-    match = re.search(r"github\.com/([^/]+)/([^/\s]+?)(?:\.git)?/?$", repo_url.strip())
-    if not match:
-        return None
-    return match.group(1), match.group(2)
-
-
-def fetch_latest_release(owner: str, repo: str, headers: dict) -> str | None:
-    """
-    Retourne le tag de la dernière release GitHub.
-    Fallback sur le dernier tag si pas de release officielle.
-    """
-    # 1. Essayer les releases
-    url = f"{GITHUB_API}/repos/{owner}/{repo}/releases/latest"
-    r = requests.get(url, headers=headers, timeout=10)
-    if r.status_code == 200:
-        return r.json().get("tag_name")
-
-    # 2. Fallback : tags
-    if r.status_code == 404:
-        url_tags = f"{GITHUB_API}/repos/{owner}/{repo}/tags?per_page=1"
-        r2 = requests.get(url_tags, headers=headers, timeout=10)
-        if r2.status_code == 200 and r2.json():
-            return r2.json()[0]["name"]
-        return None
-
-    r.raise_for_status()
-    return None
-
-
-def normalize_version(v: str | None) -> str:
-    """Normalise une version pour comparaison (retire 'v' prefix, strip)."""
-    if not v:
-        return ""
-    return v.strip().lstrip("v")
-
-
 def load_json(path: Path) -> dict | None:
-    """Retourne le dict JSON ou None si le fichier n'est pas parsable."""
+    """
+    Charge un fichier JSON. Retourne None si le fichier est invalide,
+    avec un message d'avertissement.
+    """
     try:
         return json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, UnicodeDecodeError):
+    except json.JSONDecodeError as e:
+        print(f"  [WARN] {path.name} ignoré — JSON invalide : {e}")
         return None
-
-
-def is_tool_json(data: dict) -> bool:
-    """Verifie que c'est bien un JSON d'outil."""
-    ctx = data.get("@context", "")
-    if isinstance(ctx, str) and "tool_schema" in ctx:
-        return True
-    return bool(data.get("type") or data.get("supports_shortreads") is not None)
+    except UnicodeDecodeError as e:
+        print(f"  [WARN] {path.name} ignoré — encodage invalide : {e}")
+        return None
 
 
 def save_json(path: Path, data: dict) -> None:
@@ -115,37 +71,102 @@ def save_json(path: Path, data: dict) -> None:
     )
 
 
+def iter_tools(tools_dir: Path):
+    """
+    Itère sur tous les fichiers .json dans tools_dir.
+    Yield : (path, data) pour les fichiers valides.
+    """
+    files = sorted(tools_dir.glob("*.json"))
+    if not files:
+        print(f"[WARN] Aucun fichier .json trouvé dans {tools_dir}")
+        return
+    for path in files:
+        data = load_json(path)
+        if data is not None:
+            yield path, data
+
+
 # ─────────────────────────────────────────────────────────────────────────────
-# FONCTION 1 — Synchronisation des latest_release depuis GitHub
+# GITHUB
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def get_headers(token: str | None) -> dict:
+    h = {"Accept": "application/vnd.github+json"}
+    if token:
+        h["Authorization"] = f"Bearer {token}"
+    return h
+
+
+def extract_owner_repo(repo_url: str) -> tuple[str, str] | None:
+    match = re.search(
+        r"github\.com/([^/]+)/([^/\s]+?)(?:\.git)?/?$",
+        repo_url.strip(),
+    )
+    if not match:
+        return None
+    return match.group(1), match.group(2)
+
+
+def fetch_github_latest(owner: str, repo: str, headers: dict) -> str | None:
+    """
+    Retourne le tag de la dernière release officielle.
+    Si aucune release n'existe, retourne le dernier tag.
+    Si rien n'existe, retourne None.
+    """
+    # 1. Release officielle
+    r = requests.get(
+        f"{GITHUB_API}/repos/{owner}/{repo}/releases/latest",
+        headers=headers,
+        timeout=10,
+    )
+    if r.status_code == 200:
+        return r.json().get("tag_name")
+
+    # 2. Fallback : tags
+    if r.status_code == 404:
+        r2 = requests.get(
+            f"{GITHUB_API}/repos/{owner}/{repo}/tags?per_page=1",
+            headers=headers,
+            timeout=10,
+        )
+        if r2.status_code == 200 and r2.json():
+            return r2.json()[0]["name"]
+        return None
+
+    r.raise_for_status()
+
+
+def normalize_version(v) -> str:
+    """Normalise pour comparaison : retire préfixe 'v', strip."""
+    if not v:
+        return ""
+    return str(v).strip().lstrip("v")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FONCTION 1 — Sync latest_release depuis GitHub
 # ─────────────────────────────────────────────────────────────────────────────
 
 
 def sync_latest_releases(tools_dir: Path, token: str | None) -> list[dict]:
     """
-    Pour chaque JSON de tools_dir :
-    - récupère la latest release sur GitHub
-    - met à jour le champ latest_release si différente
-    - ajoute github_last_fetched
+    Pour chaque JSON dans tools_dir :
+      - lit le champ 'repo'
+      - interroge l'API GitHub
+      - met à jour 'latest_release' et 'github_last_fetched' si nécessaire
 
-    Retourne la liste des résultats (dict) pour chaque outil.
+    Retourne la liste des résultats par outil.
     """
     headers = get_headers(token)
     results = []
 
-    tool_files = sorted(tools_dir.glob("*.json"))
-    if not tool_files:
-        print(f"[WARN] Aucun fichier JSON trouvé dans {tools_dir}")
-        return results
+    print(f"\n{'─'*62}")
+    print("  SYNC GITHUB — latest_release")
+    print(f"{'─'*62}")
 
-    print(f"\n{'─'*60}")
-    print(f"  SYNCHRONISATION GITHUB — {len(tool_files)} fichier(s)")
-    print(f"{'─'*60}")
-
-    for path in tool_files:
-        data = load_json(path)
-        if data is None or not is_tool_json(data):
-            continue
-        name = data.get("name", path.stem)
+    for path, data in iter_tools(tools_dir):
+        name = data.get("name") or path.stem
         repo_url = data.get("repo")
 
         result = {
@@ -157,12 +178,20 @@ def sync_latest_releases(tools_dir: Path, token: str | None) -> list[dict]:
             "message": "",
         }
 
-        # Ignorer les outils sans repo GitHub
-        if not repo_url or "github.com" not in repo_url:
+        # Pas de repo renseigné
+        if not repo_url:
             result["status"] = "SKIP"
-            result["message"] = "Pas de repo GitHub renseigné."
+            result["message"] = "Champ 'repo' absent ou vide."
             results.append(result)
-            print(f"  [{result['status']:7}] {name:20} — {result['message']}")
+            _print_result(result)
+            continue
+
+        # Repo non-GitHub
+        if "github.com" not in repo_url:
+            result["status"] = "SKIP"
+            result["message"] = f"Repo non-GitHub : {repo_url}"
+            results.append(result)
+            _print_result(result)
             continue
 
         owner_repo = extract_owner_repo(repo_url)
@@ -170,51 +199,50 @@ def sync_latest_releases(tools_dir: Path, token: str | None) -> list[dict]:
             result["status"] = "ERROR"
             result["message"] = f"URL GitHub non parsable : {repo_url}"
             results.append(result)
-            print(f"  [{result['status']:7}] {name:20} — {result['message']}")
+            _print_result(result)
             continue
 
         owner, repo = owner_repo
 
         try:
-            github_release = fetch_latest_release(owner, repo, headers)
+            github_tag = fetch_github_latest(owner, repo, headers)
         except requests.HTTPError as e:
             result["status"] = "ERROR"
             result["message"] = f"API GitHub : {e}"
             results.append(result)
-            print(f"  [{result['status']:7}] {name:20} — {result['message']}")
+            _print_result(result)
             continue
         except requests.RequestException as e:
             result["status"] = "ERROR"
             result["message"] = f"Réseau : {e}"
             results.append(result)
-            print(f"  [{result['status']:7}] {name:20} — {result['message']}")
+            _print_result(result)
             continue
 
-        if github_release is None:
+        if github_tag is None:
             result["status"] = "SKIP"
             result["message"] = "Aucune release ni tag trouvé sur GitHub."
             results.append(result)
-            print(f"  [{result['status']:7}] {name:20} — {result['message']}")
+            _print_result(result)
             continue
 
-        result["new"] = github_release
-        current = data.get("latest_release", "")
+        result["new"] = github_tag
+        current = data.get("latest_release")
 
-        if normalize_version(current) == normalize_version(github_release):
+        if normalize_version(current) == normalize_version(github_tag):
             result["status"] = "OK"
-            result["message"] = f"À jour ({github_release})"
+            result["message"] = f"À jour ({github_tag})"
         else:
-            # Mise à jour
-            data["latest_release"] = github_release
+            data["latest_release"] = github_tag
             data["github_last_fetched"] = datetime.now(timezone.utc).strftime(
                 "%Y-%m-%dT%H:%M:%SZ"
             )
             save_json(path, data)
             result["status"] = "UPDATED"
-            result["message"] = f"{current or '?'}  →  {github_release}"
+            result["message"] = f"{current or '?'}  →  {github_tag}"
 
         results.append(result)
-        print(f"  [{result['status']:7}] {name:20} — {result['message']}")
+        _print_result(result)
 
     updated = sum(1 for r in results if r["status"] == "UPDATED")
     errors = sum(1 for r in results if r["status"] == "ERROR")
@@ -222,46 +250,47 @@ def sync_latest_releases(tools_dir: Path, token: str | None) -> list[dict]:
     return results
 
 
+def _print_result(r: dict) -> None:
+    print(f"  [{r['status']:7}] {r['name'][:22]:22} {r['message']}")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FONCTION 2 — Rapport de curation manuelle
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-def curation_report(tools_dir: Path, output_path: Path | None = None) -> list[dict]:
+def curation_report(
+    tools_dir: Path,
+    output_path: Path | None = None,
+) -> list[dict]:
     """
-    Compare latest_release et curated_release pour chaque outil.
-    Si elles diffèrent (ou si curated_release est vide), l'outil est à recurer.
+    Compare 'latest_release' et 'curated_release' pour chaque outil.
+    Génère un rapport des outils dont la curation est en retard.
 
-    Affiche le rapport en console et l'écrit dans output_path si fourni.
+    Un outil est à recurer si :
+      - curated_release est absent, vide, ou différent de latest_release.
+
+    Un outil est ignoré si :
+      - latest_release est absent ou 'unknown' (impossible de comparer).
+
     Retourne la liste des outils à recurer.
     """
-    tool_files = sorted(tools_dir.glob("*.json"))
     to_curate = []
     up_to_date = []
     skipped = []
 
-    for path in tool_files:
-        data = load_json(path)
-        if data is None or not is_tool_json(data):
-            continue
-        name = data.get("name", path.stem)
-        latest = data.get("latest_release", "")
-        curated = data.get("curated_release", "")
+    for path, data in iter_tools(tools_dir):
+        name = data.get("name") or path.stem
+        latest = data.get("latest_release")
+        curated = data.get("curated_release")
 
-        # Ignorer les sous-outils (pas de curation autonome)
-        if data.get("type", "").lower() in ("sub-tool", "sub_tool"):
-            skipped.append(
-                {"name": name, "reason": "Sub-tool (curation via outil parent)"}
-            )
-            continue
-
-        # Champs manquants
-        if not latest or latest.lower() in ("unknown", "null"):
+        # Impossible de comparer sans latest_release valide
+        if not latest or str(latest).strip().lower() in ("", "unknown", "null", "none"):
             skipped.append(
                 {
                     "name": name,
-                    "reason": "latest_release non renseignée — vérifiez GitHub manuellement.",
                     "file": path.name,
+                    "reason": f"'latest_release' = {repr(latest)} — vérification GitHub manuelle requise.",
                 }
             )
             continue
@@ -273,30 +302,30 @@ def curation_report(tools_dir: Path, output_path: Path | None = None) -> list[di
                 {
                     "name": name,
                     "file": path.name,
-                    "latest_release": latest,
-                    "curated_release": curated or "(vide)",
-                    "repo": data.get("repo", "—"),
-                    "doi": data.get("doi", "—"),
+                    "latest_release": str(latest),
+                    "curated_release": str(curated) if curated else "(vide)",
+                    "repo": data.get("repo") or "—",
+                    "doi": data.get("doi") or "—",
                 }
             )
 
-    # ── Formatage du rapport ──────────────────────────────────────────────────
-    lines = []
+    # ── Formatage ────────────────────────────────────────────────────────────
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    lines = []
 
-    lines.append("═" * 60)
+    lines.append("═" * 62)
     lines.append(f"  RAPPORT DE CURATION — {now}")
-    lines.append("═" * 60)
+    lines.append("═" * 62)
     lines.append(
-        f"\n  {len(to_curate)} outil(s) à recurer"
-        f"  |  {len(up_to_date)} à jour"
-        f"  |  {len(skipped)} ignoré(s)\n"
+        f"\n  {len(to_curate)} à recurer  "
+        f"|  {len(up_to_date)} à jour  "
+        f"|  {len(skipped)} ignoré(s)\n"
     )
 
     if to_curate:
-        lines.append("─" * 60)
+        lines.append("─" * 62)
         lines.append("  ⚠️  OUTILS À RECURER MANUELLEMENT")
-        lines.append("─" * 60)
+        lines.append("─" * 62)
         for t in to_curate:
             lines.append(f"\n  🔧 {t['name']}  ({t['file']})")
             lines.append(f"     latest_release  : {t['latest_release']}")
@@ -306,40 +335,34 @@ def curation_report(tools_dir: Path, output_path: Path | None = None) -> list[di
             if t["doi"] != "—":
                 lines.append(f"     publication     : {t['doi']}")
             lines.append(
-                f"     → Mettez curated_release = \"{t['latest_release']}\" "
-                "après avoir vérifié et mis à jour les champs du JSON."
+                f"     → Après curation, mettez "
+                f"curated_release = \"{t['latest_release']}\"."
             )
     else:
-        lines.append("\n  ✅ Tous les outils sont à jour (curated = latest).")
+        lines.append("\n  ✅ Tous les outils sont à jour.")
 
     if up_to_date:
-        lines.append(f"\n{'─'*60}")
-        lines.append("  ✅ OUTILS À JOUR")
-        lines.append("─" * 60)
+        lines.append(f"\n{'─'*62}")
+        lines.append("  ✅ À JOUR")
+        lines.append("─" * 62)
         for t in up_to_date:
-            lines.append(f"  {t['name']:25} {t['version']}")
+            lines.append(f"  {t['name'][:30]:30} {t['version']}")
 
     if skipped:
-        lines.append(f"\n{'─'*60}")
-        lines.append("  ℹ️  IGNORÉS")
-        lines.append("─" * 60)
+        lines.append(f"\n{'─'*62}")
+        lines.append("  ℹ️  IGNORÉS (latest_release manquante ou inconnue)")
+        lines.append("─" * 62)
         for t in skipped:
-            reason = t.get("reason", "")
-            fname = t.get("file", "")
-            line = f"  {t['name']:25} {reason}"
-            if fname:
-                line += f"  ({fname})"
-            lines.append(line)
+            lines.append(f"  {t['name'][:30]:30} ({t['file']})")
+            lines.append(f"    → {t['reason']}")
 
-    lines.append("\n" + "═" * 60)
+    lines.append("\n" + "═" * 62)
     report_text = "\n".join(lines)
 
-    # ── Affichage console ─────────────────────────────────────────────────────
     print(report_text)
 
-    # ── Écriture fichier ──────────────────────────────────────────────────────
     if output_path:
-        output_path.write_text(report_text, encoding="utf-8")
+        output_path.write_text(report_text + "\n", encoding="utf-8")
         print(f"\n  📄 Rapport sauvegardé : {output_path}\n")
 
     return to_curate
@@ -357,18 +380,17 @@ def main():
             "un rapport de curation pour les outils du catalogue."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__,
     )
     parser.add_argument(
         "--tools",
         type=Path,
         default=Path("data/tools"),
-        help="Dossier contenant les JSON d'outils (défaut : data/tools/)",
+        help="Dossier contenant les JSON d'outils (défaut : data/tools/).",
     )
     parser.add_argument(
         "--token",
         default=os.environ.get("GITHUB_TOKEN"),
-        help="Token GitHub (ou variable d'environnement GITHUB_TOKEN).",
+        help="Token GitHub personnel (ou variable GITHUB_TOKEN).",
     )
     parser.add_argument(
         "--only-sync",
@@ -396,10 +418,11 @@ def main():
     do_sync = not args.only_report
     do_report = not args.only_sync
 
-    if not args.token and do_sync:
+    if do_sync and not args.token:
         print(
-            "[WARN] Pas de token GitHub — limite : 60 requêtes/heure.\n"
-            "[WARN] Utilisez --token ou exportez GITHUB_TOKEN pour 5000 req/h.\n"
+            "[WARN] Pas de token GitHub fourni.\n"
+            "[WARN] Limite anonyme : 60 requêtes/heure.\n"
+            "[WARN] Utilisez --token ou exportez GITHUB_TOKEN.\n"
         )
 
     if do_sync:

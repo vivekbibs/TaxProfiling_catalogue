@@ -1,0 +1,5 @@
+--tools          chemin vers data/tools/     (défaut : data/tools/)
+--token          token GitHub                (ou variable GITHUB_TOKEN)
+--only-sync      ne fait que la fonction 1
+--only-report    ne fait que la fonction 2
+--report-output  chemin du fichier rapport   (défaut : curation_report.txt)
