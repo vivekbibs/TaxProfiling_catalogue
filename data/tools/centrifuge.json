@@ -5,7 +5,7 @@
   "type": "Taxonomic Profiler",
   "description": "Lightweight FM-index based classifier (mourisl Centrifuger entry)",
   "latest_release": "v1.1.0",
-  "curated_release": "",
+  "curated_release": "v1.1.0",
   "citations_count": 1300,
   "issues_count": null,
   "host_reads_removal": null,

@@ -10,7 +10,10 @@
   "doi": null,
   "homepage": null,
   "license": null,
-  "taxonomic_scope": null,
+  "taxonomic_scope": {
+    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_4751",
+    "label": "Fungi"
+  },
   "sample": null,
   "origin": null,
   "is_about": null,
