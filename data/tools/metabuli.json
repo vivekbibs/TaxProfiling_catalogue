@@ -22,6 +22,6 @@
   "doi": "https://doi.org/10.1038/s41592-024-02273-y",
   "additional_functionality": "novel k-mer structure (metamer) allowing combined DNA+AA analysis for sensitive detection and strain discrimination",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "220", "taxonomy_system": "gtdb" }
+    { "name": "GTDB", "@id": "gtdb", "release": "226", "taxonomy_system": "gtdb" }
   ]
 }

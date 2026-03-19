@@ -1,7 +1,7 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/tool_schema.json",
   "name": "Kraken",
-  "@id": "kraken",
+  "@id": "kraken2",
   "type": "Taxonomic profiler",
   "description": "k-mer based exact alignment classifier; very fast classification",
   "latest_release": "v2.1.6",
