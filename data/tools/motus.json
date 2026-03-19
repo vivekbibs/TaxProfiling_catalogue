@@ -3,7 +3,7 @@
   "name": "mOTUs",
   "@id": "motus",
   "type": "Taxonomic Profiler",
-  "latest_release": "unknown",
+  "latest_release": "4.0.4",
   "curated_release": "",
   "citations_count": 31,
   "issues_count": null,
@@ -19,6 +19,11 @@
   "supports_shortreads": true,
   "additional_functionality": "marker-gene-based profiling tailored for mOTUs reference sets",
   "uses_databases": [
-    { "name": "mOTUs-db", "@id": "motus-db", "taxonomy_system": "gtdb" }
-  ]
+    {
+      "name": "mOTUs-db",
+      "@id": "motus-db",
+      "taxonomy_system": "gtdb"
+    }
+  ],
+  "github_last_fetched": "2026-03-19T13:48:56Z"
 }

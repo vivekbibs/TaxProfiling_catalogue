@@ -4,7 +4,7 @@
   "@id": "sylph",
   "type": "Taxonomic Profiler",
   "description": "",
-  "latest_release": "v0.8.1",
+  "latest_release": "latest",
   "curated_release": "",
   "citations_count": 82,
   "issues_count": null,
@@ -24,9 +24,12 @@
     {
       "name": "GTDB",
       "@id": "gtdb",
-      "release": [ "226", "220", "214" ],
+      "release": [
+        "226",
+        "220",
+        "214"
+      ],
       "taxonomy_system": "gtdb"
-
     },
     {
       "name": "GlobDB",
@@ -50,7 +53,6 @@
       "@id": "uhgg",
       "release": "2.0.1",
       "taxonomy_system": "gtdb"
-
     },
     {
       "name": "RefSeq Fungi",
@@ -63,6 +65,6 @@
       "@id": "tara_oceans",
       "taxonomy_system": "ncbi"
     }
-
-  ]
+  ],
+  "github_last_fetched": "2026-03-19T13:48:56Z"
 }

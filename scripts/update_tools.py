@@ -254,6 +254,42 @@ def _print_result(r: dict) -> None:
     print(f"  [{r['status']:7}] {r['name'][:22]:22} {r['message']}")
 
 
+def sync_github_report(results: list[dict], output_path: Path) -> None:
+    """
+    Écrit dans output_path le rapport de synchronisation GitHub,
+    identique à ce qui a été affiché dans le terminal.
+    """
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    updated = sum(1 for r in results if r["status"] == "UPDATED")
+    errors = sum(1 for r in results if r["status"] == "ERROR")
+    ok = sum(1 for r in results if r["status"] == "OK")
+    skipped = sum(1 for r in results if r["status"] == "SKIP")
+
+    sep = "─" * 62
+    sep2 = "═" * 62
+
+    report_lines = [
+        sep2,
+        f"  RAPPORT SYNC GITHUB — {now}",
+        sep2,
+        "",
+        f"  {updated} mis à jour  |  {ok} à jour  |  {skipped} ignoré(s)  |  {errors} erreur(s)",
+        "",
+        sep,
+    ]
+    for r in results:
+        report_lines.append(f"  [{r['status']:7}] {r['name'][:22]:22} {r['message']}")
+    report_lines += [
+        "",
+        f"  ✅ {updated} mis à jour   ❌ {errors} erreur(s)",
+        sep2,
+    ]
+
+    output_path.write_text("\n".join(report_lines) + "\n", encoding="utf-8")
+    print(f"  📄 Rapport sync sauvegardé : {output_path}\n")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FONCTION 2 — Rapport de curation manuelle
 # ─────────────────────────────────────────────────────────────────────────────
@@ -406,7 +442,13 @@ def main():
         "--report-output",
         type=Path,
         default=Path("curation_report.txt"),
-        help="Fichier de sortie du rapport (défaut : curation_report.txt).",
+        help="Fichier de sortie du rapport de curation (défaut : curation_report.txt).",
+    )
+    parser.add_argument(
+        "--sync-report-output",
+        type=Path,
+        default=Path("sync_github_report.txt"),
+        help="Fichier de sortie du rapport de sync GitHub (défaut : sync_github_report.txt).",
     )
 
     args = parser.parse_args()
@@ -426,7 +468,8 @@ def main():
         )
 
     if do_sync:
-        sync_latest_releases(args.tools, args.token)
+        sync_results = sync_latest_releases(args.tools, args.token)
+        sync_github_report(sync_results, args.sync_report_output)
 
     if do_report:
         curation_report(args.tools, args.report_output)

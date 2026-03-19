@@ -4,7 +4,7 @@
   "@id": "ganon",
   "type": "Taxonomic Profiler",
   "description": "compact k-mer indices with incremental updates; fast database building and classification (HIBF index)",
-  "latest_release": "v2.1.1",
+  "latest_release": "v2.3.0",
   "curated_release": "",
   "citations_count": 8,
   "issues_count": null,
@@ -21,6 +21,12 @@
   "doi": "https://doi.org/10.1093/nargab/lqaf094",
   "additional_functionality": "compact k-mer indices with incremental updates; fast database building and classification (HIBF index)",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "226", "taxonomy_system": "gtdb" }
-  ]
+    {
+      "name": "GTDB",
+      "@id": "gtdb",
+      "release": "226",
+      "taxonomy_system": "gtdb"
+    }
+  ],
+  "github_last_fetched": "2026-03-19T13:48:54Z"
 }

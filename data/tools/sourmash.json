@@ -4,7 +4,7 @@
   "@id": "sourmash",
   "type": "Taxonomic Profiler",
   "description": "MinHash sketching for fast similarity searches and containment estimation",
-  "latest_release": "unknown",
+  "latest_release": "v4.9.4",
   "curated_release": "",
   "citations_count": 52,
   "issues_count": null,
@@ -20,8 +20,24 @@
   "supports_shortreads": true,
   "additional_functionality": "MinHash sketching for fast similarity searches and containment estimation",
   "uses_databases": [
-    { "name": "GTDB", "@id": "gtdb", "release": "226", "taxonomy_system": "gtdb" },
-    { "name": "GenBank Viruses", "@id": "genbank_viruses", "release": "Jan 2025", "taxonomy_system": "ncbi" },
-    { "name": "RefSeq Eukaryotes", "@id": "refseq_eukaryotes", "release": "Jan 2025", "taxonomy_system": "ncbi" }
-  ]
+    {
+      "name": "GTDB",
+      "@id": "gtdb",
+      "release": "226",
+      "taxonomy_system": "gtdb"
+    },
+    {
+      "name": "GenBank Viruses",
+      "@id": "genbank_viruses",
+      "release": "Jan 2025",
+      "taxonomy_system": "ncbi"
+    },
+    {
+      "name": "RefSeq Eukaryotes",
+      "@id": "refseq_eukaryotes",
+      "release": "Jan 2025",
+      "taxonomy_system": "ncbi"
+    }
+  ],
+  "github_last_fetched": "2026-03-19T13:48:56Z"
 }

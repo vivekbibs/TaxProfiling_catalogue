@@ -4,7 +4,7 @@
   "@id": "tipp3",
   "type": "Taxonomic Profiler",
   "description": "Phylogenetic placement-based taxonomic profiling; marker-gene driven",
-  "latest_release": "unknown",
+  "latest_release": "v0.3",
   "curated_release": "",
   "citations_count": 4,
   "issues_count": null,
@@ -20,6 +20,11 @@
   "supports_shortreads": true,
   "additional_functionality": "Phylogenetic placement-based taxonomic profiling; marker-gene driven",
   "uses_databases": [
-    { "name": "TIPP3 reference package", "@id": "tipp3_refpkg", "taxonomy_system": "ncbi" }
-  ]
+    {
+      "name": "TIPP3 reference package",
+      "@id": "tipp3_refpkg",
+      "taxonomy_system": "ncbi"
+    }
+  ],
+  "github_last_fetched": "2026-03-19T13:48:57Z"
 }

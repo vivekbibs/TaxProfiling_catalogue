@@ -1,0 +1,117 @@
+══════════════════════════════════════════════════════════════
+  RAPPORT DE CURATION — 2026-03-19 14:48
+══════════════════════════════════════════════════════════════
+
+  15 à recurer  |  0 à jour  |  1 ignoré(s)
+
+──────────────────────────────────────────────────────────────
+  ⚠️  OUTILS À RECURER MANUELLEMENT
+──────────────────────────────────────────────────────────────
+
+  🔧 Bracken  (bracken.json)
+     latest_release  : v3.1
+     curated_release : (vide)
+     repo            : https://github.com/jenniferlu717/Bracken
+     → Après curation, mettez curated_release = "v3.1".
+
+  🔧 Centrifuge  (centrifuge.json)
+     latest_release  : v1.1.0
+     curated_release : (vide)
+     repo            : https://github.com/mourisl/centrifuger
+     publication     : https://doi.org/10.1186/s13059-024-03244-4
+     → Après curation, mettez curated_release = "v1.1.0".
+
+  🔧 Centrifuger  (centrifuger.json)
+     latest_release  : v1.1.0
+     curated_release : (vide)
+     repo            : https://github.com/mourisl/centrifuger
+     publication     : https://doi.org/10.1186/s13059-024-03244-4
+     → Après curation, mettez curated_release = "v1.1.0".
+
+  🔧 Ganon  (ganon.json)
+     latest_release  : v2.3.0
+     curated_release : (vide)
+     repo            : https://github.com/pirovc/ganon
+     publication     : https://doi.org/10.1093/nargab/lqaf094
+     → Après curation, mettez curated_release = "v2.3.0".
+
+  🔧 Kaiju  (kaiju.json)
+     latest_release  : v1.10.1
+     curated_release : (vide)
+     repo            : https://github.com/bioinformatics-centre/kaiju
+     → Après curation, mettez curated_release = "v1.10.1".
+
+  🔧 KMCP  (kmcp.json)
+     latest_release  : v0.9.4
+     curated_release : (vide)
+     repo            : https://github.com/shenwei356/kmcp
+     publication     : https://doi.org/10.1093/bioinformatics/btac845
+     → Après curation, mettez curated_release = "v0.9.4".
+
+  🔧 Kraken  (kraken.json)
+     latest_release  : v2.17.1
+     curated_release : (vide)
+     repo            : https://github.com/DerrickWood/kraken2
+     publication     : https://doi.org/10.1186/s13059-019-1891-0
+     → Après curation, mettez curated_release = "v2.17.1".
+
+  🔧 Metabuli  (metabuli.json)
+     latest_release  : v1.1.1
+     curated_release : (vide)
+     repo            : https://github.com/steineggerlab/Metabuli
+     publication     : https://doi.org/10.1038/s41592-024-02273-y
+     → Après curation, mettez curated_release = "v1.1.1".
+
+  🔧 MetaPhlAn  (metaphlan.json)
+     latest_release  : v4.2.4
+     curated_release : (vide)
+     repo            : https://github.com/biobakery/MetaPhlAn
+     publication     : https://doi.org/10.1038/s41587-023-01688-w
+     → Après curation, mettez curated_release = "v4.2.4".
+
+  🔧 meteor  (meteor.json)
+     latest_release  : 2.0.22
+     curated_release : (vide)
+     repo            : https://github.com/metagenopolis/meteor
+     publication     : https://doi.org/10.21203/rs.3.rs-6122276/v1
+     → Après curation, mettez curated_release = "2.0.22".
+
+  🔧 mOTUs  (motus.json)
+     latest_release  : 4.0.4
+     curated_release : (vide)
+     repo            : https://github.com/motu-tool/mOTUs
+     → Après curation, mettez curated_release = "4.0.4".
+
+  🔧 singleM  (singlem.json)
+     latest_release  : 0.20.3
+     curated_release : (vide)
+     repo            : https://github.com/wwood/singlem
+     publication     : https://zenodo.org/records/15232972
+     → Après curation, mettez curated_release = "0.20.3".
+
+  🔧 sourmash  (sourmash.json)
+     latest_release  : v4.9.4
+     curated_release : (vide)
+     repo            : https://github.com/sourmash-bio/sourmash
+     → Après curation, mettez curated_release = "v4.9.4".
+
+  🔧 sylph  (sylph.json)
+     latest_release  : latest
+     curated_release : (vide)
+     repo            : https://github.com/bluenote-1577/sylph
+     publication     : https://doi.org/10.1038/s41587-024-02412-y
+     → Après curation, mettez curated_release = "latest".
+
+  🔧 TIPP3  (tipp3.json)
+     latest_release  : v0.3
+     curated_release : (vide)
+     repo            : https://github.com/c5shen/TIPP3
+     → Après curation, mettez curated_release = "v0.3".
+
+──────────────────────────────────────────────────────────────
+  ℹ️  IGNORÉS (latest_release manquante ou inconnue)
+──────────────────────────────────────────────────────────────
+  Lyrebird                       (lyrebird.json)
+    → 'latest_release' = 'unknown' — vérification GitHub manuelle requise.
+
+══════════════════════════════════════════════════════════════
