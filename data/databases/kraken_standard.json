@@ -8,6 +8,7 @@
   "to_update": false,
   "description": "Standard Kraken database (NCBI RefSeq-based).Refseq archaea, bacteria, viral, plasmid, human, UniVec_Core",
   "doi": null,
+  "homepage": null,
   "license": null,
   "taxonomic_scope": [
     {

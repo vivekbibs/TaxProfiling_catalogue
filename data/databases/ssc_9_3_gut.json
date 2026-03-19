@@ -26,6 +26,7 @@
     "label": "Sus scrofa domesticus"
   },
   "doi": "https://doi.org/10.5281/zenodo.10674273",
+  "homepage": "https://doi.org/10.5281/zenodo.10674273",
   "compatible_tools": [
     {
       "@id": "meteor",

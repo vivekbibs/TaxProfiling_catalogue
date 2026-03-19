@@ -5,6 +5,7 @@
   "description": "Catalogue of genomes and MAGs associated with anaerobic ammonium oxidation (anammox) metabolism.",
   "release": null,
   "doi": "https://doi.org/10.1016/j.watres.2024.122356",
+  "homepage": "https://doi.org/10.1016/j.watres.2024.122356",
   "taxonomic_scope": [
     {
       "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",

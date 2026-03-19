@@ -27,5 +27,6 @@
     { "@id": "globdb" },
     { "@id": "chocophlan" }
   ],
-  "doi": "https://doi.org/10.1016/j.cell.2024.07.039"
+  "doi": "https://doi.org/10.1016/j.cell.2024.07.039",
+  "homepage": "https://doi.org/10.1016/j.cell.2024.07.039"
 }

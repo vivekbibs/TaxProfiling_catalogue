@@ -19,5 +19,6 @@
   "sample": null,
   "origin": null,
   "doi": "https://doi.org/10.1093/nar/gkae1004",
+  "homepage": "https://doi.org/10.1093/nar/gkae1004",
   "compatible_tools": [ "motus" ]
 }

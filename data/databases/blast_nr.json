@@ -5,6 +5,7 @@
   "type": "Database",
   "latest_release": null,
   "to_update": false,
+  "homepage": null,
   "description": "Non-redundant protein database used for BLAST searches.",
   "isPartOf": null
 }

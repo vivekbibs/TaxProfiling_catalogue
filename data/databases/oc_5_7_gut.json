@@ -26,6 +26,7 @@
     "label": "Oryctolagus cuniculus"
   },
   "doi": "https://doi.org/10.5281/zenodo.10659710",
+    "homepage": "https://doi.org/10.5281/zenodo.10659710",
   "compatible_tools": [
     {
       "@id": "meteor",

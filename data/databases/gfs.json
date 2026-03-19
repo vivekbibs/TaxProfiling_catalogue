@@ -34,5 +34,6 @@
     "@id": "http://purl.obolibrary.org/obo/ENVO_01001529",
     "label": "glacier snout"
   },
-  "doi": "https://doi.org/10.1038/s41564-024-01874-9"
+  "doi": "https://doi.org/10.1038/s41564-024-01874-9",
+  "homepage": "https://doi.org/10.1038/s41564-024-01874-9"
 }

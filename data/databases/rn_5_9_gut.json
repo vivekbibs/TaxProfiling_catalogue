@@ -26,6 +26,7 @@
     "label": "Rattus norvegicus"
   },
   "doi": "https://doi.org/10.5281/zenodo.10672634",
+  "homepage": "https://doi.org/10.5281/zenodo.10672634",
   "compatible_tools": [
     {
       "@id": "meteor",

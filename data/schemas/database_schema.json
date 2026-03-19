@@ -20,6 +20,10 @@
       "@id": "schema:identifier",
       "comment": "DOI or persistent URL of the associated publication or dataset, e.g. https://doi.org/10.1038/s41467-024-45895-8. Omit if unknown."
     },
+    "homepage": {
+      "@id": "schema:url",
+      "comment": "Homepage or landing page URL for the database (prefer persistent landing pages). Omit if unknown."
+    },
     "license": {
       "@id": "schema:license",
       "comment": "License URL (e.g. https://creativecommons.org/licenses/by/4.0/)."
