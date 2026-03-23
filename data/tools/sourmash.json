@@ -34,7 +34,7 @@
     },
     {
       "name": "RefSeq Eukaryotes",
-      "@id": "refseq_eukaryotes",
+      "@id": "refseq_euk",
       "release": "Jan 2025",
       "taxonomy_system": "ncbi"
     }

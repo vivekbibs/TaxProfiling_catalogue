@@ -56,7 +56,7 @@
     },
     {
       "name": "RefSeq Fungi",
-      "@id": "refseqfungi",
+      "@id": "refseq_fungi",
       "release": "2025-10-11",
       "taxonomy_system": "ncbi"
     },
