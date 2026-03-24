@@ -49,12 +49,6 @@
       "taxonomy_system": "ncbi"
     },
     {
-      "name": "UHGG",
-      "@id": "uhgg",
-      "release": "2.0.1",
-      "taxonomy_system": "gtdb"
-    },
-    {
       "name": "RefSeq Fungi",
       "@id": "refseq_fungi",
       "release": "2025-10-11",
