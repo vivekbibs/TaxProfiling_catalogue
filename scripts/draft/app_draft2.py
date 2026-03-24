@@ -623,14 +623,17 @@ def _tab_graph():
                     f"Releases : {rels or '—'}"
                 )
 
+                # On définit des paliers qui entourent parfaitement 0, 1, 2 et 3
+        # Frontières : 0.5/3 ≈ 0.16, 1.5/3 = 0.5, 2.5/3 ≈ 0.83
         colorscale = [
-            [0.0, "#1A1F2E"],  # 0 = vide
-            [0.33, "#1A1F2E"],
-            [0.34, "#17C3B2"],  # 1 = GTDB
-            [0.66, "#17C3B2"],
-            [0.67, "#AFA9EC"],  # 2 = NCBI
-            [0.99, "#AFA9EC"],
-            [1.0, "#F5A623"],  # 3 = les deux
+            [0, "#1A1F2E"],  # Début palier 0
+            [0.16, "#1A1F2E"],  # Fin palier 0
+            [0.16, "#17C3B2"],  # Début palier 1 (GTDB)
+            [0.5, "#17C3B2"],  # Fin palier 1
+            [0.5, "#AFA9EC"],  # Début palier 2 (NCBI)
+            [0.83, "#AFA9EC"],  # Fin palier 2
+            [0.83, "#F5A623"],  # Début palier 3 (Les deux)
+            [1.0, "#F5A623"],  # Fin palier 3
         ]
 
         fig = go.Figure(
@@ -641,6 +644,8 @@ def _tab_graph():
                 customdata=hover,
                 hovertemplate="%{customdata}<extra></extra>",
                 colorscale=colorscale,
+                zmin=0,  # Force l'échelle de 0
+                zmax=3,  # à 3 pour que le calcul des paliers soit fixe
                 showscale=False,
                 xgap=2,
                 ygap=2,
