@@ -1,34 +1,29 @@
 """
-app.py  —  Application principale : Profiling Taxonomique Catalogue
-────────────────────────────────────────────────────────────────────
-Navigation multi-pages (sidebar) :
-  🔍 Questionnaire  — aide au choix outil + BD (contenu de app_questionnaire.py)
-  📊 Catalogue      — graphe interactif pyvis + tableaux filtrables + fiches
+app.py  —  Profiling Taxonomique — Catalogue & Aide au choix
+─────────────────────────────────────────────────────────────
+Point d'entrée unique de l'application Streamlit.
 
-Structure :
-    app.py
-    app_questionnaire.py    ← ton fichier existant, importé comme module
+Structure du projet :
+    scripts/streamlit/
+    ├── app.py               ← ce fichier (streamlit run app.py)
+    └── catalogue_utils.py   ← logique métier pure (pas de Streamlit)
     data/
-        databases/
-        tools/
+    ├── databases/           ← fichiers JSON-LD des bases de données
+    └── tools/               ← fichiers JSON-LD des outils
 
 Lancement :
     streamlit run app.py
 
-Dépendances supplémentaires :
-    pip install pyvis pandas
+Dépendances :
+    pip install streamlit pandas plotly networkx
 """
 
-import json
-import os
-import sys
-import tempfile
 from pathlib import Path
 
 import streamlit as st
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CONFIG — premier appel Streamlit obligatoire
+# CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Profiling Taxonomique — Catalogue",
@@ -37,20 +32,18 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ─────────────────────────────────────────────────────────────────────────────
+# CHEMINS
+# ─────────────────────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
-
-# On s'assure que le dossier des scripts est dans le path pour les imports
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-# On définit les chemins des données de manière absolue par rapport à la racine
-TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 DB_DIR = PROJECT_ROOT / "data" / "databases"
+TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 
-# Importer les fonctions partagées depuis app_questionnaire
-# (load_catalogue, helpers d'affichage, moteur de recommandation)
-from app_questionnaire import (  # noqa: E402
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPORTS LOGIQUE MÉTIER
+# ─────────────────────────────────────────────────────────────────────────────
+from catalogue_utils import (  # noqa: E402
     _to_list,
     load_catalogue,
     taxon_labels,
@@ -70,7 +63,6 @@ from app_questionnaire import (  # noqa: E402
     compatible_tool_ids,
     download_variants,
 )
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DONNÉES
@@ -94,13 +86,8 @@ with st.sidebar:
 
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — QUESTIONNAIRE
-# On réutilise exactement le contenu de app_questionnaire.py
-# en important ses constantes et fonctions puis en réexécutant son UI
 # ═════════════════════════════════════════════════════════════════════════════
 def render_questionnaire():
-    """Restitue la page questionnaire en appelant directement le code UI."""
-
-    # ── En-tête ───────────────────────────────────────────────────────────────
     st.markdown("# 🧬 Aide au choix — Profiling Taxonomique")
     st.markdown(
         "Répondez aux questions ci-dessous pour obtenir les outils et bases de données "
@@ -335,7 +322,6 @@ def render_questionnaire():
 # PAGE 2 — CATALOGUE
 # ═════════════════════════════════════════════════════════════════════════════
 
-# Couleurs graphe
 _C = {
     "tool": "#534AB7",
     "db": "#1D9E75",
@@ -373,11 +359,13 @@ def render_catalogue():
 # TAB GRAPHE
 # ─────────────────────────────────────────────────────────────────────────────
 def _tab_graph():
-    """4 vues de visualisation du catalogue."""
-    import plotly.graph_objects as go
-    import plotly.express as px
-    import pandas as pd
+    import math
+
     import networkx as nx
+    import plotly.express as px
+    import plotly.graph_objects as go
+    import pandas as pd
+    import numpy as np
 
     v_ego, v_matrix, v_sunburst, v_cards = st.tabs(
         [
@@ -404,7 +392,6 @@ def _tab_graph():
         else:
             kind, node_id = all_names[chosen]
 
-            # Construire l'ego-graph : nœud central + voisins directs
             nodes: dict[str, dict] = {}
             edges: list[tuple] = []
 
@@ -439,24 +426,18 @@ def _tab_graph():
                         edges.append((node_id, did, ts))
             else:
                 add_db_node(node_id)
-                # Outils qui utilisent cette BD
                 for tid, tool in tools.items():
                     for u in _to_list(tool.get("uses_databases")):
                         if isinstance(u, dict) and u.get("@id") == node_id:
                             add_tool_node(tid)
                             ts = taxonomy_badge(u.get("taxonomy_system"))
                             edges.append((tid, node_id, ts))
-                # hasPart
                 db = databases.get(node_id, {})
                 for part in _to_list(db.get("hasPart")):
                     if isinstance(part, dict) and part.get("@id"):
                         add_db_node(part["@id"])
                         edges.append((node_id, part["@id"], "hasPart"))
 
-            # Layout circulaire autour du nœud central
-            import math
-
-            n = len(nodes)
             pos = {}
             others = [nid for nid in nodes if nid != node_id]
             pos[node_id] = (0.0, 0.0)
@@ -465,8 +446,6 @@ def _tab_graph():
                 pos[nid] = (math.cos(angle) * 2.2, math.sin(angle) * 2.2)
 
             traces = []
-
-            # Arêtes
             ECOL = {"GTDB": "#17C3B2", "NCBI": "#AFA9EC", "hasPart": "#888780"}
             for u, v, ts in edges:
                 x0, y0 = pos.get(u, (0, 0))
@@ -486,7 +465,6 @@ def _tab_graph():
                         showlegend=False,
                     )
                 )
-                # Label sur l'arête
                 mx, my = (x0 + x1) / 2, (y0 + y1) / 2
                 traces.append(
                     go.Scatter(
@@ -500,7 +478,6 @@ def _tab_graph():
                     )
                 )
 
-            # Nœuds
             for nid, nd in nodes.items():
                 x, y = pos.get(nid, (0, 0))
                 is_center = nid == node_id
@@ -554,24 +531,18 @@ def _tab_graph():
                 height=520,
                 margin=dict(l=10, r=10, t=10, b=10),
                 xaxis=dict(
-                    showgrid=False,
-                    zeroline=False,
-                    showticklabels=False,
+                    showgrid=False, zeroline=False, showticklabels=False,
                     range=[-3.2, 3.2],
                 ),
                 yaxis=dict(
-                    showgrid=False,
-                    zeroline=False,
-                    showticklabels=False,
+                    showgrid=False, zeroline=False, showticklabels=False,
                     range=[-3.2, 3.2],
                 ),
                 hovermode="closest",
             )
             st.plotly_chart(
-                fig,
-                use_container_width=True,
-                config=dict(scrollZoom=True),
-                key="ego_fig",
+                fig, use_container_width=True,
+                config=dict(scrollZoom=True), key="ego_fig",
             )
             st.caption(f"{len(nodes)-1} connexion(s) directe(s) de « {chosen} »")
 
@@ -579,10 +550,9 @@ def _tab_graph():
     with v_matrix:
         st.markdown(
             "Chaque cellule montre la **taxonomie** (GTDB / NCBI) "
-            "de la relation outil ↔ BD. Cliquez sur une cellule pour les détails."
+            "de la relation outil ↔ BD."
         )
 
-        # Collecter tous les db_ids référencés
         all_db_ids: set[str] = set()
         for t in tools.values():
             for u in _to_list(t.get("uses_databases")):
@@ -597,9 +567,6 @@ def _tab_graph():
         db_labels = [
             databases[d].get("name", d) if d in databases else d for d in db_ids
         ]
-
-        # Matrice : 0=rien 1=GTDB 2=NCBI 3=les deux
-        import numpy as np
 
         Z = np.zeros((len(tool_ids), len(db_ids)), dtype=int)
         hover = [["" for _ in db_ids] for _ in tool_ids]
@@ -623,7 +590,7 @@ def _tab_graph():
                 elif has_ncbi:
                     Z[ti, di] = 2
                 else:
-                    Z[ti, di] = 1  # défaut si renseigné mais non catégorisé
+                    Z[ti, di] = 1
                 ts_str = taxonomy_badge(ts)
                 rels = ", ".join(str(r) for r in _to_list(u.get("release")) if r)
                 hover[ti][di] = (
@@ -632,54 +599,32 @@ def _tab_graph():
                     f"Releases : {rels or '—'}"
                 )
 
-        # On définit des paliers qui entourent parfaitement 0, 1, 2 et 3
-        # Frontières : 0.5/3 ≈ 0.16, 1.5/3 = 0.5, 2.5/3 ≈ 0.83
         colorscale = [
-            [0, "#1A1F2E"],  # Début palier 0
-            [0.16, "#1A1F2E"],  # Fin palier 0
-            [0.16, "#17C3B2"],  # Début palier 1 (GTDB)
-            [0.5, "#17C3B2"],  # Fin palier 1
-            [0.5, "#AFA9EC"],  # Début palier 2 (NCBI)
-            [0.83, "#AFA9EC"],  # Fin palier 2
-            [0.83, "#F5A623"],  # Début palier 3 (Les deux)
-            [1.0, "#F5A623"],  # Fin palier 3
+            [0, "#1A1F2E"], [0.16, "#1A1F2E"],
+            [0.16, "#17C3B2"], [0.5, "#17C3B2"],
+            [0.5, "#AFA9EC"], [0.83, "#AFA9EC"],
+            [0.83, "#F5A623"], [1.0, "#F5A623"],
         ]
 
         fig = go.Figure(
             go.Heatmap(
-                z=Z,
-                x=db_labels,
-                y=tool_labels,
+                z=Z, x=db_labels, y=tool_labels,
                 customdata=hover,
                 hovertemplate="%{customdata}<extra></extra>",
-                colorscale=colorscale,
-                zmin=0,  # Force l'échelle de 0
-                zmax=3,  # à 3 pour que le calcul des paliers soit fixe
-                showscale=False,
-                xgap=2,
-                ygap=2,
+                colorscale=colorscale, zmin=0, zmax=3,
+                showscale=False, xgap=2, ygap=2,
             )
         )
         fig.update_layout(
-            paper_bgcolor="#0D1117",
-            plot_bgcolor="#0D1117",
+            paper_bgcolor="#0D1117", plot_bgcolor="#0D1117",
             height=max(300, len(tool_ids) * 38 + 120),
             margin=dict(l=10, r=10, t=10, b=120),
-            xaxis=dict(
-                tickangle=-45,
-                tickfont=dict(color="#9FE1CB", size=11),
-                side="bottom",
-            ),
+            xaxis=dict(tickangle=-45, tickfont=dict(color="#9FE1CB", size=11), side="bottom"),
             yaxis=dict(tickfont=dict(color="#AFA9EC", size=12), autorange="reversed"),
             font=dict(color="#CCC"),
         )
-        # Légende manuelle
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            config=dict(displayModeBar=False),
-            key="matrix_fig",
-        )
+        st.plotly_chart(fig, use_container_width=True,
+                        config=dict(displayModeBar=False), key="matrix_fig")
         st.markdown(
             "<div style='font-size:12px;color:#888'>"
             "<span style='background:#17C3B2;padding:2px 10px;border-radius:4px;color:#000'>GTDB</span> &nbsp;"
@@ -703,10 +648,8 @@ def _tab_graph():
             values_.append(value)
             colors_.append(color)
 
-        # Racine virtuelle
         add("__root__", "Catalogue", "", 1, "#1A1F2E")
 
-        # BDs mères (celles qui ont hasPart ou qui sont isPartOf rien)
         root_dbs = [
             did
             for did, db in databases.items()
@@ -723,7 +666,6 @@ def _tab_graph():
             parts = _to_list(db.get("hasPart"))
             add(did, dname, "__root__", max(len(parts), 1), "#1D9E75")
 
-            # Sous-BDs
             for part in parts:
                 if not isinstance(part, dict) or not part.get("@id"):
                     continue
@@ -732,20 +674,12 @@ def _tab_graph():
                 plabel = pdb.get("name", pid) if pdb else pid
                 add(f"sub_{pid}", plabel, did, 1, "#0F6E56")
 
-                # Outils utilisant cette sous-BD
                 for tid, tool in tools.items():
                     for u in _to_list(tool.get("uses_databases")):
                         if isinstance(u, dict) and u.get("@id") == pid:
                             tname = tool.get("name", tid)
-                            add(
-                                f"tool_{tid}_sub_{pid}",
-                                tname,
-                                f"sub_{pid}",
-                                1,
-                                "#534AB7",
-                            )
+                            add(f"tool_{tid}_sub_{pid}", tname, f"sub_{pid}", 1, "#534AB7")
 
-            # Outils utilisant directement cette BD mère
             for tid, tool in tools.items():
                 for u in _to_list(tool.get("uses_databases")):
                     if isinstance(u, dict) and u.get("@id") == did:
@@ -754,7 +688,6 @@ def _tab_graph():
                         if uid not in ids_:
                             add(uid, tname, did, 1, "#7B5EA7")
 
-        # BDs non rattachées à une BD mère
         orphan_dbs = [
             did
             for did, db in databases.items()
@@ -773,30 +706,21 @@ def _tab_graph():
 
         fig = go.Figure(
             go.Sunburst(
-                ids=ids_,
-                labels=labels_,
-                parents=parents_,
-                values=values_,
-                branchvalues="total",
+                ids=ids_, labels=labels_, parents=parents_,
+                values=values_, branchvalues="total",
                 marker=dict(colors=colors_, line=dict(color="#0D1117", width=1.5)),
                 hovertemplate="<b>%{label}</b><extra></extra>",
                 textfont=dict(size=12, color="#FFFFFF"),
-                insidetextorientation="radial",
-                maxdepth=3,
+                insidetextorientation="radial", maxdepth=3,
             )
         )
         fig.update_layout(
             paper_bgcolor="#0D1117",
             margin=dict(l=0, r=0, t=10, b=10),
-            height=560,
-            font=dict(color="#CCC"),
+            height=560, font=dict(color="#CCC"),
         )
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            config=dict(displayModeBar=False),
-            key="sunburst_fig",
-        )
+        st.plotly_chart(fig, use_container_width=True,
+                        config=dict(displayModeBar=False), key="sunburst_fig")
         st.caption("Cliquez sur un secteur pour zoomer. Double-clic pour remonter.")
 
     # ── VUE 4 : CARDS ─────────────────────────────────────────────────────────
@@ -835,7 +759,7 @@ def _tab_graph():
                 ts = taxonomy_badge(u.get("taxonomy_system"))
                 col_ts = "#17C3B2" if "GTDB" in ts else "#AFA9EC"
                 dbs_used.append(
-                    f"<span style='color:{col_ts};font-size:11px'>" f"● {dname}</span>"
+                    f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>"
                 )
 
             links = ""
@@ -844,7 +768,6 @@ def _tab_graph():
             if tool.get("doi"):
                 links += f"<a href='{tool['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
 
-            # Barre de citations normalisée
             bar_w = int(
                 160
                 * cit
@@ -879,7 +802,6 @@ def _tab_tools():
 
     st.markdown("### 🔧 Outils")
 
-    # Filtres
     col_a, col_b, col_c, col_d = st.columns(4)
     with col_a:
         f_sr = st.selectbox("Short reads", ["Tous", "✅", "❌"], key="f_sr")
@@ -945,13 +867,8 @@ def _tab_tools():
         if not df.empty and "Citations" in df.columns
         else df
     )
-    st.dataframe(
-        display_df,
-        use_container_width=True,
-        hide_index=True,
-    )
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-    # Fiche détaillée
     st.markdown("---")
     selected = st.selectbox(
         "Fiche détaillée",
@@ -1066,7 +983,6 @@ def _tab_databases():
 
     if f_taxon:
         df = df[df["Taxons"].apply(lambda t: any(fx in t for fx in f_taxon))]
-
     if search_db:
         m = (
             df["Nom"].str.contains(search_db, case=False, na=False)
@@ -1078,7 +994,6 @@ def _tab_databases():
     st.caption(f"{len(df)} base(s) affichée(s)")
     st.dataframe(df, use_container_width=True, hide_index=True)
 
-    # Fiche détaillée
     st.markdown("---")
     selected_db = st.selectbox(
         "Fiche détaillée",
