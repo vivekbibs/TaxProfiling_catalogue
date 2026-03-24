@@ -67,9 +67,15 @@ def _normalize(obj: dict) -> dict:
 # CHARGEMENT
 # ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data
-def load_catalogue() -> tuple[dict, dict]:
+def load_catalogue(db_dir: Path, tool_dir: Path) -> tuple[dict, dict]:
     databases, tools = {}, {}
-    for path in sorted(DB_DIR.glob("*.json")):
+
+    # Vérification si les dossiers existent pour éviter les crashs
+    if not db_dir.exists():
+        st.error(f"Dossier des bases introuvable : {db_dir}")
+        return {}, {}
+
+    for path in sorted(db_dir.glob("*.json")):
         try:
             obj = _normalize(json.loads(path.read_text(encoding="utf-8")))
             key = obj.get("@id") or path.stem
@@ -78,16 +84,18 @@ def load_catalogue() -> tuple[dict, dict]:
             databases[key] = obj
         except Exception as e:
             st.warning(f"⚠️ {path.name} : {e}")
-    for path in sorted(TOOL_DIR.glob("*.json")):
+
+    for path in sorted(tool_dir.glob("*.json")):
         try:
             obj = _normalize(json.loads(path.read_text(encoding="utf-8")))
             key = obj.get("@id") or path.stem
-            # Ignorer les sous-outils (Sub-tool) — ils apparaissent dans la fiche parent
+            # Ignorer les sous-outils
             if obj.get("type", "").lower() in ("sub-tool", "sub_tool"):
                 continue
             tools[key] = obj
         except Exception as e:
             st.warning(f"⚠️ {path.name} : {e}")
+
     return databases, tools
 
 
@@ -467,7 +475,7 @@ def recommend(
 # ─────────────────────────────────────────────────────────────────────────────
 # INTERFACE
 # ─────────────────────────────────────────────────────────────────────────────
-databases, tools = load_catalogue()
+databases, tools = load_catalogue(DB_DIR, TOOL_DIR)
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:

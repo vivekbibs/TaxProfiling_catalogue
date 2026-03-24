@@ -37,8 +37,16 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-ROOT = Path(__file__).parent
-sys.path.insert(0, str(ROOT))
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+
+# On s'assure que le dossier des scripts est dans le path pour les imports
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+# On définit les chemins des données de manière absolue par rapport à la racine
+TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
+DB_DIR = PROJECT_ROOT / "data" / "databases"
 
 # Importer les fonctions partagées depuis app_questionnaire
 # (load_catalogue, helpers d'affichage, moteur de recommandation)
@@ -63,10 +71,11 @@ from app_questionnaire import (  # noqa: E402
     download_variants,
 )
 
+
 # ─────────────────────────────────────────────────────────────────────────────
 # DONNÉES
 # ─────────────────────────────────────────────────────────────────────────────
-databases, tools = load_catalogue()
+databases, tools = load_catalogue(DB_DIR, TOOLS_DIR)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR — navigation
@@ -623,7 +632,7 @@ def _tab_graph():
                     f"Releases : {rels or '—'}"
                 )
 
-                # On définit des paliers qui entourent parfaitement 0, 1, 2 et 3
+        # On définit des paliers qui entourent parfaitement 0, 1, 2 et 3
         # Frontières : 0.5/3 ≈ 0.16, 1.5/3 = 0.5, 2.5/3 ≈ 0.83
         colorscale = [
             [0, "#1A1F2E"],  # Début palier 0
@@ -931,8 +940,13 @@ def _tab_tools():
         df = df[m]
 
     st.caption(f"{len(df)} outil(s) affiché(s)")
+    display_df = (
+        df.sort_values("Citations", ascending=False)
+        if not df.empty and "Citations" in df.columns
+        else df
+    )
     st.dataframe(
-        df.sort_values("Citations", ascending=False),
+        display_df,
         use_container_width=True,
         hide_index=True,
     )
