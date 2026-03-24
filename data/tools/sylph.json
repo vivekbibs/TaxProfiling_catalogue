@@ -62,7 +62,7 @@
     },
     {
       "name": "TARA Oceans eukaryotic MAGs/SAGs",
-      "@id": "tara_oceans",
+      "@id": "tara_oceans_euk",
       "taxonomy_system": "ncbi"
     }
   ],
