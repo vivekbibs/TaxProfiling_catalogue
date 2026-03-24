@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "Homo sapiens skin",
+  "name": "Human Skin catalogue",
   "@id": "hs_2_9_skin",
   "release": null,
   "taxonomic_scope": [

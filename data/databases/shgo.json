@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "SHGO",
+  "name": "Sheep and Goat Gut catalogue",
   "@id": "shgo",
   "taxonomic_scope": [
     {

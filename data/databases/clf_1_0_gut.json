@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "Canis lupus familiaris",
+  "name": "Dog Gut Catalogue",
   "@id": "clf_1_0_gut",
   "release": null,
   "taxonomic_scope": [

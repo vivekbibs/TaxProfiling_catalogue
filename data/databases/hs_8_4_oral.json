@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "Homo sapiens oral",
+  "name": "Human Oral catalogue",
   "@id": "hs_8_4_oral",
   "release": null,
   "taxonomic_scope": [

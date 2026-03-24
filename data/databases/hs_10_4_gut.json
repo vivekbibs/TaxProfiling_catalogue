@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "Homo sapiens gut",
+  "name": "Human Gut catalogue",
   "@id": "hs_10_4_gut",
   "release": null,
   "taxonomic_scope": [

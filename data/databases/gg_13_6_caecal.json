@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "Gallus gallus domesticus",
+  "name": "Chicken Caecal catalogue",
   "@id": "gg_13_6_caecal",
   "release": null,
   "taxonomic_scope": [
