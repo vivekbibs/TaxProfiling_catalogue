@@ -23,9 +23,10 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-DATA_DIR = Path(__file__).parent / "data"
-DB_DIR = DATA_DIR / "databases"
-TOOL_DIR = DATA_DIR / "tools"
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+DB_DIR = PROJECT_ROOT / "data" / "databases"
+TOOL_DIR = PROJECT_ROOT / "data" / "tools"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # NORMALISATION
