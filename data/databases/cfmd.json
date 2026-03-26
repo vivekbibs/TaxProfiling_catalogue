@@ -5,21 +5,21 @@
   "@id": "cfmd",
   "taxonomic_scope": [
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "@id": "obo:NCBITaxon_2",
       "label": "Bacteria"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "@id": "obo:NCBITaxon_2157",
       "label": "Archaea"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
+      "@id": "obo:NCBITaxon_2759",
       "label": "Eukaryota"
     }
   ],
   "release": "unknown",
   "sample": {
-    "@id": "http://purl.obolibrary.org/obo/FOODON_00002403",
+    "@id": "obo:FOODON_00002403",
     "label": "food material"
   },
   "origin": null,

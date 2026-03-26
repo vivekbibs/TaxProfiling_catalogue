@@ -5,24 +5,24 @@
   "release": null,
   "taxonomic_scope": [
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "@id": "obo:NCBITaxon_2",
       "label": "Bacteria"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "@id": "obo:NCBITaxon_2157",
       "label": "Archaea"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2759",
+      "@id": "obo:NCBITaxon_2759",
       "label": "Eukaryota"
     }
   ],
   "sample": {
-    "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
+    "@id": "obo:ENVO_00002003",
     "label": "fecal material"
   },
   "origin": {
-    "@id": "http://purl.obolibrary.org/obo/NCBITaxon_10116",
+    "@id": "obo:NCBITaxon_10116",
     "label": "Rattus norvegicus"
   },
   "doi": "https://doi.org/10.5281/zenodo.10672634",

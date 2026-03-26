@@ -4,11 +4,11 @@
   "@id": "shgo",
   "taxonomic_scope": [
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "@id": "obo:NCBITaxon_2",
       "label": "Bacteria"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "@id": "obo:NCBITaxon_2157",
       "label": "Archaea"
     }
   ],
@@ -17,16 +17,16 @@
     { "@id": "globdb" }
   ],
   "sample": {
-    "@id": "http://purl.obolibrary.org/obo/ENVO_00002003",
+    "@id": "obo:ENVO_00002003",
     "label": "fecal material"
   },
   "origin": [
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9925",
+      "@id": "obo:NCBITaxon_9925",
       "label": "Capra hircus"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_9940",
+      "@id": "obo:NCBITaxon_9940",
       "label": "Ovis aries"
     }
   ],

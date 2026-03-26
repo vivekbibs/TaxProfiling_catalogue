@@ -15,19 +15,19 @@
       "label": "Homo sapiens"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2",
+      "@id": "obo:NCBITaxon_2",
       "label": "Bacteria"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2157",
+      "@id": "obo:NCBITaxon_2157",
       "label": "Archaea"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_10239",
+      "@id": "obo:NCBITaxon_10239",
       "label": "Viruses"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/NCBITaxon_2697049",
+      "@id": "obo:NCBITaxon_2697049",
       "label": "Severe acute respiratory syndrome coronavirus 2"
     }
   ],
