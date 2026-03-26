@@ -360,12 +360,38 @@ def recommend(
     wants_euk = "Eucaryotes" in selected_orgs
     taxon_keys = [TAXON_IRI[o] for o in selected_orgs]
 
+    def _flag_true(v) -> bool:
+        if v is None:
+            return False
+        if isinstance(v, bool):
+            return v
+        if isinstance(v, (int, float)):
+            return bool(v)
+        s = str(v).strip().lower()
+        return s in ("1", "true", "yes", "y", "supported", "ok")
+
+    def _tool_supports(tool: dict, candidates: list[str]) -> bool:
+        for k in candidates:
+            if _flag_true(tool.get(k)):
+                return True
+        return False
+
+    # candidate keys to detect capability flags in tool JSONs
+    STRAIN_KEY = "strain_level"
+    FUNC_KEY = "functional_profiling"
+
     results = []
 
     for tool_id, tool in tools.items():
         if reads_key == "Short Reads" and not tool.get("supports_shortreads"):
             continue
         if reads_key == "Long Reads" and not tool.get("supports_longreads"):
+            continue
+
+        # respect user's required analysis capabilities
+        if wants_strain and not _tool_supports(tool, [STRAIN_KEY]):
+            continue
+        if wants_func and not _tool_supports(tool, [FUNC_KEY]):
             continue
 
         ram = tool.get("ram")
