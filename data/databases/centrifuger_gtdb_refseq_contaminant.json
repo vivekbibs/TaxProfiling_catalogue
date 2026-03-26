@@ -31,6 +31,17 @@
       "label": "Viruses"
     }
   ],
+  "sequence_scope": [
+    {
+      "@id": "SO_0000352",
+      "label": "plasmid"
+    },
+    {
+      "@id": "SO_0000440",
+      "label": "vector_replicon"
+
+    }
+  ],
   "sample": null,
   "origin": null,
   "is_about": null,

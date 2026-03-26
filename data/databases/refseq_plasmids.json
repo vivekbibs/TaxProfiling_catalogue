@@ -11,6 +11,10 @@
   "homepage": null,
   "license": null,
   "taxonomic_scope": null,
+  "sequence_scope": {
+    "@id": "SO_0000352",
+    "label": "plasmid"
+  },
   "sample": null,
   "origin": null,
   "is_about": null,
