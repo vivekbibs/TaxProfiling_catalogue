@@ -12,7 +12,7 @@
   "license": null,
   "taxonomic_scope": null,
   "sequence_scope": {
-    "@id": "SO_0000352",
+    "@id": "obo:SO_0000352",
     "label": "plasmid"
   },
   "sample": null,

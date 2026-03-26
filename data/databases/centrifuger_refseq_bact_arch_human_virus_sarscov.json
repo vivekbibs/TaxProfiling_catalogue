@@ -11,7 +11,7 @@
   "homepage": null,
   "license": null,
   "taxonomic_scope": [ {
-      "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
+      "@id": "obo:NCBITAXON_9606",
       "label": "Homo sapiens"
     },
     {

@@ -11,7 +11,7 @@
   "homepage": null,
   "license": null,
   "taxonomic_scope": [ {
-      "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
+      "@id": "obo:NCBITAXON_9606",
       "label": "Homo sapiens"
     },
     {
@@ -33,11 +33,11 @@
   ],
   "sequence_scope": [
     {
-      "@id": "SO_0000352",
+      "@id": "obo:SO_0000352",
       "label": "plasmid"
     },
     {
-      "@id": "SO_0000440",
+      "@id": "obo:SO_0000440",
       "label": "vector_replicon"
 
     }

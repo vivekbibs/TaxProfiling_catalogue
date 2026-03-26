@@ -22,7 +22,7 @@
     "label": "fecal material"
   },
   "origin": {
-    "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
+    "@id": "obo:NCBITaxon_9606",
     "label": "Homo sapiens"
   },
   "doi": "https://doi.org/10.5281/zenodo.10681121",
