@@ -149,9 +149,29 @@ def render_questionnaire():
         wants_strain = st.checkbox("🔬 Strain-level profiling")
         wants_func = st.checkbox("⚙️ Profiling fonctionnel")
         if wants_func:
-            st.info("💡 Profiling fonctionnel : meteor / HUMAnN3.")
+            func_tools = [
+                t.get("name", tid)
+                for tid, t in tools.items()
+                if t.get("functional_profiling")
+            ]
+            if func_tools:
+                st.info(
+                    f"💡 Profiling fonctionnel supporté par : {', '.join(func_tools)}."
+                )
+            else:
+                st.info(
+                    "💡 Aucun outil du catalogue ne supporte le profiling fonctionnel avec vos filtres actuels."
+                )
         if wants_strain:
-            st.info("💡 Strain-level : MetaPhlAn / StrainPhlAn, Metabuli.")
+            strain_tools = [
+                t.get("name", tid) for tid, t in tools.items() if t.get("strain_level")
+            ]
+            if strain_tools:
+                st.info(f"💡 Strain-level supporté par : {', '.join(strain_tools)}.")
+            else:
+                st.info(
+                    "💡 Aucun outil du catalogue ne supporte le strain‑level avec vos filtres actuels."
+                )
     st.markdown("---")
 
     # Q4 — Paramètres avancés
@@ -531,18 +551,24 @@ def _tab_graph():
                 height=520,
                 margin=dict(l=10, r=10, t=10, b=10),
                 xaxis=dict(
-                    showgrid=False, zeroline=False, showticklabels=False,
+                    showgrid=False,
+                    zeroline=False,
+                    showticklabels=False,
                     range=[-3.2, 3.2],
                 ),
                 yaxis=dict(
-                    showgrid=False, zeroline=False, showticklabels=False,
+                    showgrid=False,
+                    zeroline=False,
+                    showticklabels=False,
                     range=[-3.2, 3.2],
                 ),
                 hovermode="closest",
             )
             st.plotly_chart(
-                fig, use_container_width=True,
-                config=dict(scrollZoom=True), key="ego_fig",
+                fig,
+                use_container_width=True,
+                config=dict(scrollZoom=True),
+                key="ego_fig",
             )
             st.caption(f"{len(nodes)-1} connexion(s) directe(s) de « {chosen} »")
 
@@ -600,31 +626,48 @@ def _tab_graph():
                 )
 
         colorscale = [
-            [0, "#1A1F2E"], [0.16, "#1A1F2E"],
-            [0.16, "#17C3B2"], [0.5, "#17C3B2"],
-            [0.5, "#AFA9EC"], [0.83, "#AFA9EC"],
-            [0.83, "#F5A623"], [1.0, "#F5A623"],
+            [0, "#1A1F2E"],
+            [0.16, "#1A1F2E"],
+            [0.16, "#17C3B2"],
+            [0.5, "#17C3B2"],
+            [0.5, "#AFA9EC"],
+            [0.83, "#AFA9EC"],
+            [0.83, "#F5A623"],
+            [1.0, "#F5A623"],
         ]
 
         fig = go.Figure(
             go.Heatmap(
-                z=Z, x=db_labels, y=tool_labels,
+                z=Z,
+                x=db_labels,
+                y=tool_labels,
                 customdata=hover,
                 hovertemplate="%{customdata}<extra></extra>",
-                colorscale=colorscale, zmin=0, zmax=3,
-                showscale=False, xgap=2, ygap=2,
+                colorscale=colorscale,
+                zmin=0,
+                zmax=3,
+                showscale=False,
+                xgap=2,
+                ygap=2,
             )
         )
         fig.update_layout(
-            paper_bgcolor="#0D1117", plot_bgcolor="#0D1117",
+            paper_bgcolor="#0D1117",
+            plot_bgcolor="#0D1117",
             height=max(300, len(tool_ids) * 38 + 120),
             margin=dict(l=10, r=10, t=10, b=120),
-            xaxis=dict(tickangle=-45, tickfont=dict(color="#9FE1CB", size=11), side="bottom"),
+            xaxis=dict(
+                tickangle=-45, tickfont=dict(color="#9FE1CB", size=11), side="bottom"
+            ),
             yaxis=dict(tickfont=dict(color="#AFA9EC", size=12), autorange="reversed"),
             font=dict(color="#CCC"),
         )
-        st.plotly_chart(fig, use_container_width=True,
-                        config=dict(displayModeBar=False), key="matrix_fig")
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config=dict(displayModeBar=False),
+            key="matrix_fig",
+        )
         st.markdown(
             "<div style='font-size:12px;color:#888'>"
             "<span style='background:#17C3B2;padding:2px 10px;border-radius:4px;color:#000'>GTDB</span> &nbsp;"
@@ -678,7 +721,13 @@ def _tab_graph():
                     for u in _to_list(tool.get("uses_databases")):
                         if isinstance(u, dict) and u.get("@id") == pid:
                             tname = tool.get("name", tid)
-                            add(f"tool_{tid}_sub_{pid}", tname, f"sub_{pid}", 1, "#534AB7")
+                            add(
+                                f"tool_{tid}_sub_{pid}",
+                                tname,
+                                f"sub_{pid}",
+                                1,
+                                "#534AB7",
+                            )
 
             for tid, tool in tools.items():
                 for u in _to_list(tool.get("uses_databases")):
@@ -706,21 +755,30 @@ def _tab_graph():
 
         fig = go.Figure(
             go.Sunburst(
-                ids=ids_, labels=labels_, parents=parents_,
-                values=values_, branchvalues="total",
+                ids=ids_,
+                labels=labels_,
+                parents=parents_,
+                values=values_,
+                branchvalues="total",
                 marker=dict(colors=colors_, line=dict(color="#0D1117", width=1.5)),
                 hovertemplate="<b>%{label}</b><extra></extra>",
                 textfont=dict(size=12, color="#FFFFFF"),
-                insidetextorientation="radial", maxdepth=3,
+                insidetextorientation="radial",
+                maxdepth=3,
             )
         )
         fig.update_layout(
             paper_bgcolor="#0D1117",
             margin=dict(l=0, r=0, t=10, b=10),
-            height=560, font=dict(color="#CCC"),
+            height=560,
+            font=dict(color="#CCC"),
         )
-        st.plotly_chart(fig, use_container_width=True,
-                        config=dict(displayModeBar=False), key="sunburst_fig")
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config=dict(displayModeBar=False),
+            key="sunburst_fig",
+        )
         st.caption("Cliquez sur un secteur pour zoomer. Double-clic pour remonter.")
 
     # ── VUE 4 : CARDS ─────────────────────────────────────────────────────────
