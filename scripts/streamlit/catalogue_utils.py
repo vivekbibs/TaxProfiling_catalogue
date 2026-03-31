@@ -281,14 +281,12 @@ SAMPLE_CATEGORIES: dict[str, list[str]] = {
         "Mouton (Ovis aries)",
     ],
     "Environnemental": [
-        "Sol (Soil)",
+        "Sol",
         "Océan / Eau marine",
-        "Eau douce / Lac / Rivière",
         "Sédiment",
-        "Glacier / Streams glaciaires",
         "Nourriture / Aliment",
     ],
-    "Multi-environnements / Global": ["Multi-environnements / Global"],
+    "Multi-environnements / Général": ["Multi-environnements / Général"],
     "Autre": ["Autre / Je ne sais pas"],
 }
 
