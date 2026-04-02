@@ -215,6 +215,25 @@ def render_questionnaire():
 
     st.success(f"**{len(recs)} outil(s)** trouvé(s).")
 
+    # Detect if a recommended DB is included in another recommended DB.
+    rec_db_ids = {r.get("db_id") for r in recs if r.get("db_id")}
+    parent_db_by_child: dict[str, list[str]] = {}
+    for child_id in rec_db_ids:
+        parents = []
+        for parent_id in rec_db_ids:
+            if parent_id == child_id:
+                continue
+            parent_db = databases.get(parent_id, {})
+            part_ids = [
+                p.get("@id")
+                for p in _to_list(parent_db.get("hasPart"))
+                if isinstance(p, dict) and p.get("@id")
+            ]
+            if child_id in part_ids:
+                parents.append(parent_id)
+        if parents:
+            parent_db_by_child[child_id] = parents
+
     for i, rec in enumerate(recs):
         tool = rec["tool"]
         db = rec["db"]
@@ -308,6 +327,15 @@ def render_questionnaire():
                     st.caption(
                         f"ℹ️ `{db_id}.json` absent de `data/databases/` "
                         "— ajoutez-le pour les détails complets."
+                    )
+                if db_id in parent_db_by_child:
+                    parent_names = [
+                        databases.get(pid, {}).get("name", pid)
+                        for pid in parent_db_by_child[db_id]
+                    ]
+                    st.info(
+                        "ℹ️ Cette BD est incluse dans : "
+                        + ", ".join(f"**{n}**" for n in parent_names)
                     )
                 dl = rec["dl"]
                 if dl:

@@ -306,29 +306,56 @@ def _score_db_entry(
     wants_euk: bool,
 ) -> int:
     """Score 0-6 d'une entrée uses_databases selon les critères utilisateur."""
-    envo_tag, host_tag = db_scope(db_id, databases)
-    score = 0
+    def _score_scope(envo_tag: str | None, host_tag: str | None) -> int:
+        score = 0
 
-    if envo_key:
-        if envo_tag == envo_key:
+        if envo_key:
+            if envo_tag == envo_key:
+                score += 3
+            elif envo_tag is None:
+                score += 1
+        else:
+            if envo_tag is None:
+                score += 2
+
+        if host_key and host_tag == host_key:
             score += 3
-        elif envo_tag is None:
-            score += 1
-    else:
-        if envo_tag is None:
-            score += 2
 
-    if host_key and host_tag == host_key:
-        score += 3
+        if envo_tag == "virus" and wants_virus:
+            score += 3
+        if envo_tag == "fungi" and wants_fungi:
+            score += 3
+        if envo_tag == "eukaryote" and wants_euk:
+            score += 3
+        return score
 
-    if envo_tag == "virus" and wants_virus:
-        score += 3
-    if envo_tag == "fungi" and wants_fungi:
-        score += 3
-    if envo_tag == "eukaryote" and wants_euk:
-        score += 3
+    envo_tag, host_tag = db_scope(db_id, databases)
+    best_score = _score_scope(envo_tag, host_tag)
 
-    return score
+    db_obj = databases.get(db_id, {})
+    parts = _to_list(db_obj.get("hasPart")) if isinstance(db_obj, dict) else []
+
+    # If a composite DB (e.g. GlobDB) contains a very specific matching sub-DB
+    # (e.g. SHGO for goats/sheep), let the parent inherit most of that score.
+    best_part_score = -1
+    for p in parts:
+        if not isinstance(p, dict) or not p.get("@id"):
+            continue
+        p_envo, p_host = db_scope(p["@id"], databases)
+        part_score = _score_scope(p_envo, p_host)
+        if part_score > best_part_score:
+            best_part_score = part_score
+
+    if best_part_score >= 0:
+        inherited = max(best_part_score - 1, 0)
+        if inherited > best_score:
+            best_score = inherited
+
+    # Prefer GlobDB for broad/no-specific-context selections.
+    if db_id == "globdb" and envo_key is None and host_key is None:
+        best_score += 3
+
+    return best_score
 
 
 def recommend(
@@ -445,4 +472,18 @@ def recommend(
             }
         )
 
-    return sorted(results, key=lambda r: -r["score"])
+    def _rank_tuple(r: dict) -> tuple:
+        db_id = r.get("db_id")
+        db_obj = databases.get(db_id, {}) if db_id else {}
+        part_count = len(
+            [
+                p
+                for p in _to_list(db_obj.get("hasPart"))
+                if isinstance(p, dict) and p.get("@id")
+            ]
+        )
+        # In broad contexts (Autre / Multi-env), prefer exhaustive composite DBs.
+        broad_boost = 1 if (envo_key is None and host_key is None and part_count > 0) else 0
+        return (-r["score"], -broad_boost, -part_count)
+
+    return sorted(results, key=_rank_tuple)
