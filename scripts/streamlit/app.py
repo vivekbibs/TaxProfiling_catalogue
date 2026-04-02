@@ -56,7 +56,6 @@ from catalogue_utils import (  # noqa: E402
     SAMPLE_FILTER,
     SAMPLE_CATEGORIES,
     TAXON_IRI,
-    DB_SCOPE_FALLBACK,
     db_scope,
     _score_db_entry,
     recommend,
