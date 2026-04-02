@@ -9,6 +9,8 @@ Utilisé par :
 """
 
 import json
+import os
+from datetime import datetime
 from pathlib import Path
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -129,29 +131,59 @@ DB_SCOPE_FALLBACK: dict[str, tuple] = {
 }
 
 
+_DB_SCOPE_DEBUG = os.getenv("CATALOGUE_DEBUG_DB_SCOPE", "0") == "1"
+_DB_SCOPE_DEBUG_LOG = Path(__file__).parent / "debug_db_scope.log"
+
+
+def _dbg_db_scope(msg: str) -> None:
+    """Ecrit des traces db_scope dans un fichier si le mode debug est activé."""
+    if not _DB_SCOPE_DEBUG:
+        return
+    with _DB_SCOPE_DEBUG_LOG.open("a", encoding="utf-8") as f:
+        f.write(f"{datetime.now().isoformat()} | {msg}\n")
+
+
 def db_scope(db_id: str, databases: dict) -> tuple:
     """Retourne (envo_key_or_tag, host_taxon_key) depuis le JSON ou le fallback."""
     db = databases.get(db_id)
-    if db:
-        s = db.get("sample")
-        envo = None
-        if isinstance(s, dict):
-            iri = s.get("@id", "")
-            sep = "obo:"
-            if sep in iri:
-                envo = iri.split(sep)[-1]
-        origins = _to_list(db.get("origin"))
-        host = None
-        for o in origins:
-            if isinstance(o, dict):
-                iri = o.get("@id", "")
-                sep = "obo:"
-                if sep in iri:
-                    host = iri.split(sep)[-1]
-        return (envo, host)
+    if not db:
+        fallback = DB_SCOPE_FALLBACK.get(db_id, (None, None))
+        _dbg_db_scope(f"db_id={db_id} missing -> fallback={fallback}")
+        return fallback
 
+    _dbg_db_scope(f"db_id={db_id}")
 
-"""     return DB_SCOPE_FALLBACK.get(db_id, (None, None)) """
+    s = db.get("sample")
+    envo = None
+    _dbg_db_scope(f"sample_type={type(s).__name__} sample_raw={s!r}")
+    if isinstance(s, dict):
+        iri = str(s.get("@id", "")).strip()
+        sep = "obo:"
+        _dbg_db_scope(f"sample_iri={iri!r} contains_sep={sep in iri}")
+        if sep in iri:
+            split_val = iri.split(sep)[-1]
+            _dbg_db_scope(f"sample_split={split_val!r}")
+            envo = split_val
+    else:
+        _dbg_db_scope("sample is not a dict -> envo remains None")
+
+    origins = _to_list(db.get("origin"))
+    host = None
+    _dbg_db_scope(f"origin_count={len(origins)} origin_raw={origins!r}")
+    for i, o in enumerate(origins):
+        if not isinstance(o, dict):
+            _dbg_db_scope(f"origin[{i}] skipped (not dict): {o!r}")
+            continue
+        iri = str(o.get("@id", "")).strip()
+        sep = "obo:"
+        _dbg_db_scope(f"origin[{i}] iri={iri!r} contains_sep={sep in iri}")
+        if sep in iri:
+            split_val = iri.split(sep)[-1]
+            _dbg_db_scope(f"origin[{i}] split={split_val!r}")
+            host = split_val
+
+    _dbg_db_scope(f"result db_id={db_id} -> envo={envo!r}, host={host!r}")
+    return (envo, host)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
