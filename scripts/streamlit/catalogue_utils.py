@@ -137,19 +137,17 @@ def db_scope(db_id: str, databases: dict) -> tuple:
         envo = None
         if isinstance(s, dict):
             iri = s.get("@id", "")
-            for sep in ("obo/", "obo_"):
-                if sep in iri:
-                    envo = iri.split(sep)[-1]
-                    break
+            sep = "obo:"
+            if sep in iri:
+                envo = iri.split(sep)[-1]
         origins = _to_list(db.get("origin"))
         host = None
         for o in origins:
             if isinstance(o, dict):
                 iri = o.get("@id", "")
-                for sep in ("obo/", "obo_"):
-                    if sep in iri:
-                        host = iri.split(sep)[-1]
-                        break
+                sep = "obo:"
+                if sep in iri:
+                    host = iri.split(sep)[-1]
         return (envo, host)
     return DB_SCOPE_FALLBACK.get(db_id, (None, None))
 
@@ -257,7 +255,7 @@ SAMPLE_FILTER: dict[str, tuple] = {
     "Océan / Eau marine": ("ENVO_00002149", None),
     "Eau douce / Lac / Rivière": ("ENVO_00002006", None),
     "Sédiment": ("ENVO_00002007", None),
-    "Glacier / Streams glaciaires": ("ENVO_00002007", None),
+    "Glacier-fed Streams": ("ENVO_00002007", "ENVO_01001529"),
     "Nourriture / Aliment": ("ENVO_00002073", None),
     "Multi-environnements / Global": (None, None),
     "Autre / Je ne sais pas": (None, None),
