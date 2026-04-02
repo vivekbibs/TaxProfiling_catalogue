@@ -88,50 +88,7 @@ def load_catalogue(db_dir: Path, tool_dir: Path) -> tuple[dict, dict]:
 # ─────────────────────────────────────────────────────────────────────────────
 # CONNAISSANCE DES BDs (scope biologique) — complète les JSONs manquants
 # ─────────────────────────────────────────────────────────────────────────────
-DB_SCOPE_FALLBACK: dict[str, tuple] = {
-    # ── Host-specific (meteor) ──────────────────────────────────────
-    "hs_10_4_gut": ("ENVO_00002003", "NCBITaxon_9606"),
-    "hs_2_9_skin": ("ENVO_00002003", "NCBITaxon_9606"),
-    "hs_8_4_oral": ("ENVO_00002003", "NCBITaxon_9606"),
-    "mm_5_0_gut": ("ENVO_00002003", "NCBITaxon_10090"),
-    "rn_5_9_gut": ("ENVO_00002003", "NCBITaxon_10116"),
-    "clf_1_0_gut": ("ENVO_00002003", "NCBITaxon_9615"),
-    "fc_1_3_gut": ("ENVO_00002003", "NCBITaxon_9685"),
-    "gg_13_6_caecal": ("ENVO_00002003", "NCBITaxon_9031"),
-    "oc_5_7_gut": ("ENVO_00002003", "NCBITaxon_9986"),
-    "ssc_9_3_gut": ("ENVO_00002003", "NCBITaxon_9825"),
-    "uhgg": ("ENVO_00002003", "NCBITaxon_9606"),
-    # ── Virus ───────────────────────────────────────────────────────
-    "imgvr": ("virus", None),
-    "uhgv": ("virus", None),
-    "genbank_viruses": ("virus", None),
-    "refseq_viral": ("virus", None),
-    "refseq_viruses": ("virus", None),
-    "rvdb": ("virus", None),
-    # ── Fungi / Eukaryotes ──────────────────────────────────────────
-    "refseq_fungi": ("fungi", None),
-    "refseqfungi": ("fungi", None),
-    "refseq_eukaryotes": ("eukaryote", None),
-    "blast_nr_eukaryotes": ("eukaryote", None),
-    "tara_oceans": ("ENVO_00002149", None),
-    # ── Plasmides ───────────────────────────────────────────────────
-    "refseq_plasmids": ("plasmid", None),
-    # ── Génériques / multi-env ──────────────────────────────────────
-    "gtdb": (None, None),
-    "globdb": (None, None),
-    "motus-db": (None, None),
-    "refseq": (None, None),
-    "refseq_nr": (None, None),
-    "refseq_prot": (None, None),
-    "progenomes": (None, None),
-    "blast_nr": (None, None),
-    "kraken_standard": (None, None),
-    "chocophlan": (None, None),
-    "tipp3_refpkg": (None, None),
-}
-
-
-_DB_SCOPE_DEBUG = os.getenv("CATALOGUE_DEBUG_DB_SCOPE", "0") == "1"
+_DB_SCOPE_DEBUG = os.getenv("CATALOGUE_DEBUG_DB_SCOPE", "1") == "1"
 _DB_SCOPE_DEBUG_LOG = Path(__file__).parent / "debug_db_scope.log"
 
 
@@ -144,12 +101,11 @@ def _dbg_db_scope(msg: str) -> None:
 
 
 def db_scope(db_id: str, databases: dict) -> tuple:
-    """Retourne (envo_key_or_tag, host_taxon_key) depuis le JSON ou le fallback."""
+    """Retourne (envo_key_or_tag, host_taxon_key) depuis le JSON."""
     db = databases.get(db_id)
     if not db:
-        fallback = DB_SCOPE_FALLBACK.get(db_id, (None, None))
-        _dbg_db_scope(f"db_id={db_id} missing -> fallback={fallback}")
-        return fallback
+        _dbg_db_scope(f"db_id={db_id} missing -> return (None, None)")
+        return (None, None)
 
     _dbg_db_scope(f"db_id={db_id}")
 
