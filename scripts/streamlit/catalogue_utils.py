@@ -101,7 +101,7 @@ def _dbg_db_scope(msg: str) -> None:
 
 
 def db_scope(db_id: str, databases: dict) -> tuple:
-    """Retourne (envo_key_or_tag, host_taxon_key) depuis le JSON."""
+    """Retourne (tag sample, tag origin) depuis sample.@id et origin[].@id (suffixe obo:)."""
     db = databases.get(db_id)
     if not db:
         _dbg_db_scope(f"db_id={db_id} missing -> return (None, None)")
@@ -119,9 +119,7 @@ def db_scope(db_id: str, databases: dict) -> tuple:
         if sep in iri:
             split_val = iri.split(sep)[-1]
             _dbg_db_scope(f"sample_split={split_val!r}")
-            # sample is used as environment context (ENVO) or food context (FOODON)
-            if split_val.startswith("ENVO_") or split_val.startswith("FOODON_"):
-                envo = split_val
+            envo = split_val
     else:
         _dbg_db_scope("sample is not a dict -> envo remains None")
 
@@ -138,9 +136,7 @@ def db_scope(db_id: str, databases: dict) -> tuple:
         if sep in iri:
             split_val = iri.split(sep)[-1]
             _dbg_db_scope(f"origin[{i}] split={split_val!r}")
-            # host must be a taxon, not another ontology term.
-            if split_val.startswith("NCBITaxon_"):
-                host = split_val
+            host = split_val
 
     _dbg_db_scope(f"result db_id={db_id} -> envo={envo!r}, host={host!r}")
     return (envo, host)
@@ -335,6 +331,14 @@ def _score_db_entry(
         return score
 
     envo_tag, host_tag = db_scope(db_id, databases)
+
+    # Broad questionnaire (multi-env / "autre"): do not rank host-specific
+    # catalogues (meteor animal guts, human gut, etc.) — their sample may not
+    # be ENVO/FOODON so envo_tag is None, which used to wrongly get a +2 "broad"
+    # bonus via _score_scope.
+    if envo_key is None and host_key is None and host_tag is not None:
+        return -1
+
     best_score = _score_scope(envo_tag, host_tag)
 
     db_obj = databases.get(db_id, {})
@@ -347,6 +351,8 @@ def _score_db_entry(
         if not isinstance(p, dict) or not p.get("@id"):
             continue
         p_envo, p_host = db_scope(p["@id"], databases)
+        if envo_key is None and host_key is None and p_host is not None:
+            continue
         part_score = _score_scope(p_envo, p_host)
         if part_score > best_part_score:
             best_part_score = part_score
