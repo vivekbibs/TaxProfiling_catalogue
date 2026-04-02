@@ -119,7 +119,9 @@ def db_scope(db_id: str, databases: dict) -> tuple:
         if sep in iri:
             split_val = iri.split(sep)[-1]
             _dbg_db_scope(f"sample_split={split_val!r}")
-            envo = split_val
+            # sample is used as environment context (ENVO) or food context (FOODON)
+            if split_val.startswith("ENVO_") or split_val.startswith("FOODON_"):
+                envo = split_val
     else:
         _dbg_db_scope("sample is not a dict -> envo remains None")
 
@@ -136,7 +138,9 @@ def db_scope(db_id: str, databases: dict) -> tuple:
         if sep in iri:
             split_val = iri.split(sep)[-1]
             _dbg_db_scope(f"origin[{i}] split={split_val!r}")
-            host = split_val
+            # host must be a taxon, not another ontology term.
+            if split_val.startswith("NCBITaxon_"):
+                host = split_val
 
     _dbg_db_scope(f"result db_id={db_id} -> envo={envo!r}, host={host!r}")
     return (envo, host)
@@ -242,10 +246,11 @@ SAMPLE_FILTER: dict[str, tuple] = {
     "Intestinal Chèvre (Capra hircus)": ("ENVO_00002003", "NCBITaxon_9925"),
     "Intestinal Mouton (Ovis aries)": ("ENVO_00002003", "NCBITaxon_9940"),
     "Sol (Soil)": ("ENVO_00001998", None),
-    "Océan / Eau marine": ("ENVO_00002006", "ENVO_00002149"),
+    "Océan / Eau marine": ("ENVO_00002149", None),
+    "Eau douce / Lac / Rivière": ("ENVO_00002006", None),
     "Sédiment": ("ENVO_00002007", None),
-    "Glacier-fed Streams": (None, "ENVO_01001529"),
-    "Nourriture / Aliment": ("ENVO_00002073", None),
+    "Glacier-fed Streams": ("ENVO_00002007", None),
+    "Nourriture / Aliment": ("FOODON_00002403", None),
     "Multi-environnements / Global": (None, None),
     "Autre / Je ne sais pas": (None, None),
 }
@@ -447,7 +452,8 @@ def recommend(
                 best_db_id = db_id
                 best_db_ts = ts
 
-        if best_db_score == 0 and (envo_key or host_key):
+        # Reject irrelevant matches. score=0 means no useful alignment.
+        if best_db_score <= 0:
             continue
 
         db_obj = databases.get(best_db_id, {})
