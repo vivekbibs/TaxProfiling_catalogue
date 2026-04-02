@@ -242,10 +242,9 @@ SAMPLE_FILTER: dict[str, tuple] = {
     "Intestinal Chèvre (Capra hircus)": ("ENVO_00002003", "NCBITaxon_9925"),
     "Intestinal Mouton (Ovis aries)": ("ENVO_00002003", "NCBITaxon_9940"),
     "Sol (Soil)": ("ENVO_00001998", None),
-    "Océan / Eau marine": ("ENVO_00002149", None),
-    "Eau douce / Lac / Rivière": ("ENVO_00002006", None),
+    "Océan / Eau marine": ("ENVO_00002006", "ENVO_00002149"),
     "Sédiment": ("ENVO_00002007", None),
-    "Glacier / Streams glaciaires": ("ENVO_00002007", None),
+    "Glacier-fed Streams": (None, "ENVO_01001529"),
     "Nourriture / Aliment": ("ENVO_00002073", None),
     "Multi-environnements / Global": (None, None),
     "Autre / Je ne sais pas": (None, None),
@@ -273,7 +272,7 @@ SAMPLE_CATEGORIES: dict[str, list[str]] = {
         "Océan / Eau marine",
         "Eau douce / Lac / Rivière",
         "Sédiment",
-        "Glacier / Streams glaciaires",
+        "Glacier-fed Streams",
         "Nourriture / Aliment",
     ],
     "Multi-environnements / Global": ["Multi-environnements / Global"],
@@ -306,6 +305,7 @@ def _score_db_entry(
     wants_euk: bool,
 ) -> int:
     """Score 0-6 d'une entrée uses_databases selon les critères utilisateur."""
+
     def _score_scope(envo_tag: str | None, host_tag: str | None) -> int:
         score = 0
 
@@ -483,7 +483,9 @@ def recommend(
             ]
         )
         # In broad contexts (Autre / Multi-env), prefer exhaustive composite DBs.
-        broad_boost = 1 if (envo_key is None and host_key is None and part_count > 0) else 0
+        broad_boost = (
+            1 if (envo_key is None and host_key is None and part_count > 0) else 0
+        )
         return (-r["score"], -broad_boost, -part_count)
 
     return sorted(results, key=_rank_tuple)
