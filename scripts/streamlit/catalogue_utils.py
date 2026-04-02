@@ -230,8 +230,8 @@ def download_variants(db: dict, tool_id: str) -> list[dict]:
 # ─────────────────────────────────────────────────────────────────────────────
 SAMPLE_FILTER: dict[str, tuple] = {
     "Intestinal humain (gut)": ("ENVO_00002003", "NCBITaxon_9606"),
-    "Cutané humain (skin)": ("ENVO_00002003", "NCBITaxon_9606"),
-    "Oral humain": ("ENVO_00002003", "NCBITaxon_9606"),
+    "Cutané humain (skin)": ("ENVO_2100003", "NCBITaxon_9606"),
+    "Oral humain": ("ENVO_08000002", "NCBITaxon_9606"),
     "Intestinal Souris (Mus musculus)": ("ENVO_00002003", "NCBITaxon_10090"),
     "Intestinal Rat (Rattus norvegicus)": ("ENVO_00002003", "NCBITaxon_10116"),
     "Intestinal Chien (Canis lupus)": ("ENVO_00002003", "NCBITaxon_9615"),
@@ -245,7 +245,7 @@ SAMPLE_FILTER: dict[str, tuple] = {
     "Océan / Eau marine": ("ENVO_00002149", None),
     "Eau douce / Lac / Rivière": ("ENVO_00002006", None),
     "Sédiment": ("ENVO_00002007", None),
-    "Glacier-fed Streams": ("ENVO_00002007", "ENVO_01001529"),
+    "Glacier / Streams glaciaires": ("ENVO_00002007", None),
     "Nourriture / Aliment": ("ENVO_00002073", None),
     "Multi-environnements / Global": (None, None),
     "Autre / Je ne sais pas": (None, None),
@@ -258,23 +258,25 @@ SAMPLE_CATEGORIES: dict[str, list[str]] = {
         "Oral humain",
     ],
     "Animal": [
-        "Souris (Mus musculus)",
-        "Rat (Rattus norvegicus)",
-        "Chien (Canis lupus)",
-        "Chat (Felis catus)",
-        "Cochon (Sus scrofa)",
-        "Lapin (Oryctolagus cuniculus)",
-        "Poulet (Gallus gallus)",
-        "Chèvre (Capra hircus)",
-        "Mouton (Ovis aries)",
+        "Intestinal Souris (Mus musculus)",
+        "Intestinal Rat (Rattus norvegicus)",
+        "Intestinal Chien (Canis lupus)",
+        "Intestinal Chat (Felis catus)",
+        "Intestinal Cochon (Sus scrofa)",
+        "Intestinal Lapin (Oryctolagus cuniculus)",
+        "Caecum Poulet (Gallus gallus)",
+        "Intestinal Chèvre (Capra hircus)",
+        "Intestinal Mouton (Ovis aries)",
     ],
     "Environnemental": [
-        "Sol",
+        "Sol (Soil)",
         "Océan / Eau marine",
+        "Eau douce / Lac / Rivière",
         "Sédiment",
+        "Glacier / Streams glaciaires",
         "Nourriture / Aliment",
     ],
-    "Multi-environnements / Général": ["Multi-environnements / Général"],
+    "Multi-environnements / Global": ["Multi-environnements / Global"],
     "Autre": ["Autre / Je ne sais pas"],
 }
 
@@ -384,7 +386,7 @@ def recommend(
         if ram and isinstance(ram, (int, float)) and ram > max_ram:
             continue
 
-        best_db_score = 0
+        best_db_score = -1
         best_db_id = None
         best_db_ts = None
 
