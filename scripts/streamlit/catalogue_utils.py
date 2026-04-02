@@ -149,7 +149,9 @@ def db_scope(db_id: str, databases: dict) -> tuple:
                 if sep in iri:
                     host = iri.split(sep)[-1]
         return (envo, host)
-    return DB_SCOPE_FALLBACK.get(db_id, (None, None))
+
+
+"""     return DB_SCOPE_FALLBACK.get(db_id, (None, None)) """
 
 
 # ─────────────────────────────────────────────────────────────────────────────
