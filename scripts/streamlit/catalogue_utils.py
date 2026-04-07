@@ -307,7 +307,7 @@ def _score_db_entry(
 ) -> int:
     """Score 0-6 d'une entrée uses_databases selon les critères utilisateur."""
 
-    def _score_scope(envo_tag: str | None, host_tag: str | None) -> int:
+    def _score_scope(envo_tag: str | None, host_tag: str | None, db_obj: dict | None) -> int:
         score = 0
 
         if envo_key:
@@ -328,8 +328,26 @@ def _score_db_entry(
             score += 3
         if envo_tag == "eukaryote" and wants_euk:
             score += 3
+
+        # Also use DB taxonomic_scope labels (Virus/Fungi/Eukaryota).
+        labels = []
+        if isinstance(db_obj, dict):
+            for t in _to_list(db_obj.get("taxonomic_scope")):
+                if isinstance(t, dict):
+                    labels.append(str(t.get("label", "")).strip().lower())
+        has_virus = any("virus" in lbl for lbl in labels)
+        has_fungi = any("fung" in lbl for lbl in labels)
+        has_euk = any(("eukary" in lbl) or ("eucary" in lbl) for lbl in labels)
+
+        if wants_virus and has_virus:
+            score += 3
+        if wants_fungi and has_fungi:
+            score += 3
+        if wants_euk and has_euk:
+            score += 3
         return score
 
+    db_obj = databases.get(db_id, {})
     envo_tag, host_tag = db_scope(db_id, databases)
 
     # Broad questionnaire (multi-env / "autre"): do not rank host-specific
@@ -339,9 +357,7 @@ def _score_db_entry(
     if envo_key is None and host_key is None and host_tag is not None:
         return -1
 
-    best_score = _score_scope(envo_tag, host_tag)
-
-    db_obj = databases.get(db_id, {})
+    best_score = _score_scope(envo_tag, host_tag, db_obj)
     parts = _to_list(db_obj.get("hasPart")) if isinstance(db_obj, dict) else []
 
     # If a composite DB (e.g. GlobDB) contains a very specific matching sub-DB
@@ -350,10 +366,11 @@ def _score_db_entry(
     for p in parts:
         if not isinstance(p, dict) or not p.get("@id"):
             continue
+        part_db = databases.get(p["@id"], {})
         p_envo, p_host = db_scope(p["@id"], databases)
         if envo_key is None and host_key is None and p_host is not None:
             continue
-        part_score = _score_scope(p_envo, p_host)
+        part_score = _score_scope(p_envo, p_host, part_db)
         if part_score > best_part_score:
             best_part_score = part_score
 

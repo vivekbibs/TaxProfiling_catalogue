@@ -44,23 +44,19 @@ TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 # IMPORTS LOGIQUE MÉTIER
 # ─────────────────────────────────────────────────────────────────────────────
 from catalogue_utils import (  # noqa: E402
-    _to_list,
-    load_catalogue,
-    taxon_labels,
-    sample_label,
-    origin_label,
-    is_about_label,
-    seq_scope_label,
-    taxonomy_badge,
-    db_release_str,
-    SAMPLE_FILTER,
     SAMPLE_CATEGORIES,
+    SAMPLE_FILTER,
     TAXON_IRI,
-    db_scope,
-    _score_db_entry,
+    _to_list,
+    db_release_str,
+    is_about_label,
+    load_catalogue,
+    origin_label,
     recommend,
-    compatible_tool_ids,
-    download_variants,
+    sample_label,
+    seq_scope_label,
+    taxon_labels,
+    taxonomy_badge,
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -409,10 +405,10 @@ def _tab_graph():
     import math
 
     import networkx as nx
+    import numpy as np
+    import pandas as pd
     import plotly.express as px
     import plotly.graph_objects as go
-    import pandas as pd
-    import numpy as np
 
     v_ego, v_matrix, v_sunburst, v_cards = st.tabs(
         [
