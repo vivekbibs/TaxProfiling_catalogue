@@ -305,46 +305,53 @@ def _score_db_entry(
     wants_fungi: bool,
     wants_euk: bool,
 ) -> int:
-    """Score 0-6 d'une entrée uses_databases selon les critères utilisateur."""
+    """Score d'une entrée uses_databases avec contraintes strictes."""
 
-    def _score_scope(envo_tag: str | None, host_tag: str | None, db_obj: dict | None) -> int:
-        score = 0
-
-        if envo_key:
-            if envo_tag == envo_key:
-                score += 3
-            elif envo_tag is None:
-                score += 1
-        else:
-            if envo_tag is None:
-                score += 2
-
-        if host_key and host_tag == host_key:
-            score += 3
-
-        if envo_tag == "virus" and wants_virus:
-            score += 3
-        if envo_tag == "fungi" and wants_fungi:
-            score += 3
-        if envo_tag == "eukaryote" and wants_euk:
-            score += 3
-
-        # Also use DB taxonomic_scope labels (Virus/Fungi/Eukaryota).
+    def _scope_labels(db_obj: dict | None) -> list[str]:
         labels = []
         if isinstance(db_obj, dict):
             for t in _to_list(db_obj.get("taxonomic_scope")):
                 if isinstance(t, dict):
                     labels.append(str(t.get("label", "")).strip().lower())
-        has_virus = any("virus" in lbl for lbl in labels)
-        has_fungi = any("fung" in lbl for lbl in labels)
-        has_euk = any(("eukary" in lbl) or ("eucary" in lbl) for lbl in labels)
+        return labels
 
-        if wants_virus and has_virus:
-            score += 3
-        if wants_fungi and has_fungi:
-            score += 3
-        if wants_euk and has_euk:
-            score += 3
+    def _matches_constraints(
+        envo_tag: str | None, host_tag: str | None, db_obj: dict | None
+    ) -> bool:
+        # Strict environment/host constraints from questionnaire.
+        if envo_key and envo_tag != envo_key:
+            return False
+        if host_key and host_tag != host_key:
+            return False
+
+        labels = _scope_labels(db_obj)
+        has_virus = ("virus" in str(envo_tag).lower()) or any(
+            "virus" in lbl for lbl in labels
+        )
+        has_fungi = ("fungi" in str(envo_tag).lower()) or any(
+            "fung" in lbl for lbl in labels
+        )
+        has_euk = ("eukaryote" in str(envo_tag).lower()) or any(
+            ("eukary" in lbl) or ("eucary" in lbl) for lbl in labels
+        )
+
+        # Strict taxonomic group constraints from questionnaire.
+        if wants_virus and not has_virus:
+            return False
+        if wants_fungi and not has_fungi:
+            return False
+        if wants_euk and not has_euk:
+            return False
+        return True
+
+    def _score_scope(envo_tag: str | None, host_tag: str | None, db_obj: dict | None) -> int:
+        score = 0
+        if envo_key and envo_tag == envo_key:
+            score += 4
+        if host_key and host_tag == host_key:
+            score += 4
+        if envo_key is None and host_key is None and envo_tag is None:
+            score += 1
         return score
 
     db_obj = databases.get(db_id, {})
@@ -357,7 +364,9 @@ def _score_db_entry(
     if envo_key is None and host_key is None and host_tag is not None:
         return -1
 
-    best_score = _score_scope(envo_tag, host_tag, db_obj)
+    best_score = _score_scope(envo_tag, host_tag, db_obj) if _matches_constraints(
+        envo_tag, host_tag, db_obj
+    ) else -1
     parts = _to_list(db_obj.get("hasPart")) if isinstance(db_obj, dict) else []
 
     # If a composite DB (e.g. GlobDB) contains a very specific matching sub-DB
@@ -369,6 +378,8 @@ def _score_db_entry(
         part_db = databases.get(p["@id"], {})
         p_envo, p_host = db_scope(p["@id"], databases)
         if envo_key is None and host_key is None and p_host is not None:
+            continue
+        if not _matches_constraints(p_envo, p_host, part_db):
             continue
         part_score = _score_scope(p_envo, p_host, part_db)
         if part_score > best_part_score:
