@@ -318,10 +318,12 @@ def _score_db_entry(
     def _matches_constraints(
         envo_tag: str | None, host_tag: str | None, db_obj: dict | None
     ) -> bool:
+        is_global_scope = envo_tag is None and host_tag is None
+
         # Strict environment/host constraints from questionnaire.
-        if envo_key and envo_tag != envo_key:
+        if envo_key and envo_tag != envo_key and not is_global_scope:
             return False
-        if host_key and host_tag != host_key:
+        if host_key and host_tag != host_key and not is_global_scope:
             return False
 
         labels = _scope_labels(db_obj)
@@ -350,6 +352,9 @@ def _score_db_entry(
             score += 4
         if host_key and host_tag == host_key:
             score += 4
+        # Keep truly global catalogues as fallback when user asks a specific context.
+        if (envo_key or host_key) and envo_tag is None and host_tag is None:
+            score += 1
         if envo_key is None and host_key is None and envo_tag is None:
             score += 1
         return score
