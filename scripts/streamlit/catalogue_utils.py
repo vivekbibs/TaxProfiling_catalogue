@@ -304,6 +304,9 @@ def _score_db_entry(
     wants_virus: bool,
     wants_fungi: bool,
     wants_euk: bool,
+    wants_bacteria: bool,
+    wants_archaea: bool,
+    rel_taxonomy_system=None,
 ) -> int:
     """Score d'une entrée uses_databases avec contraintes strictes."""
 
@@ -357,6 +360,14 @@ def _score_db_entry(
             score += 1
         if envo_key is None and host_key is None and envo_tag is None:
             score += 1
+
+        # GTDB is particularly relevant for Bacteria/Archaea profiling.
+        wants_ba = wants_bacteria or wants_archaea
+        if wants_ba:
+            ts_vals = _to_list(rel_taxonomy_system)
+            ts_lower = [str(x).strip().lower() for x in ts_vals if x is not None]
+            if "gtdb" in ts_lower:
+                score += 2
         return score
 
     db_obj = databases.get(db_id, {})
@@ -417,6 +428,8 @@ def recommend(
     wants_virus = "Virus" in selected_orgs
     wants_fungi = "Fungi" in selected_orgs
     wants_euk = "Eucaryotes" in selected_orgs
+    wants_bacteria = "Bactéries" in selected_orgs
+    wants_archaea = "Archées" in selected_orgs
     taxon_keys = [TAXON_IRI[o] for o in selected_orgs]
 
     def _flag_true(v) -> bool:
@@ -486,6 +499,9 @@ def recommend(
                 wants_virus,
                 wants_fungi,
                 wants_euk,
+                wants_bacteria,
+                wants_archaea,
+                ts,
             )
             if sc > best_db_score:
                 best_db_score = sc
