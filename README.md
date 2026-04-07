@@ -163,21 +163,8 @@ Le script `scripts/update_tools.py` sert a identifier les outils a recurer (quan
 
 ---
 
-## 6) Debug pratique
 
-Un log de debug de `db_scope` peut etre ecrit dans:
-
-- `scripts/streamlit/debug_db_scope.log`
-
-Il permet de verifier, pour chaque `db_id`:
-
-- le contenu de `sample` et `origin`;
-- les tags extraits;
-- le resultat final utilise par le moteur de recommandation.
-
----
-
-## 7) Dependances
+## 6) Dependances
 
 Dependances Python utilisees dans le projet (selon les modules executes):
 
@@ -194,7 +181,7 @@ Installer selon votre environnement (venv/conda/cluster).
 
 ---
 
-## 8) Philosophie du catalogue
+## 7) Philosophie du catalogue
 
 Ce projet vise a etre:
 
