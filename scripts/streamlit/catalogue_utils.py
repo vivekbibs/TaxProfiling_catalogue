@@ -197,13 +197,13 @@ def seq_scope_label(db: dict) -> str:
     return ", ".join(parts) or "—"
 
 
-def taxonomy_badge(tool: dict) -> str:
+def taxonomy_badge(ts) -> str:
     """Retourne un badge lisible pour taxonomy_system (str ou list)."""
-    parts = []
-    for item in _to_list(tool.get("uses_databases")):
-        if isinstance(item, dict) and item.get("taxonomy_system"):
-            parts.append(str(item["taxonomy_system"]))
-    return " + ".join(parts) if parts else "—"
+    if ts is None:
+        return "—"
+    if isinstance(ts, list):
+        return " + ".join(str(x).upper() for x in ts)
+    return str(ts).upper()
 
 
 def db_release_str(db: dict) -> str:
@@ -427,6 +427,7 @@ def recommend(
         best_db_score = -1
         best_db_id = None
         best_db_ts = None
+        best_db_rel = None
 
         for u in _to_list(tool.get("uses_databases")):
             if not isinstance(u, dict):
@@ -457,6 +458,7 @@ def recommend(
                 best_db_score = sc
                 best_db_id = db_id
                 best_db_ts = ts
+                best_db_rel = u
 
         # Reject irrelevant matches. score=0 means no useful alignment.
         if best_db_score <= 0:
@@ -478,6 +480,7 @@ def recommend(
                 "db_id": best_db_id,
                 "db": db_obj,
                 "db_ts": best_db_ts,
+                "db_rel": best_db_rel,
                 "score": best_db_score,
                 "dl": dl_info,
                 "releases": releases,

@@ -240,7 +240,7 @@ def render_questionnaire():
         db_id = rec["db_id"] or "—"
         t_name = tool.get("name", rec["tool_id"])
         db_name = db.get("name", db_id) if db else db_id
-        ts = rec["db_ts"]
+        rel = rec.get("db_rel") or {}
         releases = rec["releases"]
 
         badges = []
@@ -293,7 +293,7 @@ def render_questionnaire():
 
             with col_d:
                 st.markdown(f"### 🗄️ {db_name}")
-                ts_display = taxonomy_badge(ts)
+                ts_display = taxonomy_badge(rel.get("taxonomy_system"))
                 if ts_display != "—":
                     color = "#1D9E75" if "GTDB" in ts_display else "#534AB7"
                     st.markdown(
