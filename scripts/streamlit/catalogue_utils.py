@@ -197,13 +197,13 @@ def seq_scope_label(db: dict) -> str:
     return ", ".join(parts) or "—"
 
 
-def taxonomy_badge(ts) -> str:
+def taxonomy_badge(tool: dict) -> str:
     """Retourne un badge lisible pour taxonomy_system (str ou list)."""
-    if ts is None:
-        return "—"
-    if isinstance(ts, list):
-        return " + ".join(str(x).upper() for x in ts)
-    return str(ts).upper()
+    parts = []
+    for item in _to_list(tool.get("uses_databases")):
+        if isinstance(item, dict) and item.get("taxonomy_system"):
+            parts.append(str(item["taxonomy_system"]))
+    return " + ".join(parts) if parts else "—"
 
 
 def db_release_str(db: dict) -> str:
