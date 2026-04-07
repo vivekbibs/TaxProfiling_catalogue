@@ -361,6 +361,19 @@ def _score_db_entry(
         if envo_key is None and host_key is None and envo_tag is None:
             score += 1
 
+        # Slightly prefer composite catalogues (e.g. GlobDB) over a single
+        # contained catalogue when both satisfy constraints similarly.
+        if isinstance(db_obj, dict):
+            part_count = len(
+                [
+                    p
+                    for p in _to_list(db_obj.get("hasPart"))
+                    if isinstance(p, dict) and p.get("@id")
+                ]
+            )
+            if part_count > 0:
+                score += 1
+
         # GTDB is particularly relevant for Bacteria/Archaea profiling.
         wants_ba = wants_bacteria or wants_archaea
         if wants_ba:
