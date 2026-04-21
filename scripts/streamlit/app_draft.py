@@ -38,7 +38,7 @@ st.logo(
 st.image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
     caption=None,
-    width=40,
+    width=400,
     use_column_width=None,
     clamp=False,
     channels="RGB",
@@ -49,7 +49,7 @@ st.image(
 st.image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/labgem.jpeg",
     caption=None,
-    width=40,
+    width=400,
     use_column_width=None,
     clamp=False,
     channels="RGB",
@@ -60,7 +60,7 @@ st.image(
 st.image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.png",
     caption=None,
-    width=40,
+    width=400,
     use_column_width=None,
     clamp=False,
     channels="RGB",
@@ -71,7 +71,7 @@ st.image(
 st.image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo_Genoscope_ORIG_344.png",
     caption=None,
-    width=40,
+    width=400,
     use_column_width=None,
     clamp=False,
     channels="RGB",
