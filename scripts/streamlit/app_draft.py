@@ -31,7 +31,11 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
+st.logo(
+    "https://www.ifb-elixir.fr/wp-content/uploads/2025/08/logo-ifb-elixir.png",
+    "Logo IFB-ELIXIR",
+    width=120,
+)
 # ─────────────────────────────────────────────────────────────────────────────
 # CHEMINS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -356,7 +360,6 @@ def render_questionnaire():
                                 f"`{v_ifb.get('path','')}`"
                             )
 
-
     # ═══════════════════════════════════════════════════════════════════════
     # SECTION IFB — Scripts SLURM et Notebooks Jupyter
     # ═══════════════════════════════════════════════════════════════════════
@@ -398,89 +401,110 @@ def render_questionnaire():
                     placeholder="Détecté automatiquement depuis le JSON",
                 )
             with col_i2:
-                tool_key_sel = rec_sel["tool_id"].lower().replace("-","").replace("_","")
+                tool_key_sel = (
+                    rec_sel["tool_id"].lower().replace("-", "").replace("_", "")
+                )
                 _defaults = {
-                    "sylph":     (8, 32, "02:00:00"),
-                    "singlem":   (8, 8,  "04:00:00"),
-                    "meteor":    (16,64, "08:00:00"),
-                    "kraken":    (16,128,"04:00:00"),
-                    "kraken2":   (16,128,"04:00:00"),
+                    "sylph": (8, 32, "02:00:00"),
+                    "singlem": (8, 8, "04:00:00"),
+                    "meteor": (16, 64, "08:00:00"),
+                    "kraken": (16, 128, "04:00:00"),
+                    "kraken2": (16, 128, "04:00:00"),
                     "metaphlan": (8, 32, "04:00:00"),
-                    "metabuli":  (16,64, "06:00:00"),
+                    "metabuli": (16, 64, "06:00:00"),
                 }.get(tool_key_sel, (8, 32, "04:00:00"))
                 n_cpus = st.slider("CPUs", 1, 64, _defaults[0], key="ifb_cpu")
-                n_mem  = st.slider("RAM (GB)", 4, 512, _defaults[1], key="ifb_mem")
-                walltime = st.text_input("Walltime (HH:MM:SS)", _defaults[2], key="ifb_time")
+                n_mem = st.slider("RAM (GB)", 4, 512, _defaults[1], key="ifb_mem")
+                walltime = st.text_input(
+                    "Walltime (HH:MM:SS)", _defaults[2], key="ifb_time"
+                )
 
         user_params = {
             "input_fastq": input_fastq,
-            "cpus":        n_cpus,
-            "mem":         n_mem,
-            "time":        walltime,
+            "cpus": n_cpus,
+            "mem": n_mem,
+            "time": walltime,
         }
         if db_path_override.strip():
             user_params["db_path"] = db_path_override.strip()
 
-        tab_sbatch, tab_nb = st.tabs(["📄 Script SLURM (sbatch)", "📓 Notebook Jupyter"])
+        tab_sbatch, tab_nb = st.tabs(
+            ["📄 Script SLURM (sbatch)", "📓 Notebook Jupyter"]
+        )
 
         # ── Tab SLURM ──────────────────────────────────────────────────────
         with tab_sbatch:
             try:
                 from ifb_export import make_sbatch
+
                 script = make_sbatch(
-                    tool   = rec_sel["tool"],
-                    db     = rec_sel["db"],
-                    db_id  = rec_sel["db_id"],
-                    db_rel = rec_sel.get("db_rel") or {},
-                    user_params = user_params,
+                    tool=rec_sel["tool"],
+                    db=rec_sel["db"],
+                    db_id=rec_sel["db_id"],
+                    db_rel=rec_sel.get("db_rel") or {},
+                    user_params=user_params,
                 )
                 st.code(script, language="bash")
                 fname = f"{rec_sel['tool_id']}_{rec_sel['db_id']}.sh"
                 st.download_button(
-                    label    = "⬇️ Télécharger le script .sh",
-                    data     = script,
-                    file_name= fname,
-                    mime     = "text/x-sh",
-                    key      = "dl_sbatch",
+                    label="⬇️ Télécharger le script .sh",
+                    data=script,
+                    file_name=fname,
+                    mime="text/x-sh",
+                    key="dl_sbatch",
                 )
-                st.markdown("""
+                st.markdown(
+                    """
 **Comment utiliser ce script sur l'IFB :**
 ```bash
 # 1. Transférez le script sur le cluster
-scp """ + fname + """ login@core.cluster.france-bioinformatique.fr:~/
+scp """
+                    + fname
+                    + """ login@core.cluster.france-bioinformatique.fr:~/
 
 # 2. Connectez-vous et soumettez le job
 ssh login@core.cluster.france-bioinformatique.fr
-sbatch """ + fname + """
+sbatch """
+                    + fname
+                    + """
 ```
-""")
+"""
+                )
             except ImportError:
-                st.error("Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`.")
+                st.error(
+                    "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
+                )
 
         # ── Tab Notebook ───────────────────────────────────────────────────
         with tab_nb:
             try:
                 from ifb_export import make_notebook, notebook_to_json
+
                 nb = make_notebook(
-                    tool   = rec_sel["tool"],
-                    db     = rec_sel["db"],
-                    db_id  = rec_sel["db_id"],
-                    db_rel = rec_sel.get("db_rel") or {},
-                    user_params = user_params,
+                    tool=rec_sel["tool"],
+                    db=rec_sel["db"],
+                    db_id=rec_sel["db_id"],
+                    db_rel=rec_sel.get("db_rel") or {},
+                    user_params=user_params,
                 )
                 nb_json = notebook_to_json(nb)
                 tool_name_nb = rec_sel["tool"].get("name", rec_sel["tool_id"])
-                db_name_nb   = rec_sel["db"].get("name", rec_sel["db_id"]) if rec_sel["db"] else rec_sel["db_id"]
+                db_name_nb = (
+                    rec_sel["db"].get("name", rec_sel["db_id"])
+                    if rec_sel["db"]
+                    else rec_sel["db_id"]
+                )
                 nb_fname = f"tutorial_{rec_sel['tool_id']}_{rec_sel['db_id']}.ipynb"
 
                 st.download_button(
-                    label    = f"⬇️ Télécharger le notebook {nb_fname}",
-                    data     = nb_json,
-                    file_name= nb_fname,
-                    mime     = "application/x-ipynb+json",
-                    key      = "dl_nb",
+                    label=f"⬇️ Télécharger le notebook {nb_fname}",
+                    data=nb_json,
+                    file_name=nb_fname,
+                    mime="application/x-ipynb+json",
+                    key="dl_nb",
                 )
-                st.markdown(f"""
+                st.markdown(
+                    f"""
 **Comment ouvrir ce notebook sur l'IFB OpenOnDemand :**
 
 1. Téléchargez le fichier `{nb_fname}` ci-dessus
@@ -490,7 +514,8 @@ sbatch """ + fname + """
 5. Activez votre environnement conda dans le kernel avant d'exécuter
 
 > **Tip** : Modifiez les cellules `INPUT_FASTQ` et `DB_PATH` avant d'exécuter.
-""")
+"""
+                )
                 # Aperçu des cellules
                 with st.expander("👁️ Aperçu du notebook", expanded=False):
                     for cell in nb.get("cells", []):
@@ -499,12 +524,16 @@ sbatch """ + fname + """
                             if src.startswith("#"):
                                 st.markdown(src.split("\n")[0])
                         elif cell["cell_type"] == "code":
-                            st.code(cell["source"][:300] + ("..." if len(cell["source"]) > 300 else ""),
-                                    language="python")
+                            st.code(
+                                cell["source"][:300]
+                                + ("..." if len(cell["source"]) > 300 else ""),
+                                language="python",
+                            )
 
             except ImportError:
-                st.error("Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`.")
-
+                st.error(
+                    "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
+                )
 
     st.markdown("---")
     if st.button("🔄 Réinitialiser"):
