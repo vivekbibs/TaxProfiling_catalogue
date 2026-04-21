@@ -33,7 +33,7 @@ st.set_page_config(
 )
 st.logo(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
-    size="small",
+    size="medium",
 )
 # ─────────────────────────────────────────────────────────────────────────────
 # CHEMINS
