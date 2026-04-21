@@ -58,7 +58,7 @@ st.image(
     link=None,
 ),
 st.image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.svg.png",
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.png",
     caption=None,
     width="content",
     use_column_width=None,
