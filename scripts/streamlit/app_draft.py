@@ -35,6 +35,50 @@ st.logo(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
     size="large",
 )
+st.image(
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
+    caption=None,
+    width="content",
+    use_column_width=None,
+    clamp=False,
+    channels="RGB",
+    output_format="auto",
+    use_container_width=None,
+    link=None,
+)
+st.image(
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/labgem.jpeg",
+    caption=None,
+    width="content",
+    use_column_width=None,
+    clamp=False,
+    channels="RGB",
+    output_format="auto",
+    use_container_width=None,
+    link=None,
+),
+st.image(
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.svg.png",
+    caption=None,
+    width="content",
+    use_column_width=None,
+    clamp=False,
+    channels="RGB",
+    output_format="auto",
+    use_container_width=None,
+    link=None,
+),
+st.image(
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo_Genoscope_ORIG_344.gif",
+    caption=None,
+    width="content",
+    use_column_width=None,
+    clamp=False,
+    channels="RGB",
+    output_format="auto",
+    use_container_width=None,
+    link=None,
+),
 # ─────────────────────────────────────────────────────────────────────────────
 # CHEMINS
 # ─────────────────────────────────────────────────────────────────────────────
