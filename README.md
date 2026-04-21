@@ -1,4 +1,17 @@
-# Taxonomic Profiling Catalogue
+# Taxonomic Profiling Catalog
+
+This project centralizes a **catalog** of tools and associated reference databases for taxonomic profiling (metagenomics), featuring:
+
+- A **Streamlit** interface to explore the catalog and obtain recommendations based on user questions and needs;
+- Workflow **notebooks** to launch analyses on the IFB cluster and cloud;
+
+The goal is to properly link:
+1) tool metadata,
+2) database metadata,
+3) user use cases (sample type, target taxa, technical constraints, etc.).
+
+---
+
 The following introduction was largely inspired by:
 
 Sophia Hampe, Bérénice Batut, Paul Zierep, Taxonomic Profiling and Visualization of Metagenomic Data (Galaxy Training Materials). [https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html](https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html)
