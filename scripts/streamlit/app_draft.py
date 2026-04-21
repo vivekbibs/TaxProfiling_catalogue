@@ -32,9 +32,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 st.logo(
-    "https://www.ifb-elixir.fr/wp-content/uploads/2025/08/logo-ifb-elixir.png",
-    "Logo IFB-ELIXIR",
-    width=120,
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
+    size="small",
 )
 # ─────────────────────────────────────────────────────────────────────────────
 # CHEMINS
