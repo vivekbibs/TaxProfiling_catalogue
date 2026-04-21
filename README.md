@@ -1,18 +1,39 @@
 # Catalogue de Profiling Taxonomique
 
-Ce projet centralise un **catalogue JSON** d'outils et de bases de donnees pour le profiling taxonomique (metagenomique), avec:
+Ce projet centralise un **catalogue** d'outils, et de bases de données de référence associées, pour le profiling taxonomique (metagenomique), avec:
 
-- une interface **Streamlit** pour explorer le catalogue et obtenir des recommandations;
-- des **notebooks** de workflow pour lancer des analyses avec Sylph et SingleM;
+- une interface **Streamlit** pour explorer le catalogue et obtenir des recommandations en fonctions des questions/besoins des utilisateurs;
+- des **notebooks** de workflow pour lancer des analyses sur cluster et cloud IFB;
 - des scripts utilitaires de curation/mise a jour.
 
 L'objectif est de relier proprement:
-1) les metadonnees des outils,
-2) les metadonnees des bases,
-3) les cas d'usage utilisateur (type d'echantillon, taxons cibles, contraintes techniques).
+1) les métadonnées des outils,
+2) les métadonnées des bases,
+3) les cas d'usage utilisateur (type d'echantillon, taxons cibles, contraintes techniques...).
 
 ---
 
+# What is Taxonomic Profiling ? 
+
+Sophia Hampe, Bérénice Batut, Paul Zierep, Taxonomic Profiling and Visualization of Metagenomic Data (Galaxy Training Materials). [https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html](https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html)
+
+Hiltemann, Saskia, Rasche, Helena et al., 2023 Galaxy Training: A Powerful Framework for Teaching! PLOS Computational Biology [10.1371/journal.pcbi.1010752](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1010752)
+Batut et al., 2018 Community-Driven Data Analysis Training for Biology Cell Systems 10.1016/j.cels.2018.05.012
+
+The term “microbiome” describes “a characteristic microbial community occupying a reasonably well-defined habitat which has distinct physio-chemical properties. The term thus not only refers to the microorganisms involved but also encompasses their theatre of activity” (Whipps et al. 1988).
+
+
+Microbiome data can be gathered from different environments such as soil, water or the human gut. The biological interest lies in general in the question how the microbiome present at a specific site influences this environment. To study a microbiome, we need to use indirect methods like metagenomics or metatranscriptomics.
+
+Metagenomic samples contain DNA from different organisms at a specific site, where the sample was collected. Metagenomic data can be used to find out which organisms coexist in that niche and which genes are present in the different organisms. Metatranscriptomic samples include the transcribed gene products, thus RNA, that therefore allow to not only study the presence of genes but additionally their expression in the given environment. The following tutorial will focus on metagenomics data, but the principle is the same for metatranscriptomics data.
+
+The investigation of microorganisms present at a specific site and their relative abundance is also called “microbial community profiling”. The main objective is to identify the microorganisms that are present within the given sample. This can be achieved for all known microbes, where the DNA sequence specific for a certain species is known.
+
+For that we try to identify the taxon to which each individual read belongs.
+
+For metagenomic data analysis we start with sequences derived from DNA fragments that are isolated from the sample of interest. Ideally, the sequences from all microbes in the sample are present. The underlying idea of taxonomic assignment is to compare the DNA sequences found in the sample (reads) to DNA sequences of a database. When a read matches a database DNA sequence of a known microbe, we can derive a list with microbes present in the sample.
+
+Taxonomic profiling refers to methods that produces relative abundance of present microorganisms, through an abundance profile table, without any binning/assembly methods.
 ## 1) Structure du projet
 
 ```text
