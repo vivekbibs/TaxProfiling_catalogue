@@ -56,7 +56,7 @@ st.image(
     output_format="auto",
     use_container_width=None,
     link=None,
-),
+)
 st.image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.png",
     caption=None,
@@ -67,9 +67,9 @@ st.image(
     output_format="auto",
     use_container_width=None,
     link=None,
-),
+)
 st.image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo_Genoscope_ORIG_344.gif",
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo_Genoscope_ORIG_344.png",
     caption=None,
     width="content",
     use_column_width=None,
@@ -78,7 +78,7 @@ st.image(
     output_format="auto",
     use_container_width=None,
     link=None,
-),
+)
 # ─────────────────────────────────────────────────────────────────────────────
 # CHEMINS
 # ─────────────────────────────────────────────────────────────────────────────
