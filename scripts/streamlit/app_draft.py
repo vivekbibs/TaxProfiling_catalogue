@@ -22,6 +22,29 @@ from pathlib import Path
 
 import streamlit as st
 
+
+# Helper: display images only if the file exists to avoid Streamlit media errors
+def _maybe_logo(path: str, *args, **kwargs):
+    p = Path(path)
+    if not p.exists():
+        return None
+    try:
+        return st.logo(str(p), *args, **kwargs)
+    except Exception:
+        # fall back silently
+        return None
+
+
+def _maybe_image(path: str, *args, **kwargs):
+    p = Path(path)
+    if not p.exists():
+        return None
+    try:
+        return st.image(str(p), *args, **kwargs)
+    except Exception:
+        return None
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
@@ -31,11 +54,11 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-st.logo(
+_maybe_logo(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
     size="large",
 )
-st.image(
+_maybe_image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
     caption=None,
     width=400,
@@ -46,7 +69,7 @@ st.image(
     use_container_width=None,
     link=None,
 )
-st.image(
+_maybe_image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/labgem.jpeg",
     caption=None,
     width=400,
@@ -57,7 +80,7 @@ st.image(
     use_container_width=None,
     link=None,
 )
-st.image(
+_maybe_image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.png",
     caption=None,
     width=400,
@@ -68,7 +91,7 @@ st.image(
     use_container_width=None,
     link=None,
 )
-st.image(
+_maybe_image(
     "/home/vashokan/Bureau/IS4/catalogue/data/images/logo_Genoscope_ORIG_344.png",
     caption=None,
     width=400,
