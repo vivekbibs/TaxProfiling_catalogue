@@ -1,4 +1,4 @@
-# Taxonomic Profiling Catalog
+# A FAIR Catalog for Taxonomic Profiling
 
 This project centralizes a **catalog** of tools and associated reference databases for taxonomic profiling (metagenomics), featuring:
 
