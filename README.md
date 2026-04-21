@@ -39,13 +39,13 @@ Taxonomic Profiling refers to methods that directly calculates the relative abun
 ```text
 catalogue/
 ├── data/
-│   ├── databases/              # database JSON files
-│   ├── tools/                  # tool JSON files
+│   ├── databases/              # reference databases metadata in JSON format
+│   ├── tools/                  # tools metadata in JSON format
 │   └── schemas/                # JSON-LD schemas (tool_schema, database_schema...)
 ├── scripts/
 │   ├── streamlit/
-│   │   ├── app.py              # Streamlit UI (questionnaire + catalogue)
-│   │   └── catalogue_utils.py  # business logic (loading, normalisation, recommendation)
+│   │   ├── app.py              # Streamlit UI 
+│   │   └── catalogue_utils.py  # utils for streamlit interface
 │   ├── notebooks/
 │   │   ├── sylph_nb.ipynb      # Sylph + GlobDB workflow
 │   │   └── singlem_nb.ipynb    # SingleM + GlobDB workflow
