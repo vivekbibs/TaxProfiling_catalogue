@@ -14,6 +14,7 @@ L'objectif est de relier proprement:
 ---
 
 # What is Taxonomic Profiling ? 
+The following introduction was largely inspired by :
 
 Sophia Hampe, Bérénice Batut, Paul Zierep, Taxonomic Profiling and Visualization of Metagenomic Data (Galaxy Training Materials). [https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html](https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html)
 
