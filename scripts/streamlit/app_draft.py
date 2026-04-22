@@ -1402,3 +1402,5 @@ if page == "🔍 Questionnaire":
     render_questionnaire()
 elif page == "📊 Catalogue":
     render_catalogue()
+elif page == "🏠 Accueil":
+    render_home()
