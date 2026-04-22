@@ -154,6 +154,9 @@ with st.sidebar:
 # ═════════════════════════════════════════════════════════════════════════════
 def render_home():
     st.markdown("# 🏠 Accueil — Profiling Taxonomique")
+    st.pdf(
+        "/home/vashokan/Bureau/IS4/catalogue/data/homepage_catalogue.pdf", height=3000
+    )
     st.markdown(
         "Bienvenue dans le catalogue et l'aide au choix pour le profiling taxonomique. "
         "Utilisez le menu de navigation en haut à gauche pour aller au Questionnaire ou au Catalogue."
