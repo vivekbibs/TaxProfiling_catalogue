@@ -141,7 +141,7 @@ with st.sidebar:
     st.markdown("## 🧬 Navigation")
     page = st.radio(
         "",
-        ["🔍 Questionnaire", "📊 Catalogue"],
+        ["🏠 Accueil", "🔍 Questionnaire", "📊 Catalogue"],
         label_visibility="collapsed",
     )
     st.markdown("---")
@@ -152,6 +152,26 @@ with st.sidebar:
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — QUESTIONNAIRE
 # ═════════════════════════════════════════════════════════════════════════════
+def render_home():
+    st.markdown("# 🏠 Accueil — Profiling Taxonomique")
+    st.markdown(
+        "Bienvenue dans le catalogue et l'aide au choix pour le profiling taxonomique. "
+        "Utilisez le menu de navigation en haut à gauche pour aller au Questionnaire ou au Catalogue."
+    )
+    st.markdown("---")
+    st.markdown("Quelques chiffres rapides :")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Bases de données", len(databases))
+    with col2:
+        st.metric("Outils", len(tools))
+    with col3:
+        st.markdown("\n")
+        st.caption(
+            "Sélectionnez '🔍 Questionnaire' pour obtenir des recommandations personnalisées."
+        )
+
+
 def render_questionnaire():
     st.markdown("# 🧬 Aide au choix — Profiling Taxonomique")
     st.markdown(
