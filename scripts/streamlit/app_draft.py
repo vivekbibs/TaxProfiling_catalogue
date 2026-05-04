@@ -55,13 +55,13 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 _maybe_logo(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos_institutions.png",
     size="large",
 )
 _maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo-ifb-elixir.png",
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos_institutions.png",
     caption=None,
-    width=400,
+    width=800,
     use_column_width=None,
     clamp=False,
     channels="RGB",
@@ -69,39 +69,7 @@ _maybe_image(
     use_container_width=None,
     link=None,
 )
-_maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/labgem.jpeg",
-    caption=None,
-    width=400,
-    use_column_width=None,
-    clamp=False,
-    channels="RGB",
-    output_format="auto",
-    use_container_width=None,
-    link=None,
-)
-_maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/LOGO_CEA_ORIGINAL_2022.png",
-    caption=None,
-    width=400,
-    use_column_width=None,
-    clamp=False,
-    channels="RGB",
-    output_format="auto",
-    use_container_width=None,
-    link=None,
-)
-_maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logo_Genoscope_ORIG_344.png",
-    caption=None,
-    width=400,
-    use_column_width=None,
-    clamp=False,
-    channels="RGB",
-    output_format="auto",
-    use_container_width=None,
-    link=None,
-)
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CHEMINS
 # ─────────────────────────────────────────────────────────────────────────────
