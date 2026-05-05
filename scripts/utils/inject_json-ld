@@ -1,0 +1,30 @@
+La technique : st.markdown avec unsafe_allow_html=True
+Streamlit ne donne pas accès direct au <head>, mais on peut y injecter du HTML arbitraire — y compris des balises <script> — via cette astuce :
+pythonimport json
+from pathlib import Path
+import streamlit as st
+
+def inject_jsonld_schemas(*schema_paths: Path):
+    """Injecte les fichiers JSON-LD dans le <head> HTML de la page Streamlit."""
+    scripts = []
+    for path in schema_paths:
+        if path.exists():
+            data = json.loads(path.read_text(encoding="utf-8"))
+            scripts.append(
+                f'<script type="application/ld+json">\n'
+                f'{json.dumps(data, indent=2, ensure_ascii=False)}\n'
+                f'</script>'
+            )
+    if scripts:
+        st.markdown("\n".join(scripts), unsafe_allow_html=True)
+Dans votre app.py, juste après st.set_page_config()
+python# ── CHEMINS ──────────────────────────────────────────────────────────────────
+SCRIPT_DIR   = Path(__file__).parent.resolve()
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+SCHEMA_DIR   = PROJECT_ROOT / "data" / "schema"
+
+# ── JSON-LD DANS LE HEAD ──────────────────────────────────────────────────────
+inject_jsonld_schemas(
+    SCHEMA_DIR / "database_schema.json",
+    SCHEMA_DIR / "tool_schema.json",
+)

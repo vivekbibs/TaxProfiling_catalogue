@@ -2,10 +2,11 @@
 #SBATCH --job-name=singlem_profile
 #SBATCH --output=singlem_%j.out
 #SBATCH --error=singlem_%j.err
-#SBATCH --time=24:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
-#SBATCH --partition=normal
+#SBATCH --partition=fast
+#SBATCH --account=YOUR_PROJECT_NAME
 
 # Script SLURM pour profiler des métagénomes avec SingleM
 # Base de données: GTDB-226 (pré-installée sur le cluster)
@@ -15,17 +16,21 @@
 # ==============================================================================
 
 # Chemin vers la base de données GTDB-226 (metapackage SingleM)
-METAPACKAGE="/shared/bank/singlem/glob_db/GlobDB_r226.metapackage_v1.smpkg"
+# Sur IFB, utilisez /shared/bank/ pour les bases publiques ou /shared/projects/ pour votre projet
+METAPACKAGE="/shared/bank/singlem/gtdb-r226_metapackage"
+# OU si dans votre projet:
+# METAPACKAGE="/shared/projects/YOUR_PROJECT_NAME/databases/singlem/gtdb-r226_metapackage"
 
 # Fichiers d'entrée (reads paired-end)
-FORWARD_READS="/path/to/sample_R1.fastq.gz"
-REVERSE_READS="/path/to/sample_R2.fastq.gz"
+# Utilisez /shared/projects/YOUR_PROJECT_NAME/ pour vos données
+FORWARD_READS="/shared/projects/YOUR_PROJECT_NAME/data/sample_R1.fastq.gz"
+REVERSE_READS="/shared/projects/YOUR_PROJECT_NAME/data/sample_R2.fastq.gz"
 
 # Nom de l'échantillon (pour les fichiers de sortie)
 SAMPLE_NAME="sample01"
 
-# Répertoire de sortie
-OUTPUT_DIR="./singlem_output"
+# Répertoire de sortie (dans votre espace projet)
+OUTPUT_DIR="/shared/projects/YOUR_PROJECT_NAME/results/singlem_output"
 
 # Nombre de threads (doit correspondre à --cpus-per-task)
 THREADS=16
@@ -48,10 +53,17 @@ echo "=========================================="
 # Créer le répertoire de sortie
 mkdir -p ${OUTPUT_DIR}
 
+# Charger le module SingleM (si disponible) ou conda
+# Option 1: Si SingleM est disponible comme module
 # module load singlem
-# (ajustez selon votre installation)
-module load singlem  # ou module load miniconda3
 
+# Option 2: Si vous utilisez un environnement conda personnel
+module load conda
+conda activate singlem
+
+# Option 3: Si vous utilisez Apptainer/Singularity
+# module load apptainer
+# SINGLEM_CONTAINER="/path/to/singlem.sif"
 
 # Vérification que SingleM est disponible
 if ! command -v singlem &> /dev/null; then

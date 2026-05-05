@@ -5,7 +5,8 @@
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=32G
-#SBATCH --partition=normal
+#SBATCH --partition=fast
+#SBATCH --account=YOUR_PROJECT_NAME
 
 # Script SLURM pour profiler des métagénomes avec Sylph
 # Base de données: GTDB-226 (pré-installée sur le cluster)
@@ -15,20 +16,21 @@
 # ==============================================================================
 
 # Chemin vers la base de données GTDB-226 (pre-sketched Sylph database)
-SYLPH_DATABASE="/path/to/gtdb-r226.syldb"
+# Sur IFB, utilisez /shared/bank/ pour les bases publiques ou /shared/projects/ pour votre projet
+SYLPH_DATABASE="/shared/bank/sylph/gtdb-r226.syldb"
+# OU si dans votre projet:
+# SYLPH_DATABASE="/shared/projects/YOUR_PROJECT_NAME/databases/sylph/gtdb-r226.syldb"
 
 # Fichiers d'entrée (reads paired-end)
-# Pour Sylph, vous pouvez soit:
-# 1. Fournir les reads directement (recommandé depuis sylph v0.6+)
-# 2. Ou pre-sketch les reads puis les profiler
-FORWARD_READS="/path/to/sample_R1.fastq.gz"
-REVERSE_READS="/path/to/sample_R2.fastq.gz"
+# Utilisez /shared/projects/YOUR_PROJECT_NAME/ pour vos données
+FORWARD_READS="/shared/projects/YOUR_PROJECT_NAME/data/sample_R1.fastq.gz"
+REVERSE_READS="/shared/projects/YOUR_PROJECT_NAME/data/sample_R2.fastq.gz"
 
 # Nom de l'échantillon (pour les fichiers de sortie)
 SAMPLE_NAME="sample01"
 
-# Répertoire de sortie
-OUTPUT_DIR="./sylph_output"
+# Répertoire de sortie (dans votre espace projet)
+OUTPUT_DIR="/shared/projects/YOUR_PROJECT_NAME/results/sylph_output"
 
 # Nombre de threads (doit correspondre à --cpus-per-task)
 THREADS=16
@@ -40,7 +42,7 @@ PROFILING_MODE="direct"
 
 # Options pour sylph-tax (intégration taxonomique)
 GTDB_VERSION="GTDB_r226"  # Doit correspondre à votre database
-TAXONOMY_DIR="./sylph_taxonomy"
+TAXONOMY_DIR="/shared/projects/YOUR_PROJECT_NAME/databases/sylph_taxonomy"
 
 # ==============================================================================
 # INITIALISATION
@@ -58,10 +60,17 @@ echo "=========================================="
 mkdir -p ${OUTPUT_DIR}
 mkdir -p ${TAXONOMY_DIR}
 
-# Activation de l'environnement conda Sylph
-# (ajustez selon votre installation)
-module load conda  # ou module load miniconda3
+# Charger le module Sylph (si disponible) ou conda
+# Option 1: Si Sylph est disponible comme module
+# module load sylph
+
+# Option 2: Si vous utilisez un environnement conda personnel
+module load conda
 conda activate sylph
+
+# Option 3: Si vous utilisez Apptainer/Singularity
+# module load apptainer
+# SYLPH_CONTAINER="/path/to/sylph.sif"
 
 # Vérification que Sylph est disponible
 if ! command -v sylph &> /dev/null; then
