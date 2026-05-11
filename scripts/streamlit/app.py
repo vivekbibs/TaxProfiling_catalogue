@@ -197,11 +197,11 @@ def render_questionnaire():
         selected_orgs = st.multiselect(
             "Taxons to identify",
             list(TAXON_IRI.keys()),
-            default=["Bacteria", "Archea"],
+            default=["Bacteria", "Archaea"],
         )
         if not selected_orgs:
             st.warning("Select at least one organism group to get recommendations.")
-        if "Virus" in selected_orgs or "Eucaryotes" in selected_orgs:
+        if "Virus" in selected_orgs or "Eukaryota" in selected_orgs:
             st.warning(
                 "⚠️ Few tools support virus or eukaryote profiling — expect limited recommendations."
             )
