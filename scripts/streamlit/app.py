@@ -195,17 +195,19 @@ def render_questionnaire():
     col_org, col_extra = st.columns(2)
     with col_org:
         selected_orgs = st.multiselect(
-            "Groupes taxonomiques à identifier",
+            "Taxons to identify",
             list(TAXON_IRI.keys()),
-            default=["Bactéries", "Archées"],
+            default=["Bacteria", "Archea"],
         )
         if not selected_orgs:
-            st.warning("Sélectionnez au moins un groupe.")
+            st.warning("Select at least one organism group to get recommendations.")
         if "Virus" in selected_orgs or "Eucaryotes" in selected_orgs:
-            st.warning("⚠️ Peu d'outils couvrent Virus et Eucaryotes.")
+            st.warning(
+                "⚠️ Few tools support virus or eukaryote profiling — expect limited recommendations."
+            )
     with col_extra:
         wants_strain = st.checkbox("🔬 Strain-level profiling")
-        wants_func = st.checkbox("⚙️ Profiling fonctionnel")
+        wants_func = st.checkbox("⚙️ Functional profiling")
         if wants_func:
             func_tools = [
                 t.get("name", tid)
@@ -334,7 +336,7 @@ def render_questionnaire():
         if tool.get("strain_level"):
             badges.append("🔬 strain-level")
         if tool.get("functional_profiling"):
-            badges.append("⚙️ fonctionnel")
+            badges.append("⚙️ functional")
         badge_str = "  ·  ".join(badges)
 
         with st.expander(
@@ -362,10 +364,10 @@ def render_questionnaire():
                         f"**Strain-level** : {'✅' if tool.get('strain_level') else '❌'}"
                     )
                     st.markdown(
-                        f"**Fonctionnel** : {'✅' if tool.get('functional_profiling') else '❌'}"
+                        f"**Functional profiling** : {'✅' if tool.get('functional_profiling') else '❌'}"
                     )
                     st.markdown(f"**Citations** : {tool.get('citations_count') or '—'}")
-                    st.markdown(f"**Taxonomie** : {tool.get('taxonomy') or '—'}")
+                    st.markdown(f"**Taxonomy** : {tool.get('taxonomy') or '—'}")
                 links = []
                 if tool.get("repo"):
                     links.append(f"[GitHub]({tool['repo']})")
@@ -397,9 +399,9 @@ def render_questionnaire():
                     if taxa:
                         st.markdown(f"**Taxons** : {', '.join(taxa)}")
                     for label, fn in [
-                        ("Échantillon", sample_label),
-                        ("Origine", origin_label),
-                        ("Séquences", seq_scope_label),
+                        ("Sample", sample_label),
+                        ("Origin", origin_label),
+                        ("Sequences", seq_scope_label),
                         ("is_about", is_about_label),
                     ]:
                         val = fn(db)
@@ -407,13 +409,13 @@ def render_questionnaire():
                             st.markdown(f"**{label}** : {val}")
                     st.markdown(f"**Release** : {db_release_str(db)}")
                     if db.get("homepage"):
-                        st.markdown(f"🌐 [Site officiel]({db['homepage']})")
+                        st.markdown(f"🌐 [Official site]({db['homepage']})")
                     if db.get("doi"):
                         st.markdown(f"📄 [Publication]({db['doi']})")
                 else:
                     st.caption(
-                        f"ℹ️ `{db_id}.json` absent de `data/databases/` "
-                        "— ajoutez-le pour les détails complets."
+                        f"ℹ️ `{db_id}.json` absent from `data/databases/` "
+                        "— add it for more complete details."
                     )
                 if db_id in parent_db_by_child:
                     parent_names = [
@@ -421,7 +423,7 @@ def render_questionnaire():
                         for pid in parent_db_by_child[db_id]
                     ]
                     st.info(
-                        "ℹ️ Cette BD est incluse dans : "
+                        "ℹ️ This database is included in : "
                         + ", ".join(f"**{n}**" for n in parent_names)
                     )
                 dl = rec["dl"]
@@ -591,15 +593,15 @@ sbatch """
                     key="dl_nb",
                 )
                 st.markdown(f"""
-**Comment ouvrir ce notebook sur l'IFB OpenOnDemand :**
+**How to open this notebook on IFB OpenOnDemand:**
 
-1. Téléchargez le fichier `{nb_fname}` ci-dessus
-2. Connectez-vous à [https://ondemand.cluster.france-bioinformatique.fr](https://ondemand.cluster.france-bioinformatique.fr)
-3. Allez dans **Files** → uploadez `{nb_fname}` dans votre dossier home
-4. Ouvrez **Jupyter Notebook** depuis le menu → naviguez jusqu'au fichier
-5. Activez votre environnement conda dans le kernel avant d'exécuter
+1. Download the file `{nb_fname}` above
+2. Log in to https://ondemand.cluster.france-bioinformatique.fr
+3. Go to **Files** → upload `{nb_fname}` into your home directory
+4. Open **Jupyter Notebook** from the menu and navigate to the file
+5. Activate your conda environment/kernel before running the notebook
 
-> **Tip** : Modifiez les cellules `INPUT_FASTQ` et `DB_PATH` avant d'exécuter.
+> **Tip:** Edit the `INPUT_FASTQ` and `DB_PATH` cells to your paths before executing.
 """)
                 # Aperçu des cellules
                 with st.expander("👁️ Notebook preview", expanded=False):
@@ -617,11 +619,11 @@ sbatch """
 
             except ImportError:
                 st.error(
-                    "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
+                    "Module `ifb_export.py` not found — place it in the same directory as `app.py`."
                 )
 
     st.markdown("---")
-    if st.button("🔄 Réinitialiser"):
+    if st.button("🔄 Reset"):
         st.rerun()
 
 
@@ -648,8 +650,8 @@ def render_catalogue():
 
     tab_graph, tab_tools, tab_dbs = st.tabs(
         [
-            "🕸️ Graphe de relations",
-            "🔧 Outils",
+            "🕸️ Relations graph",
+            "🔧 Tools",
             "🗄️ Databases",
         ]
     )
@@ -677,7 +679,7 @@ def _tab_graph():
     v_ego, v_matrix, v_sunburst, v_cards = st.tabs(
         [
             "🕸️ Ego-graph",
-            "🔲 Matrice",
+            "🔲 Matrix",
             "🌞 Sunburst",
             "🃏 Cards",
         ]
@@ -685,17 +687,15 @@ def _tab_graph():
 
     # ── VUE 1 : EGO-GRAPH ─────────────────────────────────────────────────────
     with v_ego:
-        st.markdown(
-            "Sélectionnez un outil ou une BD pour voir **ses connexions directes**."
-        )
+        st.markdown("Select a tool or database to see **its direct connections**.")
         BG = "#0D1117"
 
         all_names = {t.get("name", tid): ("tool", tid) for tid, t in tools.items()} | {
             db.get("name", did): ("db", did) for did, db in databases.items()
         }
-        chosen = st.selectbox("Nœud central", ["—"] + sorted(all_names), key="ego_sel")
+        chosen = st.selectbox("Central node", ["—"] + sorted(all_names), key="ego_sel")
         if chosen == "—":
-            st.info("Choisissez un outil ou une base de données ci-dessus.")
+            st.info("Choose a tool or database above.")
         else:
             kind, node_id = all_names[chosen]
 
@@ -857,13 +857,13 @@ def _tab_graph():
                 config=dict(scrollZoom=True),
                 key="ego_fig",
             )
-            st.caption(f"{len(nodes)-1} connexion(s) directe(s) de « {chosen} »")
+            st.caption(f"{len(nodes)-1} direct connection(s) from « {chosen} »")
 
     # ── VUE 2 : MATRICE ───────────────────────────────────────────────────────
     with v_matrix:
         st.markdown(
-            "Chaque cellule montre la **taxonomie** (GTDB / NCBI) "
-            "de la relation outil ↔ BD."
+            "Each cell shows the **taxonomy** (GTDB / NCBI) "
+            "of the tool ↔ database relationship."
         )
 
         all_db_ids: set[str] = set()
@@ -1066,7 +1066,7 @@ def _tab_graph():
             config=dict(displayModeBar=False),
             key="sunburst_fig",
         )
-        st.caption("Cliquez sur un secteur pour zoomer. Double-clic pour remonter.")
+        st.caption("Click on a sector to zoom. Double-click to go back.")
 
     # ── VUE 4 : CARDS ─────────────────────────────────────────────────────────
     with v_cards:
@@ -1149,13 +1149,13 @@ def _tab_tools():
 
     col_a, col_b, col_c, col_d = st.columns(4)
     with col_a:
-        f_sr = st.selectbox("Short reads", ["Tous", "✅", "❌"], key="f_sr")
+        f_sr = st.selectbox("Short reads", ["All", "✅", "❌"], key="f_sr")
     with col_b:
-        f_lr = st.selectbox("Long reads", ["Tous", "✅", "❌"], key="f_lr")
+        f_lr = st.selectbox("Long reads", ["All", "✅", "❌"], key="f_lr")
     with col_c:
-        f_strain = st.selectbox("Strain-level", ["Tous", "✅", "❌"], key="f_strain")
+        f_strain = st.selectbox("Strain-level", ["All", "✅", "❌"], key="f_strain")
     with col_d:
-        f_taxo = st.selectbox("Taxonomie BD", ["Toutes", "GTDB", "NCBI"], key="f_taxo")
+        f_taxo = st.selectbox("Taxonomie BD", ["All", "GTDB", "NCBI"], key="f_taxo")
     search_t = st.text_input(
         "🔍 Recherche", "", key="search_t", placeholder="nom, approche, BD…"
     )
@@ -1174,39 +1174,39 @@ def _tab_tools():
         taxo_str = " + ".join(sorted(x for x in taxo_set if x != "—")) or "—"
         rows.append(
             {
-                "Nom": t.get("name", tid),
+                "Name": t.get("name", tid),
                 "Type": t.get("type", "—"),
                 "Version": t.get("latest_release") or "—",
                 "Short reads": "✅" if t.get("supports_shortreads") else "❌",
                 "Long reads": "✅" if t.get("supports_longreads") else "❌",
                 "Strain-level": "✅" if t.get("strain_level") else "❌",
-                "Fonctionnel": "✅" if t.get("functional_profiling") else "❌",
+                "Functional": "✅" if t.get("functional_profiling") else "❌",
                 "RAM (GB)": str(t.get("ram") or "—"),
-                "Taxonomie BD": taxo_str,
+                "DB Taxonomy ": taxo_str,
                 "Citations": t.get("citations_count") or 0,
-                "BDs utilisées": db_names,
-                "Approche": t.get("approach_detail") or "—",
+                "DBs used": db_names,
+                "Approach": t.get("approach_detail") or "—",
             }
         )
 
     df = pd.DataFrame(rows)
-    if f_sr != "Tous":
+    if f_sr != "All":
         df = df[df["Short reads"] == f_sr]
-    if f_lr != "Tous":
+    if f_lr != "All":
         df = df[df["Long reads"] == f_lr]
-    if f_strain != "Tous":
+    if f_strain != "All":
         df = df[df["Strain-level"] == f_strain]
-    if f_taxo != "Toutes":
-        df = df[df["Taxonomie BD"].str.contains(f_taxo, na=False)]
+    if f_taxo != "All":
+        df = df[df["DB Taxonomy "].str.contains(f_taxo, na=False)]
     if search_t:
         m = (
-            df["Nom"].str.contains(search_t, case=False, na=False)
-            | df["Approche"].str.contains(search_t, case=False, na=False)
-            | df["BDs utilisées"].str.contains(search_t, case=False, na=False)
+            df["Name"].str.contains(search_t, case=False, na=False)
+            | df["Approach"].str.contains(search_t, case=False, na=False)
+            | df["DBs used"].str.contains(search_t, case=False, na=False)
         )
         df = df[m]
 
-    st.caption(f"{len(df)} outil(s) affiché(s)")
+    st.caption(f"{len(df)} Tools shown")
     display_df = (
         df.sort_values("Citations", ascending=False)
         if not df.empty and "Citations" in df.columns
@@ -1216,7 +1216,7 @@ def _tab_tools():
 
     st.markdown("---")
     selected = st.selectbox(
-        "Fiche détaillée",
+        "Details view",
         ["—"] + sorted(t.get("name", k) for k, t in tools.items()),
         key="sel_tool",
     )
@@ -1229,7 +1229,7 @@ def _tab_tools():
 def _tool_card(tool: dict):
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"**Nom** : {tool.get('name','—')}")
+        st.markdown(f"**Name** : {tool.get('name','—')}")
         st.markdown(f"**Type** : {tool.get('type','—')}")
         st.markdown(f"**Version** : {tool.get('latest_release') or '—'}")
         st.markdown(f"**RAM** : {tool.get('ram') or '—'} GB")
@@ -1241,15 +1241,15 @@ def _tool_card(tool: dict):
         )
         st.markdown(f"**Strain-level** : {'✅' if tool.get('strain_level') else '❌'}")
         st.markdown(
-            f"**Fonctionnel** : {'✅' if tool.get('functional_profiling') else '❌'}"
+            f"**Functional** : {'✅' if tool.get('functional_profiling') else '❌'}"
         )
         st.markdown(f"**Citations** : {tool.get('citations_count') or '—'}")
         desc = tool.get("description") or tool.get("approach_detail") or ""
         if desc:
-            st.markdown(f"**Approche** : {desc}")
+            st.markdown(f"**Approach** : {desc}")
         sm = tool.get("sub_module")
         if sm and isinstance(sm, dict):
-            st.markdown(f"**Sous-module** : {sm.get('name', sm.get('@id',''))}")
+            st.markdown(f"**Submodule** : {sm.get('name', sm.get('@id',''))}")
     with col2:
         links = []
         if tool.get("repo"):
@@ -1262,7 +1262,7 @@ def _tool_card(tool: dict):
             links.append(f"[Publication]({tool['doi']})")
         if links:
             st.markdown("🔗 " + "  ·  ".join(links))
-        st.markdown("**Bases de données utilisées :**")
+        st.markdown("**Databases used :**")
         for u in _to_list(tool.get("uses_databases")):
             if not isinstance(u, dict):
                 continue
@@ -1289,33 +1289,33 @@ def _tool_card(tool: dict):
 def _tab_databases():
     import pandas as pd
 
-    st.markdown("### 🗄️ Bases de données")
+    st.markdown("### 🗄️ Databases")
 
     col_a, col_b = st.columns(2)
     with col_a:
         f_taxon = st.multiselect(
-            "Taxons couverts",
+            "Covered Taxons",
             ["Bacteria", "Archaea", "Eukaryota", "Viruses", "Fungi"],
             key="f_taxon",
         )
     with col_b:
         search_db = st.text_input(
-            "🔍 Recherche", "", key="search_db", placeholder="nom, sample, origine…"
+            "🔍 Search", "", key="search_db", placeholder="name, sample, origin…"
         )
 
     rows = []
     for db_id, db in sorted(databases.items()):
         rows.append(
             {
-                "Nom": db.get("name", db_id),
+                "Name": db.get("name", db_id),
                 "Taxons": ", ".join(taxon_labels(db)) or "—",
                 "Sample": sample_label(db),
-                "Origine": origin_label(db),
-                "Séquences (SO)": seq_scope_label(db),
+                "Origin": origin_label(db),
+                "Sequences (SO)": seq_scope_label(db),
                 "is_about": is_about_label(db),
                 "Release": db_release_str(db),
                 "Sous-BDs": len(_to_list(db.get("hasPart"))),
-                "Fait partie de": ", ".join(
+                "Part of": ", ".join(
                     ip.get("@id", "")
                     for ip in _to_list(db.get("isPartOf"))
                     if isinstance(ip, dict)
@@ -1330,9 +1330,9 @@ def _tab_databases():
         df = df[df["Taxons"].apply(lambda t: any(fx in t for fx in f_taxon))]
     if search_db:
         m = (
-            df["Nom"].str.contains(search_db, case=False, na=False)
+            df["Name"].str.contains(search_db, case=False, na=False)
             | df["Sample"].str.contains(search_db, case=False, na=False)
-            | df["Origine"].str.contains(search_db, case=False, na=False)
+            | df["Origin"].str.contains(search_db, case=False, na=False)
         )
         df = df[m]
 
@@ -1341,7 +1341,7 @@ def _tab_databases():
 
     st.markdown("---")
     selected_db = st.selectbox(
-        "Fiche détaillée",
+        "Details view",
         ["—"] + sorted(db.get("name", k) for k, db in databases.items()),
         key="sel_db",
     )
@@ -1357,15 +1357,15 @@ def _tab_databases():
 def _db_card(db: dict, db_id: str):
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"**Nom** : {db.get('name', db_id)}")
+        st.markdown(f"**Name** : {db.get('name', db_id)}")
         st.markdown(f"**Release** : {db_release_str(db)}")
         taxa = taxon_labels(db)
         if taxa:
             st.markdown(f"**Taxons** : {', '.join(taxa)}")
         for label, fn in [
             ("Sample", sample_label),
-            ("Origine", origin_label),
-            ("Séquences (SO)", seq_scope_label),
+            ("Origin", origin_label),
+            ("Sequences (SO)", seq_scope_label),
             ("is_about", is_about_label),
         ]:
             val = fn(db)
@@ -1378,10 +1378,10 @@ def _db_card(db: dict, db_id: str):
             if isinstance(ip, dict)
         ]
         if parents:
-            st.markdown(f"**Fait partie de** : {', '.join(parents)}")
+            st.markdown(f"**Part of** : {', '.join(parents)}")
         parts = _to_list(db.get("hasPart"))
         if parts:
-            st.markdown(f"**Contient {len(parts)} sous-BD(s) :**")
+            st.markdown(f"**Contains {len(parts)} sub-database(s) :**")
             for p in parts[:12]:
                 if isinstance(p, dict):
                     rel = f" · r{p['release']}" if p.get("release") else ""
@@ -1389,7 +1389,7 @@ def _db_card(db: dict, db_id: str):
             if len(parts) > 12:
                 st.caption(f"… et {len(parts) - 12} autres.")
         if db.get("homepage"):
-            st.markdown(f"🌐 [Site officiel]({db['homepage']})")
+            st.markdown(f"🌐 [Official Website]({db['homepage']})")
         if db.get("doi"):
             st.markdown(f"📄 [Publication]({db['doi']})")
 
