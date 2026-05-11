@@ -349,7 +349,9 @@ def _score_db_entry(
             return False
         return True
 
-    def _score_scope(envo_tag: str | None, host_tag: str | None, db_obj: dict | None) -> int:
+    def _score_scope(
+        envo_tag: str | None, host_tag: str | None, db_obj: dict | None
+    ) -> int:
         score = 0
         if envo_key and envo_tag == envo_key:
             score += 4
@@ -393,9 +395,11 @@ def _score_db_entry(
     if envo_key is None and host_key is None and host_tag is not None:
         return -1
 
-    best_score = _score_scope(envo_tag, host_tag, db_obj) if _matches_constraints(
-        envo_tag, host_tag, db_obj
-    ) else -1
+    best_score = (
+        _score_scope(envo_tag, host_tag, db_obj)
+        if _matches_constraints(envo_tag, host_tag, db_obj)
+        else -1
+    )
     parts = _to_list(db_obj.get("hasPart")) if isinstance(db_obj, dict) else []
 
     # If a composite DB (e.g. GlobDB) contains a very specific matching sub-DB
@@ -494,12 +498,17 @@ def recommend(
             db_id = u.get("@id", "")
             ts = u.get("taxonomy_system")
 
-            if pref_taxo != "Indifférent":
-                pref_lower = pref_taxo.lower()
+            # Allow several synonyms for "no preference" so the UI can be
+            # localized to English without breaking the recommender.
+            # Treat values like 'Any', 'indifferent' or the original 'Indifférent'
+            # as meaning no taxonomy preference.
+            pref_norm = str(pref_taxo or "").strip().lower()
+            if pref_norm not in ("indifférent", "indifferent", "any"):
+                pref_lower = pref_norm
                 if isinstance(ts, list):
-                    if pref_lower not in [x.lower() for x in ts]:
+                    if pref_lower not in [str(x).lower() for x in ts]:
                         continue
-                elif ts and ts.lower() != pref_lower:
+                elif ts and str(ts).lower() != pref_lower:
                     continue
 
             sc = _score_db_entry(

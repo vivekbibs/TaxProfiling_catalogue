@@ -22,29 +22,6 @@ from pathlib import Path
 
 import streamlit as st
 
-
-# Helper: display images only if the file exists to avoid Streamlit media errors
-def _maybe_logo(path: str, *args, **kwargs):
-    p = Path(path)
-    if not p.exists():
-        return None
-    try:
-        return st.logo(str(p), *args, **kwargs)
-    except Exception:
-        # fall back silently
-        return None
-
-
-def _maybe_image(path: str, *args, **kwargs):
-    p = Path(path)
-    if not p.exists():
-        return None
-    try:
-        return st.image(str(p), *args, **kwargs)
-    except Exception:
-        return None
-
-
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
@@ -53,21 +30,6 @@ st.set_page_config(
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="expanded",
-)
-_maybe_logo(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos_institutions.png",
-    size="large",
-)
-_maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos_institutions.png",
-    caption=None,
-    width=800,
-    use_column_width=None,
-    clamp=False,
-    channels="RGB",
-    output_format="auto",
-    use_container_width=None,
-    link=None,
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -109,47 +71,22 @@ with st.sidebar:
     st.markdown("## 🧬 Navigation")
     page = st.radio(
         "",
-        ["🏠 Home", "🔍 Survey", "📊 Catalog"],
+        ["🔍 Questionnaire", "📊 Catalogue"],
         label_visibility="collapsed",
     )
     st.markdown("---")
-    st.metric("Databases", len(databases))
-    st.metric("Tools", len(tools))
+    st.metric("Bases de données", len(databases))
+    st.metric("Outils", len(tools))
 
 
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — QUESTIONNAIRE
 # ═════════════════════════════════════════════════════════════════════════════
-def render_home():
-    st.markdown("# 🏠 Home — Taxonomic Profiling")
-    # Optional PDF preview (kept if file exists in your data/images or data root)
-    try:
-        st.pdf(
-            "/home/vashokan/Bureau/IS4/catalogue/data/homepage_catalogue.pdf",
-            height="stretch",
-        )
-    except Exception:
-        pass
-    st.markdown(
-        "Welcome to the catalogue and recommendation assistant for taxonomic profiling. "
-        "Use the navigation menu at the top-left to go to the Survey or the Catalog."
-    )
-    st.markdown("---")
-    st.markdown("Quick facts:")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Databases", len(databases))
-    with col2:
-        st.metric("Tools", len(tools))
-    with col3:
-        st.markdown("\n")
-        st.caption("Select '🔍 Survey' to get personalized recommendations.")
-
-
 def render_questionnaire():
-    st.markdown("# 🧬 Recommendation Assistant — Taxonomic Profiling")
+    st.markdown("# 🧬 Aide au choix — Profiling Taxonomique")
     st.markdown(
-        "Answer the questions below to get tools and databases suited to your sample and goals."
+        "Répondez aux questions ci-dessous pour obtenir les outils et bases de données "
+        "adaptés à votre échantillon et vos objectifs."
     )
     st.markdown("---")
 
@@ -163,20 +100,20 @@ def render_questionnaire():
     reads_key = "Short Reads" if "Short" in reads_choice else "Long Reads"
     st.markdown("---")
 
-    # Q2 — Sample
-    st.markdown("## 2 · Sample type")
+    # Q2 — Échantillon
+    st.markdown("## 2 · Nature de l'échantillon")
     col_cat, col_detail = st.columns([1, 2])
     with col_cat:
-        category = st.selectbox("Main category", list(SAMPLE_CATEGORIES.keys()))
+        category = st.selectbox("Catégorie principale", list(SAMPLE_CATEGORIES.keys()))
     with col_detail:
         options = SAMPLE_CATEGORIES[category]
         if len(options) == 1:
             detail = options[0]
-            st.info(f"Selected: **{detail}**")
+            st.info(f"Sélectionné : **{detail}**")
         elif category == "Humain":
-            detail = st.radio("Body site", options, horizontal=True)
+            detail = st.radio("Site corporel", options, horizontal=True)
         elif category == "Animal":
-            detail = st.selectbox("Species", options)
+            detail = st.selectbox("Espèce", options)
         else:
             detail = st.radio("Type", options, horizontal=True)
 
@@ -190,8 +127,8 @@ def render_questionnaire():
         st.caption("Filtres JSON → " + "  ·  ".join(parts))
     st.markdown("---")
 
-    # Q3 — Organisms & analyses
-    st.markdown("## 3 · Target organisms & desired analyses")
+    # Q3 — Organismes & analyses
+    st.markdown("## 3 · Organismes cibles & analyses souhaitées")
     col_org, col_extra = st.columns(2)
     with col_org:
         selected_orgs = st.multiselect(
@@ -214,39 +151,39 @@ def render_questionnaire():
             ]
             if func_tools:
                 st.info(
-                    f"💡 Functional profiling supported by: {', '.join(func_tools)}."
+                    f"💡 Profiling fonctionnel supporté par : {', '.join(func_tools)}."
                 )
             else:
                 st.info(
-                    "💡 No tool in the catalogue currently supports functional profiling with your filters."
+                    "💡 Aucun outil du catalogue ne supporte le profiling fonctionnel avec vos filtres actuels."
                 )
         if wants_strain:
             strain_tools = [
                 t.get("name", tid) for tid, t in tools.items() if t.get("strain_level")
             ]
             if strain_tools:
-                st.info(f"💡 Strain-level supported by: {', '.join(strain_tools)}.")
+                st.info(f"💡 Strain-level supporté par : {', '.join(strain_tools)}.")
             else:
                 st.info(
-                    "💡 No tool in the catalogue currently supports strain-level profiling with your filters."
+                    "💡 Aucun outil du catalogue ne supporte le strain‑level avec vos filtres actuels."
                 )
     st.markdown("---")
 
-    # Q4 — Advanced parameters
-    with st.expander("⚙️ Advanced settings", expanded=False):
+    # Q4 — Paramètres avancés
+    with st.expander("⚙️ Paramètres avancés", expanded=False):
         col_a, col_b = st.columns(2)
         with col_a:
             pref_taxo = st.radio(
-                "Reference database taxonomy",
-                ["Any", "GTDB", "NCBI"],
+                "Taxonomie de la base de référence",
+                ["Indifférent", "GTDB", "NCBI"],
                 horizontal=True,
             )
         with col_b:
             max_ram = st.slider("RAM disponible (GB)", 2, 512, 512, 2)
     st.markdown("---")
 
-    # Recommendations
-    st.markdown("## 4 · Recommendations")
+    # Recommandations
+    st.markdown("## 4 · Recommandations")
 
     if not selected_orgs:
         st.warning("Sélectionnez au moins un groupe d'organismes (section 3).")
@@ -363,7 +300,7 @@ def render_questionnaire():
                     )
                     st.markdown("")
                 if releases:
-                    st.markdown(f"**Compatible releases**: {', '.join(releases)}")
+                    st.markdown(f"**Releases compatibles** : {', '.join(releases)}")
                 if db:
                     taxa = taxon_labels(db)
                     if taxa:
@@ -398,7 +335,7 @@ def render_questionnaire():
                     )
                 dl = rec["dl"]
                 if dl:
-                    st.markdown("#### 💾 Downloads")
+                    st.markdown("#### 💾 Téléchargement")
                     for v in dl:
                         v_name = v.get("name", "default")
                         v_size = v.get("size")
@@ -412,185 +349,12 @@ def render_questionnaire():
                         ):
                             st.code(v_url, language="bash")
                         elif v_url:
-                            st.markdown(f"⬇️ [Download]({v_url})")
+                            st.markdown(f"⬇️ [Télécharger]({v_url})")
                         if v_ifb and isinstance(v_ifb, dict):
                             st.markdown(
                                 f"🖥️ **IFB {v_ifb.get('name','')}** :  \n"
                                 f"`{v_ifb.get('path','')}`"
                             )
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # SECTION IFB — Scripts SLURM et Notebooks Jupyter
-    # ═══════════════════════════════════════════════════════════════════════
-    if recs:
-        st.markdown("---")
-        st.markdown("## 5 · Run on IFB cluster")
-        st.markdown(
-            "Generate a SLURM sbatch script or a Jupyter notebook to run the analysis "
-            "on the IFB core-cluster."
-        )
-
-        # Choisir le couple outil/BD à exporter
-        rec_labels = [
-            f"{r['tool'].get('name', r['tool_id'])}  +  "
-            f"{r['db'].get('name', r['db_id']) if r['db'] else r['db_id']}"
-            for r in recs
-        ]
-        chosen_idx = st.selectbox(
-            "Tool / database pair",
-            range(len(recs)),
-            format_func=lambda i: rec_labels[i],
-            key="ifb_rec_sel",
-        )
-        rec_sel = recs[chosen_idx]
-
-        # Paramètres utilisateur
-        with st.expander("⚙️ Execution parameters", expanded=True):
-            col_i1, col_i2 = st.columns(2)
-            with col_i1:
-                input_fastq = st.text_input(
-                    "Input FASTQ path",
-                    value="/path/to/sample.fastq.gz",
-                    key="ifb_fq",
-                )
-                db_path_override = st.text_input(
-                    "Database path (leave empty = auto-detect IFB path)",
-                    value="",
-                    key="ifb_db",
-                    placeholder="Auto-detected from the JSON",
-                )
-            with col_i2:
-                tool_key_sel = (
-                    rec_sel["tool_id"].lower().replace("-", "").replace("_", "")
-                )
-                _defaults = {
-                    "sylph": (8, 32, "02:00:00"),
-                    "singlem": (8, 8, "04:00:00"),
-                    "meteor": (16, 64, "08:00:00"),
-                    "kraken": (16, 128, "04:00:00"),
-                    "kraken2": (16, 128, "04:00:00"),
-                    "metaphlan": (8, 32, "04:00:00"),
-                    "metabuli": (16, 64, "06:00:00"),
-                }.get(tool_key_sel, (8, 32, "04:00:00"))
-                n_cpus = st.slider("CPUs", 1, 64, _defaults[0], key="ifb_cpu")
-                n_mem = st.slider("RAM (GB)", 4, 512, _defaults[1], key="ifb_mem")
-                walltime = st.text_input(
-                    "Walltime (HH:MM:SS)", _defaults[2], key="ifb_time"
-                )
-
-        user_params = {
-            "input_fastq": input_fastq,
-            "cpus": n_cpus,
-            "mem": n_mem,
-            "time": walltime,
-        }
-        if db_path_override.strip():
-            user_params["db_path"] = db_path_override.strip()
-
-        tab_sbatch, tab_nb = st.tabs(
-            ["📄 SLURM script (sbatch)", "📓 Jupyter Notebook"]
-        )
-
-        # ── Tab SLURM ──────────────────────────────────────────────────────
-        with tab_sbatch:
-            try:
-                from ifb_export import make_sbatch
-
-                script = make_sbatch(
-                    tool=rec_sel["tool"],
-                    db=rec_sel["db"],
-                    db_id=rec_sel["db_id"],
-                    db_rel=rec_sel.get("db_rel") or {},
-                    user_params=user_params,
-                )
-                st.code(script, language="bash")
-                fname = f"{rec_sel['tool_id']}_{rec_sel['db_id']}.sh"
-                st.download_button(
-                    label="⬇️ Download .sh script",
-                    data=script,
-                    file_name=fname,
-                    mime="text/x-sh",
-                    key="dl_sbatch",
-                )
-                st.markdown(
-                    """
-**How to use this script on IFB:**
-```bash
-# 1. Copy the script to the cluster
-scp """
-                    + fname
-                    + """ login@core.cluster.france-bioinformatique.fr:~/
-
-# 2. Connect and submit the job
-ssh login@core.cluster.france-bioinformatique.fr
-sbatch """
-                    + fname
-                    + """
-```
-"""
-                )
-            except ImportError:
-                st.error(
-                    "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
-                )
-
-        # ── Tab Notebook ───────────────────────────────────────────────────
-        with tab_nb:
-            try:
-                from ifb_export import make_notebook, notebook_to_json
-
-                nb = make_notebook(
-                    tool=rec_sel["tool"],
-                    db=rec_sel["db"],
-                    db_id=rec_sel["db_id"],
-                    db_rel=rec_sel.get("db_rel") or {},
-                    user_params=user_params,
-                )
-                nb_json = notebook_to_json(nb)
-                tool_name_nb = rec_sel["tool"].get("name", rec_sel["tool_id"])
-                db_name_nb = (
-                    rec_sel["db"].get("name", rec_sel["db_id"])
-                    if rec_sel["db"]
-                    else rec_sel["db_id"]
-                )
-                nb_fname = f"tutorial_{rec_sel['tool_id']}_{rec_sel['db_id']}.ipynb"
-
-                st.download_button(
-                    label=f"⬇️ Download notebook {nb_fname}",
-                    data=nb_json,
-                    file_name=nb_fname,
-                    mime="application/x-ipynb+json",
-                    key="dl_nb",
-                )
-                st.markdown(f"""
-**Comment ouvrir ce notebook sur l'IFB OpenOnDemand :**
-
-1. Téléchargez le fichier `{nb_fname}` ci-dessus
-2. Connectez-vous à [https://ondemand.cluster.france-bioinformatique.fr](https://ondemand.cluster.france-bioinformatique.fr)
-3. Allez dans **Files** → uploadez `{nb_fname}` dans votre dossier home
-4. Ouvrez **Jupyter Notebook** depuis le menu → naviguez jusqu'au fichier
-5. Activez votre environnement conda dans le kernel avant d'exécuter
-
-> **Tip** : Modifiez les cellules `INPUT_FASTQ` et `DB_PATH` avant d'exécuter.
-""")
-                # Aperçu des cellules
-                with st.expander("👁️ Notebook preview", expanded=False):
-                    for cell in nb.get("cells", []):
-                        if cell["cell_type"] == "markdown":
-                            src = cell["source"]
-                            if src.startswith("#"):
-                                st.markdown(src.split("\n")[0])
-                        elif cell["cell_type"] == "code":
-                            st.code(
-                                cell["source"][:300]
-                                + ("..." if len(cell["source"]) > 300 else ""),
-                                language="python",
-                            )
-
-            except ImportError:
-                st.error(
-                    "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
-                )
 
     st.markdown("---")
     if st.button("🔄 Réinitialiser"):
@@ -614,15 +378,15 @@ _C = {
 
 
 def render_catalogue():
-    st.markdown("# 📊 Catalog — Tools & Databases")
-    st.markdown(f"**{len(tools)} tools** · **{len(databases)} databases**")
+    st.markdown("# 📊 Catalogue — Outils & Bases de données")
+    st.markdown(f"**{len(tools)} outils** · **{len(databases)} bases de données**")
     st.markdown("---")
 
     tab_graph, tab_tools, tab_dbs = st.tabs(
         [
             "🕸️ Graphe de relations",
             "🔧 Outils",
-            "🗄️ Databases",
+            "🗄️ Bases de données",
         ]
     )
 
@@ -766,8 +530,8 @@ def _tab_graph():
                     size = 28 if is_center else 20
                     hover = (
                         f"<b>{nd['label']}</b><br>"
-                        f"Citations: {nd['cit']}<br>"
-                        f"Version: {nd['version']}<br>"
+                        f"Citations : {nd['cit']}<br>"
+                        f"Version : {nd['version']}<br>"
                         f"SR : {nd['sr']}  LR : {nd['lr']}"
                     )
                 else:
@@ -777,9 +541,9 @@ def _tab_graph():
                     size = 28 if is_center else 18
                     hover = (
                         f"<b>{nd['label']}</b><br>"
-                        f"Release: {nd['release']}<br>"
-                        f"Taxa: {nd['taxa']}<br>"
-                        f"Sample: {nd['sample']}"
+                        f"Release : {nd['release']}<br>"
+                        f"Taxons : {nd['taxa']}<br>"
+                        f"Sample : {nd['sample']}"
                     )
                 traces.append(
                     go.Scatter(
@@ -1042,11 +806,11 @@ def _tab_graph():
 
     # ── VUE 4 : CARDS ─────────────────────────────────────────────────────────
     with v_cards:
-        st.markdown("Tools sorted by citations, with their databases.")
+        st.markdown("Outils triés par citations, avec leurs bases de données.")
 
         sort_by = st.selectbox(
-            "Sort by",
-            ["Citations (↓)", "Name (A→Z)", "Version"],
+            "Trier par",
+            ["Citations (↓)", "Nom (A→Z)", "Version"],
             key="cards_sort",
         )
 
@@ -1373,5 +1137,3 @@ if page == "🔍 Questionnaire":
     render_questionnaire()
 elif page == "📊 Catalogue":
     render_catalogue()
-elif page == "🏠 Accueil":
-    render_home()
