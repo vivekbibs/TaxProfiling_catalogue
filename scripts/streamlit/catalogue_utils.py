@@ -388,7 +388,7 @@ def _score_db_entry(
     db_obj = databases.get(db_id, {})
     envo_tag, host_tag = db_scope(db_id, databases)
 
-    # Broad questionnaire (multi-env / "autre"): do not rank host-specific
+    # Broad survey (multi-env / "autre"): do not rank host-specific
     # catalogues (meteor animal guts, human gut, etc.) — their sample may not
     # be ENVO/FOODON so envo_tag is None, which used to wrongly get a +2 "broad"
     # bonus via _score_scope.
