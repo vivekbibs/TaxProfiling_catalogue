@@ -1314,7 +1314,7 @@ def _tab_databases():
                 "Sequences (SO)": seq_scope_label(db),
                 "is_about": is_about_label(db),
                 "Release": db_release_str(db),
-                "Sous-BDs": len(_to_list(db.get("hasPart"))),
+                "Sub-databases": len(_to_list(db.get("hasPart"))),
                 "Part of": ", ".join(
                     ip.get("@id", "")
                     for ip in _to_list(db.get("isPartOf"))
@@ -1336,7 +1336,7 @@ def _tab_databases():
         )
         df = df[m]
 
-    st.caption(f"{len(df)} base(s) affichée(s)")
+    st.caption(f"{len(df)} Databases shown")
     st.dataframe(df, use_container_width=True, hide_index=True)
 
     st.markdown("---")
