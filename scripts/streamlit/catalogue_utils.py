@@ -252,43 +252,43 @@ SAMPLE_FILTER: dict[str, tuple] = {
 }
 
 SAMPLE_CATEGORIES: dict[str, list[str]] = {
-    "Humain": [
-        "Intestinal humain (gut)",
-        "Cutané humain (skin)",
-        "Oral humain",
+    "Human": [
+        "Human gut",
+        "Human skin",
+        "Human mouth",
     ],
     "Animal": [
-        "Intestinal Souris (Mus musculus)",
-        "Intestinal Rat (Rattus norvegicus)",
-        "Intestinal Chien (Canis lupus)",
-        "Intestinal Chat (Felis catus)",
-        "Intestinal Cochon (Sus scrofa)",
-        "Intestinal Lapin (Oryctolagus cuniculus)",
-        "Caecum Poulet (Gallus gallus)",
-        "Intestinal Chèvre (Capra hircus)",
-        "Intestinal Mouton (Ovis aries)",
+        "Mouse gut (Mus musculus)",
+        "Rat gut (Rattus norvegicus)",
+        "Dog gut (Canis lupus)",
+        "Cat gut (Felis catus)",
+        "Pig gut (Sus scrofa)",
+        "Rabbit gut (Oryctolagus cuniculus)",
+        "Chicken caecum (Gallus gallus)",
+        "Goat gut (Capra hircus)",
+        "Sheep gut (Ovis aries)",
     ],
-    "Environnemental": [
-        "Sol (Soil)",
-        "Océan / Eau marine",
-        "Eau douce / Lac / Rivière",
-        "Sédiment",
-        "Glacier-fed Streams",
-        "Nourriture / Aliment",
+    "Environmental": [
+        "Soil",
+        "Ocean / Marine water",
+        "Fresh water / Lake / River",
+        "Sediment",
+        "Glacier-fed streams",
+        "Food",
     ],
-    "Multi-environnements / Global": ["Multi-environnements / Global"],
-    "Autre": ["Autre / Je ne sais pas"],
+    "Multi-environments / Global": ["Multi-environments / Global"],
+    "Other": ["Other / I don't know"],
 }
 
 TAXON_IRI: dict[str, str] = {
-    "Bactéries": "NCBITaxon_2",
-    "Archées": "NCBITaxon_2157",
-    "Eucaryotes": "NCBITaxon_2759",
+    "Bacteria": "NCBITaxon_2",
+    "Archaea": "NCBITaxon_2157",
+    "Eukaryota": "NCBITaxon_2759",
     "Virus": "NCBITaxon_10239",
     "Fungi": "NCBITaxon_4751",
 }
 
-SPECIAL_SCOPE_TAGS = {"virus", "fungi", "eukaryote", "plasmid"}
+SPECIAL_SCOPE_TAGS = {"virus", "fungi", "eukaryota", "plasmid"}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -336,7 +336,7 @@ def _score_db_entry(
         has_fungi = ("fungi" in str(envo_tag).lower()) or any(
             "fung" in lbl for lbl in labels
         )
-        has_euk = ("eukaryote" in str(envo_tag).lower()) or any(
+        has_euk = ("eukaryota" in str(envo_tag).lower()) or any(
             ("eukary" in lbl) or ("eucary" in lbl) for lbl in labels
         )
 
@@ -444,9 +444,9 @@ def recommend(
 ) -> list[dict]:
     wants_virus = "Virus" in selected_orgs
     wants_fungi = "Fungi" in selected_orgs
-    wants_euk = "Eucaryotes" in selected_orgs
-    wants_bacteria = "Bactéries" in selected_orgs
-    wants_archaea = "Archées" in selected_orgs
+    wants_euk = "Eukaryota" in selected_orgs
+    wants_bacteria = "Bacteria" in selected_orgs
+    wants_archaea = "Archaea" in selected_orgs
     taxon_keys = [TAXON_IRI[o] for o in selected_orgs]
 
     def _flag_true(v) -> bool:

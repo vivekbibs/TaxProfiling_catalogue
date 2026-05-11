@@ -154,9 +154,9 @@ def render_questionnaire():
     st.markdown("---")
 
     # Q1 — Séquençage
-    st.markdown("## 1 · Type de séquençage")
+    st.markdown("## 1 Sequencing method")
     reads_choice = st.radio(
-        "Type de lectures",
+        "Type of reads",
         ["Short Reads (Illumina, etc.)", "Long Reads (PacBio, Nanopore, etc.)"],
         horizontal=True,
     )
