@@ -1,0 +1,42 @@
+
+15:37
+La technique est la même que Webflow : injecter une balise <script type="application/ld+json"> dans le HTML. Streamlit expose st.html() exactement pour ça (c'est la méthode recommandée depuis Streamlit 1.36, plus robuste que st.markdown avec unsafe_allow_html).
+
+
+Fetched: st.html - Streamlit Docs
+Fetched: st.html - Streamlit Docs
+Point important à connaître : st.html sanitize le HTML avec DOMPurify et ignore le JavaScript par défaut. Une balise <script> est donc silencieusement supprimée… sauf si on passe unsafe_allow_javascript=True. 
+github
+
+Voici comment faire proprement pour votre cas :
+
+python
+import json
+from pathlib import Path
+import streamlit as st
+
+def inject_jsonld_schemas(*schema_paths: Path):
+    """Injecte les fichiers JSON-LD dans le <head> HTML via st.html."""
+    for path in schema_paths:
+        if not path.exists():
+            continue
+        data = json.loads(path.read_text(encoding="utf-8"))
+        st.html(
+            f'<script type="application/ld+json">\n'
+            f'{json.dumps(data, indent=2, ensure_ascii=False)}\n'
+            f'</script>',
+            unsafe_allow_javascript=True   # ← nécessaire pour que le <script> ne soit pas strippé
+        )
+Et dans app.py, juste après st.set_page_config() :
+
+python
+SCHEMA_DIR = Path(__file__).parent.parent / "data" / "schema"
+
+inject_jsonld_schemas(
+    SCHEMA_DIR / "database_schema.json",
+    SCHEMA_DIR / "tool_schema.json",
+)
+Deux nuances importantes :
+
+unsafe_allow_javascript=True est nécessaire ici non pas parce que vous exécutez du JS, mais parce que <script> est la balise utilisée pour le JSON-LD — Streamlit ne fait pas la distinction entre <script type="application/ld+json"> (inerte, données pures) et du vrai JavaScript.
+Le contenu de vos schémas est entièrement sous votre contrôle (vos propres fichiers JSON locaux), donc il n'y a aucun risque de sécurité ici. La mise en garde de la doc concerne surtout les cas où on passerait du contenu externe ou utilisateur dans st.html.

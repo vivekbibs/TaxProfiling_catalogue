@@ -48,18 +48,28 @@ def _maybe_image(path: str, *args, **kwargs):
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
+SCHEMA_DIR = Path(__file__).parent.parent / "data" / "schemas"
+from catalogue_utils import inject_jsonld_schemas  # noqa: E402
+
 st.set_page_config(
     page_title="Profiling Taxonomique — Catalogue",
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+inject_jsonld_schemas(
+    SCHEMA_DIR / "database_schema.json",
+    SCHEMA_DIR / "tool_schema.json",
+)
+
+
 _maybe_logo(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos_institutions.png",
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos-ifb-elixir.png",
     size="large",
 )
 _maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos_institutions.png",
+    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos-ifb-elixir.png",
     caption=None,
     width=800,
     use_column_width=None,

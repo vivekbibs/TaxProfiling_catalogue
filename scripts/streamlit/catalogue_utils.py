@@ -12,6 +12,7 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+import streamlit as st
 
 # ─────────────────────────────────────────────────────────────────────────────
 # NORMALISATION
@@ -575,3 +576,17 @@ def recommend(
         return (-r["score"], -broad_boost, -part_count)
 
     return sorted(results, key=_rank_tuple)
+
+
+def inject_jsonld_schemas(*schema_paths: Path):
+    """Injecte les fichiers JSON-LD dans le <head> HTML via st.html."""
+    for path in schema_paths:
+        if not path.exists():
+            continue
+        data = json.loads(path.read_text(encoding="utf-8"))
+        st.html(
+            f'<script type="application/ld+json">\n'
+            f"{json.dumps(data, indent=2, ensure_ascii=False)}\n"
+            f"</script>",
+            unsafe_allow_javascript=True,  # ← nécessaire pour que le <script> ne soit pas strippé
+        )
