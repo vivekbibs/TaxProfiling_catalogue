@@ -31,6 +31,8 @@ catalogue/
 │   │   └── singlem_nb.ipynb    # SingleM + GlobDB workflow
 │   
 └── README.md
+└── requirements.txt
+
 ```
 
 ---
