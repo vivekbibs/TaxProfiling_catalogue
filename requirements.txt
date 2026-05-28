@@ -10,19 +10,19 @@ dependencies:
 
   # ── Streamlit ─────────────────
   - streamlit>=1.35
-  - streamlit-pdf         # pour afficher le PDF de la homepage
+  - streamlit-pdf         
 
   # ── Dev tools ─────────────────────────────────────
   - black
   - isort
   - mypy
-  - pylance          # via pip (pas sur conda-forge)
+  - pylance          # via pip 
   - pre-commit
 
   # ── Data / utils ────────────────────────────
   - requests
-  - pandas           # utile pour les tableaux streamlit
-  - pydantic         # validation des JSONs si besoin plus tard
+  - pandas           
+  - pydantic        
 
   # ── Tests ─────────────────────────────────────────
   - pytest
@@ -32,4 +32,4 @@ dependencies:
   - pip
   - pip:
     - pylance
-    - streamlit-extras     # composants streamlit supplémentaires
+    - streamlit-extras     
