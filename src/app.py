@@ -31,7 +31,7 @@ def _maybe_image(path: str, *args, **kwargs):
 # CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
 SCHEMA_DIR = Path(__file__).parent.parent / "data" / "schemas"
-from src.catalogue_utils import inject_jsonld_schemas  # noqa: E402
+from catalogue_utils import inject_jsonld_schemas  # noqa: E402
 
 st.set_page_config(
     page_title="Profiling Taxonomique — Catalogue",
@@ -67,7 +67,7 @@ TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 # ─────────────────────────────────────────────────────────────────────────────
 # IMPORTS LOGIQUE MÉTIER
 # ─────────────────────────────────────────────────────────────────────────────
-from src.catalogue_utils import (  # noqa: E402
+from catalogue_utils import (  # noqa: E402
     SAMPLE_CATEGORIES,
     SAMPLE_FILTER,
     TAXON_IRI,
@@ -510,7 +510,7 @@ def render_questionnaire():
         # ── Tab SLURM ──────────────────────────────────────────────────────
         with tab_sbatch:
             try:
-                from src.ifb_export import make_sbatch
+                from ifb_export import make_sbatch
 
                 script = make_sbatch(
                     tool=rec_sel["tool"],
@@ -553,7 +553,7 @@ sbatch """
         # ── Tab Notebook ───────────────────────────────────────────────────
         with tab_nb:
             try:
-                from src.ifb_export import make_notebook, notebook_to_json
+                from ifb_export import make_notebook, notebook_to_json
 
                 nb = make_notebook(
                     tool=rec_sel["tool"],
