@@ -60,7 +60,7 @@ _maybe_image(
 # CHEMINS
 # ─────────────────────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).parent.resolve()
-PROJECT_ROOT = SCRIPT_DIR.parent.parent
+PROJECT_ROOT = SCRIPT_DIR.parent
 DB_DIR = PROJECT_ROOT / "data" / "databases"
 TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 
