@@ -1,22 +1,4 @@
-"""
-app.py  —  Profiling Taxonomique — Catalogue & Aide au choix
-─────────────────────────────────────────────────────────────
-Point d'entrée unique de l'application Streamlit.
-
-Structure du projet :
-    scripts/streamlit/
-    ├── app.py               ← ce fichier (streamlit run app.py)
-    └── catalogue_utils.py   ← logique métier pure (pas de Streamlit)
-    data/
-    ├── databases/           ← fichiers JSON-LD des bases de données
-    └── tools/               ← fichiers JSON-LD des outils
-
-Lancement :
-    streamlit run app.py
-
-Dépendances :
-    pip install streamlit pandas plotly networkx
-"""
+""" """
 
 from pathlib import Path
 
@@ -49,7 +31,7 @@ def _maybe_image(path: str, *args, **kwargs):
 # CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
 SCHEMA_DIR = Path(__file__).parent.parent / "data" / "schemas"
-from catalogue_utils import inject_jsonld_schemas  # noqa: E402
+from src.catalogue_utils import inject_jsonld_schemas  # noqa: E402
 
 st.set_page_config(
     page_title="Profiling Taxonomique — Catalogue",
@@ -65,19 +47,13 @@ inject_jsonld_schemas(
 
 
 _maybe_logo(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos-ifb-elixir.png",
+    str(Path(__file__).parent.parent / "data" / "images" / "logos-ifb-elixir.png"),
     size="large",
 )
 _maybe_image(
-    "/home/vashokan/Bureau/IS4/catalogue/data/images/logos-ifb-elixir.png",
+    str(Path(__file__).parent.parent / "data" / "images" / "logos-ifb-elixir.png"),
     caption=None,
     width=800,
-    use_column_width=None,
-    clamp=False,
-    channels="RGB",
-    output_format="auto",
-    use_container_width=None,
-    link=None,
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -91,7 +67,7 @@ TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 # ─────────────────────────────────────────────────────────────────────────────
 # IMPORTS LOGIQUE MÉTIER
 # ─────────────────────────────────────────────────────────────────────────────
-from catalogue_utils import (  # noqa: E402
+from src.catalogue_utils import (  # noqa: E402
     SAMPLE_CATEGORIES,
     SAMPLE_FILTER,
     TAXON_IRI,
@@ -135,7 +111,7 @@ def render_home():
     # Optional PDF preview (kept if file exists in your data/images or data root)
     try:
         st.pdf(
-            "/home/vashokan/Bureau/IS4/catalogue/data/homepage_catalogue.pdf",
+            str(Path(__file__).parent.parent / "data" / "homepage_catalogue.pdf"),
             height="stretch",
         )
     except Exception:
@@ -534,7 +510,7 @@ def render_questionnaire():
         # ── Tab SLURM ──────────────────────────────────────────────────────
         with tab_sbatch:
             try:
-                from ifb_export import make_sbatch
+                from src.ifb_export import make_sbatch
 
                 script = make_sbatch(
                     tool=rec_sel["tool"],
@@ -577,7 +553,7 @@ sbatch """
         # ── Tab Notebook ───────────────────────────────────────────────────
         with tab_nb:
             try:
-                from ifb_export import make_notebook, notebook_to_json
+                from src.ifb_export import make_notebook, notebook_to_json
 
                 nb = make_notebook(
                     tool=rec_sel["tool"],

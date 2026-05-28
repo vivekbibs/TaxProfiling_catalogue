@@ -1,35 +1,23 @@
-name: taxprofiling-catalogue
+# taxprofiling-catalogue — dépendances Python
+# Installation : pip install -r requirements.txt
 
-channels:
-  - conda-forge
-  - bioconda
+# ── Streamlit ─────────────────────────────────────
+streamlit>=1.35
+streamlit-extras
+streamlit-pdf
 
-dependencies:
-  # ── Python ────────────────────────────────────────
-  - python=3.12
+# ── Data / utils ──────────────────────────────────
+requests
+pandas
+pydantic
 
-  # ── Streamlit ─────────────────
-  - streamlit>=1.35
-  - streamlit-pdf         
+# ── Dev tools ─────────────────────────────────────
+black
+isort
+mypy
+pylance
+pre-commit
 
-  # ── Dev tools ─────────────────────────────────────
-  - black
-  - isort
-  - mypy
-  - pylance          # via pip 
-  - pre-commit
-
-  # ── Data / utils ────────────────────────────
-  - requests
-  - pandas           
-  - pydantic        
-
-  # ── Tests ─────────────────────────────────────────
-  - pytest
-  - pytest-cov
-
-  # ── pip  ───────────────────────
-  - pip
-  - pip:
-    - pylance
-    - streamlit-extras     
+# ── Tests ─────────────────────────────────────────
+pytest
+pytest-cov

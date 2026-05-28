@@ -1,6 +1,7 @@
 import json
 import os
 
+
 def update_or_create_sub_db(data, output_dir):
     """
     Parcourt les éléments de 'hasPart' dans GlobDB.
@@ -14,19 +15,19 @@ def update_or_create_sub_db(data, output_dir):
         file_id = part["id"]
         file_name = f"{file_id}.json"
         file_path = os.path.join(output_dir, file_name)
-        
+
         # Valeur du parent
         parent_id = data.get("@id", "globdb")
 
         if os.path.exists(file_path):
             # --- MODE MISE À JOUR ---
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 try:
                     sub_db = json.load(f)
                 except json.JSONDecodeError:
                     print(f"⚠️ Erreur de lecture : {file_path} est corrompu.")
                     continue
-            
+
             # Ajout ou mise à jour du champ
             sub_db["isPartOf"] = parent_id
             action = "Mis à jour"
@@ -45,29 +46,33 @@ def update_or_create_sub_db(data, output_dir):
                 "isPartOf": parent_id,
                 "bacteria_archaea_databases": [],
                 "viral_databases": [],
-                "eukaryote_databases": []
+                "eukaryote_databases": [],
             }
             action = "Généré (nouveau)"
 
         # Sauvegarde
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             json.dump(sub_db, f, indent=2, ensure_ascii=False)
-        
+
         print(f"✅ {action} : {file_path}")
 
+
 if __name__ == "__main__":
-    # Chemins basés sur votre structure
-    glob_db_path = "/home/vashokan/Bureau/IS4/catalogue/databases/globdb.json"
-    output_dir = "/home/vashokan/Bureau/IS4/catalogue/databases"
+    from pathlib import Path
+
+    # Compute project root (../.. from src/utils)
+    PROJECT_ROOT = Path(__file__).parent.parent.parent
+    glob_db_path = PROJECT_ROOT / "data" / "databases" / "globdb.json"
+    output_dir = PROJECT_ROOT / "data" / "databases"
 
     try:
-        with open(glob_db_path, 'r', encoding='utf-8') as f:
+        with open(glob_db_path, "r", encoding="utf-8") as f:
             glob_db = json.load(f)
-        
-        print(f"🚀 Analyse de {glob_db['name']} en cours...")
-        update_or_create_sub_db(glob_db, output_dir)
+
+        print(f"🚀 Analyse de {glob_db.get('name','globdb')} en cours...")
+        update_or_create_sub_db(glob_db, str(output_dir))
         print("\n✨ Opération terminée avec succès.")
-        
+
     except FileNotFoundError:
         print(f"❌ Erreur : Le fichier principal {glob_db_path} est introuvable.")
     except Exception as e:
