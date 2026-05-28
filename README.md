@@ -1,36 +1,16 @@
 # A FAIR Catalog for Taxonomic Profiling
 
-This project centralizes a **catalog** of tools and associated reference databases for taxonomic profiling (metagenomics), featuring:
-
-- A **Streamlit** interface to explore the catalog and obtain recommendations based on user questions and needs;
-- Workflow **notebooks** to launch analyses on the IFB cluster and cloud;
-
-The goal is to properly link:
-1) tool metadata,
-2) database metadata,
-3) user use cases (sample type, target taxa, technical constraints, etc.).
 
 ---
 
-The following introduction was largely inspired by:
+**Taxonomic Profiling** refers to methods that directly calculates the **relative abundance** of each present **microorganism** taxa, and provide an abundance profile table, without requiring any binning or assembly method.
 
-Sophia Hampe, Bérénice Batut, Paul Zierep, Taxonomic Profiling and Visualization of Metagenomic Data (Galaxy Training Materials). [https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html](https://training.galaxyproject.org/training-material/topics/microbiome/tutorials/taxonomic-profiling/tutorial.html)
+Information about these tools and databases was scattered around various documentations, and sometimes incomplete, so we decided to create this catalogue.
+This project centralizes metadata of tools and associated reference databases for taxonomic profiling, featuring:
 
-Hiltemann, Saskia, Rasche, Helena et al., 2023 Galaxy Training: A Powerful Framework for Teaching! PLOS Computational Biology [10.1371/journal.pcbi.1010752](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1010752)
+- A **Streamlit** interface to explore the catalog and obtain recommendations based on user questions and needs;
+- Tools and databases' metadata annotated with ontologies.
 
-Batut et al., 2018 Community-Driven Data Analysis Training for Biology Cell Systems [10.1016/j.cels.2018.05.012](https://doi.org/10.1016%2Fj.cels.2018.05.012)
-
-The term “microbiome” describes “a characteristic microbial community occupying a reasonably well-defined habitat which has distinct physio-chemical properties. The term thus not only refers to the microorganisms involved but also encompasses their theatre of activity” (Whipps et al. 1988).
-
-Microbiome data can be gathered from different environments such as soil, water or the human gut. The biological interest lies in general in the question how the microbiome present at a specific site influences this environment. To study a microbiome, we need to use indirect methods like metagenomics or metatranscriptomics.
-
-Metagenomic samples contain DNA from different organisms at a specific site, where the sample was collected. Metagenomic data can be used to find out which organisms coexist in that niche and which genes are present in the different organisms. Metatranscriptomic samples include the transcribed gene products, thus RNA, that therefore allow to not only study the presence of genes but additionally their expression in the given environment. The following tutorial will focus on metagenomics data, but the principle is the same for metatranscriptomics data.
-
-The investigation of microorganisms present at a specific site and their relative abundance is also called “microbial community profiling”. The main objective is to identify the microorganisms that are present within the given sample. This can be achieved for all known microbes, where the DNA sequence specific for a certain species is known.
-
-For metagenomic data analysis we start with sequences derived from DNA fragments that are isolated from the sample of interest. Ideally, the sequences from all microbes in the sample are present. The underlying idea of taxonomic assignment is to compare the DNA sequences found in the sample (reads) to DNA sequences of a database. When a read matches a database DNA sequence of a known microbe, we can derive a list with microbes present in the sample.
-
-Taxonomic Profiling refers to methods that directly calculates the relative abundance of each present microorganism taxa, and provide an abundance profile table, without requiring any binning/assembly method.
 
 ---
 
@@ -49,8 +29,7 @@ catalogue/
 │   ├── notebooks/
 │   │   ├── sylph_nb.ipynb      # Sylph + GlobDB workflow
 │   │   └── singlem_nb.ipynb    # SingleM + GlobDB workflow
-│   └── update_tools.py         # tool update/curation utility
-├── curation_report.txt         # tool release curation report
+│   
 └── README.md
 ```
 
@@ -107,7 +86,7 @@ streamlit run scripts/streamlit/app.py
 
 `scripts/streamlit/app.py` handles:
 
-- navigation (`Questionnaire` / `Catalogue`);
+- navigation (`Survey` / `Catalog`);
 - user widgets (read type, sample category, target taxa, RAM, etc.);
 - calls to `recommend(...)`;
 - display of recommendations: tool + database + links + downloads;
@@ -133,50 +112,31 @@ streamlit run scripts/streamlit/app.py
 
 ---
 
-## 4) Notebooks (`scripts/notebooks`)
 
-The notebooks are analysis workflows, independent of Streamlit.
+## 4) Curation and maintenance
 
-### `sylph_nb.ipynb`
-
-- Sylph pipeline on paired FASTQ (`R1`/`R2`).
-- Database configured on **GlobDB Sylph** (IFB core cluster path):
-  - `/data/sylph/databases/sylph/globdb/globdb_r226_sylph_c200.syldb`
-- TSV aggregation into an abundance matrix + clustering.
-
-### `singlem_nb.ipynb`
-
-- SingleM pipeline on FASTQ.
-- Database configured on **GlobDB SingleM** (IFB core cluster path):
-  - `/shared/bank/singlem/glob_db/GlobDB_r226.metapackage_v1.smpkg`
-- `singlem pipe` + `singlem summarise` execution, then aggregation and clustering.
-
----
-
-## 5) Curation and maintenance
-
-### 5.1 `latest_release` vs `curated_release`
+### 4.1 `latest_release` vs `curated_release`
 
 - `latest_release`: most recently detected version.
 - `curated_release`: version explicitly validated and curated in this catalogue.
 
 The `scripts/update_tools.py` script identifies tools that need curation (when `latest_release != curated_release` or `curated_release` is empty) and feeds `curation_report.txt`.
 
-### 5.2 Adding a new tool
+### 4.2 Adding a new tool
 
 1. Create `data/tools/<tool>.json`.
 2. Fill in the base fields + `uses_databases`.
 3. Check consistency of database IDs (`@id` must already exist).
 4. Restart Streamlit and test the questionnaire.
 
-### 5.3 Adding a new database
+### 4.3 Adding a new database
 
 1. Create `data/databases/<db>.json`.
 2. Fill in `sample`, `origin`, `taxonomic_scope`, `isPartOf`/`hasPart` if needed.
 3. Add `uses_databases` relationships on the relevant tool(s).
 4. If a download is available, fill in `compatible_tools`.
 
-### 5.4 Avoiding common inconsistencies
+### 4.4 Avoiding common inconsistencies
 
 - Questionnaire labels must match the mapping keys (`SAMPLE_FILTER` / `SAMPLE_CATEGORIES`).
 - IDs in `uses_databases[@id]` must point to an existing JSON in `data/databases/`.
@@ -184,7 +144,7 @@ The `scripts/update_tools.py` script identifies tools that need curation (when `
 
 ---
 
-## 6) Dependencies
+## 5) Dependencies
 
 Python dependencies used in the project (depending on the modules executed):
 
@@ -201,12 +161,12 @@ Install according to your environment (venv/conda/cluster).
 
 ---
 
-## 7) Design philosophy
+## 6) Design philosophy
 
 This project aims to be:
 
 - **traceable**: every recommendation must be explainable from the JSON files;
-- **extensible**: new databases and tools can be added without breaking the interface;
+- **extensible**: new databases and tools can be added easily;
 - **useful to maintainers**: clear visibility of pending updates (curation, compatibility, releases).
 
 If a result looks unexpected, the recommended debugging approach is:
