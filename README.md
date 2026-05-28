@@ -18,20 +18,17 @@ This project centralizes metadata of tools and associated reference databases fo
 
 ```text
 catalogue/
-├── data/
-│   ├── databases/              # reference databases metadata in JSON format
-│   ├── tools/                  # tools metadata in JSON format
-│   └── schemas/                # JSON-LD schemas (tool_schema, database_schema...)
-├── scripts/
-│   ├── streamlit/
-│   │   ├── app.py              # Streamlit UI 
-│   │   └── catalogue_utils.py  # utils for streamlit interface
-│   ├── notebooks/
-│   │   ├── sylph_nb.ipynb      # Sylph + GlobDB workflow
-│   │   └── singlem_nb.ipynb    # SingleM + GlobDB workflow
-│   
-└── README.md
-└── requirements.txt
+├── data/                       
+│   ├── databases/              # JSON files for databases
+│   ├── tools/                  # JSONfiles for tools
+│   └── schemas/                # JSON schemas
+├── src/                        
+│   ├── catalogue_utils.py      # Recommendation / loading logic
+│   └── app.py                  # Streamlit interface
+├── .gitignore             
+├── README.md                  
+├── requirements.txt            
+└── ...
 
 ```
 
