@@ -3,7 +3,7 @@
 
 ---
 
-**Taxonomic Profiling** refers to methods that directly calculates the **relative abundance** of each present **microorganism** taxa, and provide an abundance profile table, without requiring any binning or assembly method.
+**Taxonomic Profiling** refers to methods (eg. metaphlan, mOTUs...) that directly calculates the **relative abundance** of each present **microorganism** taxa, and provide an abundance profile table, without requiring any binning or assembly method.
 
 Information about these tools and databases was scattered around various documentations, and sometimes incomplete, so we decided to create this catalogue.
 This project centralizes metadata of tools and associated reference databases for taxonomic profiling, featuring:

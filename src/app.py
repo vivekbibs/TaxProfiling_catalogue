@@ -57,7 +57,7 @@ _maybe_image(
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CHEMINS
+# PATHS
 # ─────────────────────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -65,7 +65,7 @@ DB_DIR = PROJECT_ROOT / "data" / "databases"
 TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# IMPORTS LOGIQUE MÉTIER
+# IMPORTS
 # ─────────────────────────────────────────────────────────────────────────────
 from catalogue_utils import (  # noqa: E402
     SAMPLE_CATEGORIES,
@@ -84,12 +84,12 @@ from catalogue_utils import (  # noqa: E402
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# DONNÉES
+# DATA
 # ─────────────────────────────────────────────────────────────────────────────
 databases, tools = load_catalogue(DB_DIR, TOOLS_DIR)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SIDEBAR — navigation
+# SIDEBAR
 # ─────────────────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🧬 Navigation")
@@ -104,7 +104,7 @@ with st.sidebar:
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# PAGE 1 — QUESTIONNAIRE
+# PAGE 1 — SURVEY
 # ═════════════════════════════════════════════════════════════════════════════
 def render_home():
     st.markdown("# 🏠 Home — Taxonomic Profiling")
