@@ -34,7 +34,8 @@ _SLURM_HEADER = """\
 set -euo pipefail
 mkdir -p logs results
 
-INPUT_FASTQ="{input_fastq}"   # ← remplacez par votre fichier FASTQ
+INPUT_FASTQ_R1="{input_fastq_r1}"   # ← replace with your own fastq
+INPUT_FASTQ_R2="{input_fastq_r2}"   # ← replace with your own fastq
 OUTPUT_DIR="results/{job_name}"
 mkdir -p "$OUTPUT_DIR"
 
@@ -45,14 +46,18 @@ _SBATCH_SYLPH = _SLURM_HEADER + """\
 # ── Sylph sketch ──────────────────────────────────────────────────────────────
 DB_PATH="{db_path}"   # ← chemin vers la base sylph (.syldb)
 
-sylph sketch "$INPUT_FASTQ" -o "$OUTPUT_DIR/reads.sylsp" -t {cpus}
+sylph sketch -1 "$INPUT_FASTQ_R1" -2 "$INPUT_FASTQ_R2" -d "$OUTPUT_DIR" -t {cpus}
 
 # ── Sylph profile ─────────────────────────────────────────────────────────────
-sylph profile "$DB_PATH" "$OUTPUT_DIR/reads.sylsp" \\
+sylph profile "$DB_PATH" *.fastq.gz.paired.sylsp  \\
     -t {cpus} \\
     -o "$OUTPUT_DIR/profile.tsv"
 
-echo "Done — résultats dans $OUTPUT_DIR/profile.tsv"
+sylph-tax taxprof "$OUTPUT_DIR/profile.tsv" \\
+    -o "$OUTPUT_DIR" \\
+    -t GlobDB_r226 "$DB_PATH" \\
+    
+echo "Done — results in $OUTPUT_DIR/profile.tsv"
 """
 
 # ── SingleM ──────────────────────────────────────────────────────────────────
@@ -61,15 +66,18 @@ _SBATCH_SINGLEM = _SLURM_HEADER + """\
 METAPACKAGE="{db_path}"   # ← chemin vers le metapackage SingleM (.smpkg)
 
 singlem pipe \\
-    --forward "$INPUT_FASTQ" \\
-    --metapackage "$METAPACKAGE" \\
-    --otu-table "$OUTPUT_DIR/otu_table.tsv" \\
+    --forward "$INPUT_FASTQ_R1" \\
+    --reverse "$INPUT_FASTQ_R2" \\
+    --singlem-packages "$METAPACKAGE" \\
+    --taxonomic-profile "$OUTPUT_DIR/profile.tsv" \\
     --threads {cpus}
 
 # ── SingleM summarise ─────────────────────────────────────────────────────────
 singlem summarise \\
-    --input-otu-tables "$OUTPUT_DIR/otu_table.tsv" \\
-    --taxonomic-profile "$OUTPUT_DIR/profile.tsv"
+    --input-taxonomic-profile "$OUTPUT_DIR/profile.tsv" \\
+    --output-species-by-site-relative-abundance "$OUTPUT_DIR/profile_species.tsv " \\
+    --output-species-by-site-level species
+    
 
 echo "Done — profil dans $OUTPUT_DIR/profile.tsv"
 """
