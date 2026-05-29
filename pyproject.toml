@@ -1,0 +1,11 @@
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+
+# Ignorer les dossiers draft et archive — pas du code de production
+exclude = ["src/draft/", "src/archive/"]
+
+# Plotly n'a pas de stubs — ignorer proprement
+[[tool.mypy.overrides]]
+module = ["plotly.*"]
+ignore_missing_imports = true

@@ -1,6 +1,7 @@
-import pandas as pd
 import argparse
 import sys
+
+import pandas as pd
 
 
 def get_tax_level(tax_string):

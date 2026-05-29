@@ -67,21 +67,11 @@ TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 # ─────────────────────────────────────────────────────────────────────────────
 # IMPORTS
 # ─────────────────────────────────────────────────────────────────────────────
-from catalogue_utils import (  # noqa: E402
-    SAMPLE_CATEGORIES,
-    SAMPLE_FILTER,
-    TAXON_IRI,
-    _to_list,
-    db_release_str,
-    is_about_label,
-    load_catalogue,
-    origin_label,
-    recommend,
-    sample_label,
-    seq_scope_label,
-    taxon_labels,
-    taxonomy_badge,
-)
+from catalogue_utils import (SAMPLE_CATEGORIES, SAMPLE_FILTER,  # noqa: E402
+                             TAXON_IRI, _to_list, db_release_str,
+                             is_about_label, load_catalogue, origin_label,
+                             recommend, sample_label, seq_scope_label,
+                             taxon_labels, taxonomy_badge)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DATA

@@ -135,6 +135,7 @@ def fetch_github_latest(owner: str, repo: str, headers: dict) -> str | None:
         return None
 
     r.raise_for_status()
+    return None
 
 
 def normalize_version(v) -> str:

@@ -41,9 +41,7 @@ mkdir -p "$OUTPUT_DIR"
 """
 
 # ── Sylph ────────────────────────────────────────────────────────────────────
-_SBATCH_SYLPH = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_SYLPH = _SLURM_HEADER + """\
 # ── Sylph sketch ──────────────────────────────────────────────────────────────
 DB_PATH="{db_path}"   # ← chemin vers la base sylph (.syldb)
 
@@ -56,12 +54,9 @@ sylph profile "$DB_PATH" "$OUTPUT_DIR/reads.sylsp" \\
 
 echo "Done — résultats dans $OUTPUT_DIR/profile.tsv"
 """
-)
 
 # ── SingleM ──────────────────────────────────────────────────────────────────
-_SBATCH_SINGLEM = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_SINGLEM = _SLURM_HEADER + """\
 # ── SingleM pipe ──────────────────────────────────────────────────────────────
 METAPACKAGE="{db_path}"   # ← chemin vers le metapackage SingleM (.smpkg)
 
@@ -78,12 +73,9 @@ singlem summarise \\
 
 echo "Done — profil dans $OUTPUT_DIR/profile.tsv"
 """
-)
 
 # ── Meteor ───────────────────────────────────────────────────────────────────
-_SBATCH_METEOR = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_METEOR = _SLURM_HEADER + """\
 # ── Téléchargement de la référence (si pas déjà fait) ─────────────────────────
 REF_DIR="{db_path}"   # ← dossier de référence meteor (meteor download ...)
 # meteor download -i -c {db_id} -o "$REF_DIR"
@@ -103,12 +95,9 @@ meteor profiling \\
 
 echo "Done — profil dans $OUTPUT_DIR/profile/"
 """
-)
 
 # ── Kraken2 + Bracken ────────────────────────────────────────────────────────
-_SBATCH_KRAKEN2 = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_KRAKEN2 = _SLURM_HEADER + """\
 # ── Kraken2 ───────────────────────────────────────────────────────────────────
 DB_PATH="{db_path}"   # ← dossier de la base Kraken2
 
@@ -129,12 +118,9 @@ bracken \\
 
 echo "Done — profil Bracken dans $OUTPUT_DIR/bracken_species.txt"
 """
-)
 
 # ── MetaPhlAn ────────────────────────────────────────────────────────────────
-_SBATCH_METAPHLAN = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_METAPHLAN = _SLURM_HEADER + """\
 # ── MetaPhlAn ─────────────────────────────────────────────────────────────────
 DB_PATH="{db_path}"   # ← dossier contenant la base ChocoPhlan
 
@@ -147,12 +133,9 @@ metaphlan "$INPUT_FASTQ" \\
 
 echo "Done — profil dans $OUTPUT_DIR/metaphlan_profile.txt"
 """
-)
 
 # ── Metabuli ─────────────────────────────────────────────────────────────────
-_SBATCH_METABULI = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_METABULI = _SLURM_HEADER + """\
 # ── Metabuli classify ─────────────────────────────────────────────────────────
 DB_PATH="{db_path}"   # ← dossier de la base Metabuli (GTDB ou RefSeq)
 
@@ -164,12 +147,9 @@ metabuli classify \\
 
 echo "Done — résultats dans $OUTPUT_DIR/"
 """
-)
 
 # ── Générique (outil non reconnu) ────────────────────────────────────────────
-_SBATCH_GENERIC = (
-    _SLURM_HEADER
-    + """\
+_SBATCH_GENERIC = _SLURM_HEADER + """\
 # ── Commande générique ────────────────────────────────────────────────────────
 # Remplacez par la commande réelle de {tool_name}
 DB_PATH="{db_path}"
@@ -179,32 +159,31 @@ echo "Base  : {db_name}"
 echo "Input : $INPUT_FASTQ"
 echo "→ Ajoutez la commande d'exécution ici"
 """
-)
 
 _SBATCH_TEMPLATES: dict[str, str] = {
-    "sylph":     _SBATCH_SYLPH,
-    "singlem":   _SBATCH_SINGLEM,
-    "meteor":    _SBATCH_METEOR,
-    "kraken":    _SBATCH_KRAKEN2,
-    "kraken2":   _SBATCH_KRAKEN2,
-    "bracken":   _SBATCH_KRAKEN2,
+    "sylph": _SBATCH_SYLPH,
+    "singlem": _SBATCH_SINGLEM,
+    "meteor": _SBATCH_METEOR,
+    "kraken": _SBATCH_KRAKEN2,
+    "kraken2": _SBATCH_KRAKEN2,
+    "bracken": _SBATCH_KRAKEN2,
     "metaphlan": _SBATCH_METAPHLAN,
-    "metabuli":  _SBATCH_METABULI,
+    "metabuli": _SBATCH_METABULI,
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PARAMÈTRES SLURM PAR DÉFAUT PAR OUTIL
 # ─────────────────────────────────────────────────────────────────────────────
 _SLURM_DEFAULTS: dict[str, dict] = {
-    "sylph":     {"cpus": 8,  "mem": 32,  "time": "02:00:00"},
-    "singlem":   {"cpus": 8,  "mem": 8,   "time": "04:00:00"},
-    "meteor":    {"cpus": 16, "mem": 64,  "time": "08:00:00"},
-    "kraken":    {"cpus": 16, "mem": 128, "time": "04:00:00"},
-    "kraken2":   {"cpus": 16, "mem": 128, "time": "04:00:00"},
-    "bracken":   {"cpus": 4,  "mem": 32,  "time": "01:00:00"},
-    "metaphlan": {"cpus": 8,  "mem": 32,  "time": "04:00:00"},
-    "metabuli":  {"cpus": 16, "mem": 64,  "time": "06:00:00"},
-    "_default":  {"cpus": 8,  "mem": 32,  "time": "04:00:00"},
+    "sylph": {"cpus": 8, "mem": 32, "time": "02:00:00"},
+    "singlem": {"cpus": 8, "mem": 8, "time": "04:00:00"},
+    "meteor": {"cpus": 16, "mem": 64, "time": "08:00:00"},
+    "kraken": {"cpus": 16, "mem": 128, "time": "04:00:00"},
+    "kraken2": {"cpus": 16, "mem": 128, "time": "04:00:00"},
+    "bracken": {"cpus": 4, "mem": 32, "time": "01:00:00"},
+    "metaphlan": {"cpus": 8, "mem": 32, "time": "04:00:00"},
+    "metabuli": {"cpus": 16, "mem": 64, "time": "06:00:00"},
+    "_default": {"cpus": 8, "mem": 32, "time": "04:00:00"},
 }
 
 
@@ -243,29 +222,29 @@ def make_sbatch(
         cpus, mem, time, input_fastq
     """
     user_params = user_params or {}
-    tool_id  = tool.get("@id", "unknown")
+    tool_id = tool.get("@id", "unknown")
     tool_key = _normalize_tool_id(tool_id)
 
     defaults = _SLURM_DEFAULTS.get(tool_key, _SLURM_DEFAULTS["_default"])
     template = _SBATCH_TEMPLATES.get(tool_key, _SBATCH_GENERIC)
 
-    db_name    = db.get("name", db_id) if db else db_id
+    db_name = db.get("name", db_id) if db else db_id
     db_release = db_rel.get("release") or (db_release_from_db(db) if db else "—")
-    db_path    = _get_db_path(db, db_id, tool_id, db_rel)
+    db_path = _get_db_path(db, db_id, tool_id, db_rel)
 
     ctx = {
-        "job_name":    f"{tool_key}_{db_id}",
-        "tool_name":   tool.get("name", tool_id),
-        "tool_version":tool.get("latest_release") or "latest",
-        "db_name":     db_name,
-        "db_id":       db_id,
-        "db_release":  str(db_release) if db_release else "—",
-        "db_path":     user_params.get("db_path") or db_path,
-        "cpus":        user_params.get("cpus",       defaults["cpus"]),
-        "mem":         user_params.get("mem",         defaults["mem"]),
-        "time":        user_params.get("time",        defaults["time"]),
+        "job_name": f"{tool_key}_{db_id}",
+        "tool_name": tool.get("name", tool_id),
+        "tool_version": tool.get("latest_release") or "latest",
+        "db_name": db_name,
+        "db_id": db_id,
+        "db_release": str(db_release) if db_release else "—",
+        "db_path": user_params.get("db_path") or db_path,
+        "cpus": user_params.get("cpus", defaults["cpus"]),
+        "mem": user_params.get("mem", defaults["mem"]),
+        "time": user_params.get("time", defaults["time"]),
         "input_fastq": user_params.get("input_fastq", "/path/to/sample.fastq.gz"),
-        "date":        datetime.now().strftime("%Y-%m-%d"),
+        "date": datetime.now().strftime("%Y-%m-%d"),
     }
     return template.format(**ctx)
 
@@ -278,11 +257,12 @@ def db_release_from_db(db: dict) -> str:
 # GÉNÉRATION NOTEBOOK JUPYTER (nbformat v4)
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def _md_cell(source: str) -> dict:
     return {
         "cell_type": "markdown",
-        "metadata":  {},
-        "source":    textwrap.dedent(source).strip(),
+        "metadata": {},
+        "source": textwrap.dedent(source).strip(),
     }
 
 
@@ -291,11 +271,11 @@ def _code_cell(source: str, tags: list[str] | None = None) -> dict:
     if tags:
         meta["tags"] = tags
     return {
-        "cell_type":       "code",
+        "cell_type": "code",
         "execution_count": None,
-        "metadata":        meta,
-        "outputs":         [],
-        "source":          textwrap.dedent(source).strip(),
+        "metadata": meta,
+        "outputs": [],
+        "source": textwrap.dedent(source).strip(),
     }
 
 
@@ -311,21 +291,25 @@ def make_notebook(
     Retourne un dict sérialisable en JSON.
     """
     user_params = user_params or {}
-    tool_id    = tool.get("@id", "unknown")
-    tool_name  = tool.get("name", tool_id)
-    tool_ver   = tool.get("latest_release") or "latest"
-    db_name    = db.get("name", db_id) if db else db_id
+    tool_id = tool.get("@id", "unknown")
+    tool_name = tool.get("name", tool_id)
+    tool_ver = tool.get("latest_release") or "latest"
+    db_name = db.get("name", db_id) if db else db_id
     db_release = db_rel.get("release") or (db_release_from_db(db) if db else "—")
-    db_path    = user_params.get("db_path") or _get_db_path(db, db_id, tool_id, db_rel)
-    input_fq   = user_params.get("input_fastq", "/path/to/sample.fastq.gz")
-    tool_key   = _normalize_tool_id(tool_id)
-    defaults   = _SLURM_DEFAULTS.get(tool_key, _SLURM_DEFAULTS["_default"])
-    taxa       = ", ".join(
-        t.get("label", "") for t in (db or {}).get("taxonomic_scope", [])
-        if isinstance(t, dict) and t.get("label")
-    ) or "—"
+    db_path = user_params.get("db_path") or _get_db_path(db, db_id, tool_id, db_rel)
+    input_fq = user_params.get("input_fastq", "/path/to/sample.fastq.gz")
+    tool_key = _normalize_tool_id(tool_id)
+    defaults = _SLURM_DEFAULTS.get(tool_key, _SLURM_DEFAULTS["_default"])
+    taxa = (
+        ", ".join(
+            t.get("label", "")
+            for t in (db or {}).get("taxonomic_scope", [])
+            if isinstance(t, dict) and t.get("label")
+        )
+        or "—"
+    )
     ts_display = _taxo_badge(db_rel.get("taxonomy_system"))
-    doc_url    = tool.get("doc") or tool.get("repo") or ""
+    doc_url = tool.get("doc") or tool.get("repo") or ""
 
     cells = []
 
@@ -350,7 +334,9 @@ def make_notebook(
         Assurez-vous que l'outil est disponible dans votre environnement conda.
         """))
 
-    cells.append(_code_cell(f"""\
+    cells.append(
+        _code_cell(
+            f"""\
         # Vérifier que l'outil est disponible
         import subprocess, shutil, sys
 
@@ -363,7 +349,10 @@ def make_notebook(
         else:
             print("❌ {tool_name} non trouvé dans le PATH.")
             print("   Activez votre environnement conda : conda activate <env>")
-        """, tags=["setup"]))
+        """,
+            tags=["setup"],
+        )
+    )
 
     # ── Paramètres ────────────────────────────────────────────────────────────
     cells.append(_md_cell("""\
@@ -372,7 +361,9 @@ def make_notebook(
         Modifiez les chemins ci-dessous avant d'exécuter le notebook.
         """))
 
-    cells.append(_code_cell(f"""\
+    cells.append(
+        _code_cell(
+            f"""\
         from pathlib import Path
 
         # ── À modifier ────────────────────────────────────────────────────────
@@ -390,7 +381,10 @@ def make_notebook(
         assert INPUT_FASTQ.exists(), f"FASTQ introuvable : {{INPUT_FASTQ}}"
         assert DB_PATH.exists(),     f"Base de données introuvable : {{DB_PATH}}"
         print("✅ Chemins OK")
-        """, tags=["parameters"]))
+        """,
+            tags=["parameters"],
+        )
+    )
 
     # ── Exécution ─────────────────────────────────────────────────────────────
     cells.append(_md_cell("## 2 · Exécution"))
@@ -459,13 +453,13 @@ def make_notebook(
 
     # ── Metadata ──────────────────────────────────────────────────────────────
     nb = {
-        "nbformat":       4,
+        "nbformat": 4,
         "nbformat_minor": 5,
         "metadata": {
             "kernelspec": {
                 "display_name": "Python 3",
-                "language":     "python",
-                "name":         "python3",
+                "language": "python",
+                "name": "python3",
             },
             "language_info": {"name": "python", "version": "3.10.0"},
         },
