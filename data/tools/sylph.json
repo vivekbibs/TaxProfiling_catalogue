@@ -25,6 +25,7 @@
       "name": "GTDB",
       "@id": "gtdb",
       "release": [
+        "232",
         "226",
         "220",
         "214"
@@ -34,7 +35,10 @@
     {
       "name": "GlobDB",
       "@id": "globdb",
-      "release": "226",
+      "release": [
+        "232",
+        "226"
+      ],
       "taxonomy_system": "gtdb"
     },
     {
