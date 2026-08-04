@@ -35,6 +35,31 @@ def _to_list(val) -> list:
     return val if isinstance(val, list) else [val]
 
 
+def _release_as_int(value) -> int | None:
+    if value is None:
+        return None
+    try:
+        text = str(value).strip()
+    except Exception:
+        return None
+    if text.lower().startswith("r"):
+        text = text[1:]
+    try:
+        return int(text)
+    except ValueError:
+        return None
+
+
+def _part_available_since_release(part: dict, parent_release: int | None) -> bool:
+    if parent_release is None or not isinstance(part, dict):
+        return True
+    avail = part.get("available_since", part.get("release"))
+    avail_int = _release_as_int(avail)
+    if avail_int is None:
+        return True
+    return avail_int <= parent_release
+
+
 def _normalize(obj: dict) -> dict:
     obj = dict(obj)
     for f in _LIST_FIELDS:
@@ -368,11 +393,14 @@ def _score_db_entry(
         # Slightly prefer composite catalogues (e.g. GlobDB) over a single
         # contained catalogue when both satisfy constraints similarly.
         if isinstance(db_obj, dict):
+            parent_release = _release_as_int(db_obj.get("latest_release") or db_obj.get("release"))
             part_count = len(
                 [
                     p
                     for p in _to_list(db_obj.get("hasPart"))
-                    if isinstance(p, dict) and p.get("@id")
+                    if isinstance(p, dict)
+                    and p.get("@id")
+                    and _part_available_since_release(p, parent_release)
                 ]
             )
             if part_count > 0:
@@ -402,6 +430,7 @@ def _score_db_entry(
         if _matches_constraints(envo_tag, host_tag, db_obj)
         else -1
     )
+    parent_release = _release_as_int(db_obj.get("latest_release") or db_obj.get("release"))
     parts = _to_list(db_obj.get("hasPart")) if isinstance(db_obj, dict) else []
 
     # If a composite DB (e.g. GlobDB) contains a very specific matching sub-DB
@@ -409,6 +438,8 @@ def _score_db_entry(
     best_part_score = -1
     for p in parts:
         if not isinstance(p, dict) or not p.get("@id"):
+            continue
+        if not _part_available_since_release(p, parent_release):
             continue
         part_db = databases.get(p["@id"], {})
         p_envo, p_host = db_scope(p["@id"], databases)
