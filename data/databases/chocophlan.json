@@ -8,7 +8,7 @@
   "to_update": false,
   "description": "Marker database used by MetaPhlAn",
   "doi": null,
-  "homepage": null,
+  "homepage": "https://cmprod1.cibio.unitn.it/biobakery4/metaphlan_databases/bowtie2_indexes/?C=M;O=D",
   "license": null,
   "taxonomic_scope": [
     {
