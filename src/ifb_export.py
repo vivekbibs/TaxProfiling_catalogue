@@ -240,6 +240,7 @@ def make_sbatch(
     db_release = db_rel.get("release") or (db_release_from_db(db) if db else "—")
     db_path = _get_db_path(db, db_id, tool_id, db_rel)
 
+    input_fastq = user_params.get("input_fastq", "/path/to/sample.fastq.gz")
     ctx = {
         "job_name": f"{tool_key}_{db_id}",
         "tool_name": tool.get("name", tool_id),
@@ -251,7 +252,9 @@ def make_sbatch(
         "cpus": user_params.get("cpus", defaults["cpus"]),
         "mem": user_params.get("mem", defaults["mem"]),
         "time": user_params.get("time", defaults["time"]),
-        "input_fastq": user_params.get("input_fastq", "/path/to/sample.fastq.gz"),
+        "input_fastq": input_fastq,
+        "input_fastq_r1": input_fastq,
+        "input_fastq_r2": input_fastq,
         "date": datetime.now().strftime("%Y-%m-%d"),
     }
     return template.format(**ctx)
