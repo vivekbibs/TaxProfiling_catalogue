@@ -4,7 +4,7 @@
   "@id": "chocophlan",
   "type": "Database",
   "release": null,
-  "latest_release": null,
+  "latest_release": "jan2026",
   "to_update": false,
   "description": "Marker database used by MetaPhlAn",
   "doi": null,
