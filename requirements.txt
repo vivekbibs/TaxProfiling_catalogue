@@ -17,7 +17,9 @@ isort
 mypy
 pylance
 pre-commit
-
+numpy
+plotly
+networkx
 # ── Tests ─────────────────────────────────────────
 pytest
 pytest-cov
