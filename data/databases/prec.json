@@ -23,8 +23,14 @@
       "@id": "globdb"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00002006",
+    "label": "liquid water"
+  },
+  "origin": {
+    "@id": "obo:ENVO_00002149",
+    "label": "estuary (Pearl River estuary)"
+  },
   "doi": "https://doi.org/10.1038/s41597-022-01153-4",
   "description": "A holistic dataset of bacterial, archaeal and viral genomes from the Pearl River estuary."
 }

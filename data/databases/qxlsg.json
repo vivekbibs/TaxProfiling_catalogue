@@ -19,8 +19,14 @@
       "@id": "globdb"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00002006",
+    "label": "liquid water"
+  },
+  "origin": {
+    "@id": "obo:ENVO_00010483",
+    "label": "Qinghai-Xizang Plateau lake sediment"
+  },
   "doi": "https://doi.org/10.1016/j.celrep.2025.116483",
   "description": "Metagenomic atlas of Qinghai-Xizang Plateau lakes capturing microbial diversity and salinity adaptation."
 }

@@ -19,8 +19,14 @@
       "@id": "globdb"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00002003",
+    "label": "caecum and rectum"
+  },
+  "origin": {
+    "@id": "obo:NCBITaxon_9796",
+    "label": "Equus caballus"
+  },
   "doi": "https://doi.org/10.1186/s40168-022-01448-z",
   "description": "Horse-associated metagenome-assembled genomes with resistome and athletic-performance microbiome insights."
 }

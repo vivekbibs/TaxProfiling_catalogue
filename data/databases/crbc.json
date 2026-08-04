@@ -19,8 +19,14 @@
       "@id": "globdb"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00010483",
+    "label": "roots"
+  },
+  "origin": {
+    "@id": "obo:NCBITaxon_33090",
+    "label": "Plantae"
+  },
   "doi": "https://doi.org/10.1016/j.cell.2025.02.013",
   "description": "Metagenome-assembled bacterial and viral genomes from crop roots, highlighting unexplored species and microbiome patterns."
 }

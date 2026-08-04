@@ -19,8 +19,14 @@
       "@id": "globdb"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00010483",
+    "label": "lab-scale anaerobic bioreactor"
+  },
+  "origin": {
+    "@id": "obo:ENVO_00010483",
+    "label": "simulated dairy wastewater"
+  },
   "doi": "https://doi.org/10.1128/mra.00487-25",
   "description": "Metagenome-assembled genomes from microbial communities inhabiting lab-scale anaerobic bioreactors fed with dairy wastewater."
 }
