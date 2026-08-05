@@ -19,13 +19,19 @@
       "@id": "globdb"
     }
   ],
-  "sample": {
-    "@id": "obo:ENVO_00002006",
-    "label": "river"
-  },
+  "sample": [
+    {
+      "@id": "obo:ENVO_00001998",
+      "label": "soil"
+    },
+    {
+      "@id": "obo:ENVO_00002007",
+      "label": "sediment"
+    }
+  ],
   "origin": {
-    "@id": "obo:ENVO_00010483",
-    "label": "soils and surrounding sediments"
+    "@id": "obo:ENVO_00000022",
+    "label": "river"
   },
   "doi": "https://doi.org/10.1038/s41597-025-05888-8",
   "description": "236 metagenome-assembled genomes from river ecosystems sampled along a latitudinal gradient."

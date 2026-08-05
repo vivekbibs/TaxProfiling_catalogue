@@ -12,7 +12,7 @@
       "label": "Archaea"
     }
   ],
-  "latest_release": "232",
+  "latest_release": null,
   "to_update": true,
   "isPartOf": [
     {
@@ -20,12 +20,12 @@
     }
   ],
   "sample": {
-    "@id": "obo:ENVO_00010483",
-    "label": "roots"
+    "@id": "obo:MESH_D018517",
+    "label": "Plant Roots"
   },
   "origin": {
-    "@id": "obo:NCBITaxon_33090",
-    "label": "Plantae"
+    "@id": "obo:MESH_D018556",
+    "label": "Crops, Agricultural"
   },
   "doi": "https://doi.org/10.1016/j.cell.2025.02.013",
   "description": "Metagenome-assembled bacterial and viral genomes from crop roots, highlighting unexplored species and microbiome patterns."
