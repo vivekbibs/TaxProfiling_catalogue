@@ -19,13 +19,23 @@
       "@id": "globdb"
     }
   ],
-  "sample": {
-    "@id": "obo:ENVO_00002007",
-    "label": "sediment"
-  },
+  "sample": [
+    {
+      "@id": "obo:ENVO_00002149",
+      "label": "sea water"
+    },
+    {
+      "@id": "obo:ENVO_00002006",
+      "label": "cold seep fluid"
+    },
+    {
+      "@id": "obo:ENVO_00002007",
+      "label": "sediment"
+    }
+  ],
   "origin": {
-    "@id": "obo:ENVO_00002149",
-    "label": "South China Sea cold seep field (sea water, cold seep fluids, sediments)"
+    "@id": "obo:GAZ_000089899",
+    "label": "South China Sea"
   },
   "doi": "https://doi.org/10.1038/s41597-022-01586-x",
   "description": "Cold seep metagenome sequencing and 768 microbial genomes from the South China Sea."
