@@ -20,6 +20,7 @@ import streamlit as st
 # ─────────────────────────────────────────────────────────────────────────────
 _LIST_FIELDS = [
     "taxonomic_scope",
+    "sample",
     "uses_databases",
     "hasPart",
     "isPartOf",
@@ -137,36 +138,43 @@ def db_scope(db_id: str, databases: dict) -> tuple:
     _dbg_db_scope(f"db_id={db_id}")
 
     s = db.get("sample")
-    envo = None
+    envo_list: list[str] = []
     _dbg_db_scope(f"sample_type={type(s).__name__} sample_raw={s!r}")
-    if isinstance(s, dict):
-        iri = str(s.get("@id", "")).strip()
-        sep = "obo:"
-        _dbg_db_scope(f"sample_iri={iri!r} contains_sep={sep in iri}")
-        if sep in iri:
-            split_val = iri.split(sep)[-1]
-            _dbg_db_scope(f"sample_split={split_val!r}")
-            envo = split_val
-    else:
-        _dbg_db_scope("sample is not a dict -> envo remains None")
+    items = _to_list(s)
+    sep = "obo:"
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            _dbg_db_scope(f"sample[{i}] skipped (not dict): {item!r}")
+            continue
+        iri = str(item.get("@id", "")).strip()
+        _dbg_db_scope(f"sample[{i}] iri={iri!r}")
+        try:
+            split_val = _iri_key(iri)
+            _dbg_db_scope(f"sample[{i}] key={split_val!r}")
+            if split_val:
+                envo_list.append(split_val)
+        except Exception:
+            _dbg_db_scope(f"sample[{i}] could not extract key from iri={iri!r}")
 
     origins = _to_list(db.get("origin"))
-    host = None
+    host_list: list[str] = []
     _dbg_db_scope(f"origin_count={len(origins)} origin_raw={origins!r}")
     for i, o in enumerate(origins):
         if not isinstance(o, dict):
             _dbg_db_scope(f"origin[{i}] skipped (not dict): {o!r}")
             continue
         iri = str(o.get("@id", "")).strip()
-        sep = "obo:"
-        _dbg_db_scope(f"origin[{i}] iri={iri!r} contains_sep={sep in iri}")
-        if sep in iri:
-            split_val = iri.split(sep)[-1]
-            _dbg_db_scope(f"origin[{i}] split={split_val!r}")
-            host = split_val
+        _dbg_db_scope(f"origin[{i}] iri={iri!r}")
+        try:
+            split_val = _iri_key(iri)
+            _dbg_db_scope(f"origin[{i}] key={split_val!r}")
+            if split_val:
+                host_list.append(split_val)
+        except Exception:
+            _dbg_db_scope(f"origin[{i}] could not extract key from iri={iri!r}")
 
-    _dbg_db_scope(f"result db_id={db_id} -> envo={envo!r}, host={host!r}")
-    return (envo, host)
+    _dbg_db_scope(f"result db_id={db_id} -> envo_list={envo_list!r}, host_list={host_list!r}")
+    return (envo_list, host_list)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -188,10 +196,13 @@ def taxon_labels(obj: dict) -> list[str]:
 
 
 def sample_label(db: dict) -> str:
-    s = db.get("sample")
-    if not isinstance(s, dict):
-        return "—"
-    return s.get("label") or _iri_key(s.get("@id", "")) or "—"
+    parts = []
+    for item in _to_list(db.get("sample")):
+        if isinstance(item, dict):
+            parts.append(item.get("label") or _iri_key(item.get("@id", "")))
+        elif item:
+            parts.append(str(item))
+    return ", ".join(parts) or "—"
 
 
 def origin_label(db: dict) -> str:
@@ -346,26 +357,21 @@ def _score_db_entry(
         return labels
 
     def _matches_constraints(
-        envo_tag: str | None, host_tag: str | None, db_obj: dict | None
+        envo_tags: list | None, host_tags: list | None, db_obj: dict | None
     ) -> bool:
-        is_global_scope = envo_tag is None and host_tag is None
+        is_global_scope = (not envo_tags) and (not host_tags)
 
         # Strict environment/host constraints from questionnaire.
-        if envo_key and envo_tag != envo_key and not is_global_scope:
+        if envo_key and (not envo_tags or envo_key not in envo_tags) and not is_global_scope:
             return False
-        if host_key and host_tag != host_key and not is_global_scope:
+        if host_key and (not host_tags or host_key not in host_tags) and not is_global_scope:
             return False
 
         labels = _scope_labels(db_obj)
-        has_virus = ("virus" in str(envo_tag).lower()) or any(
-            "virus" in lbl for lbl in labels
-        )
-        has_fungi = ("fungi" in str(envo_tag).lower()) or any(
-            "fung" in lbl for lbl in labels
-        )
-        has_euk = ("eukaryota" in str(envo_tag).lower()) or any(
-            ("eukary" in lbl) or ("eucary" in lbl) for lbl in labels
-        )
+        envo_text = " ".join(envo_tags).lower() if envo_tags else ""
+        has_virus = ("virus" in envo_text) or any("virus" in lbl for lbl in labels)
+        has_fungi = ("fungi" in envo_text) or any("fung" in lbl for lbl in labels)
+        has_euk = ("eukaryota" in envo_text) or any(("eukary" in lbl) or ("eucary" in lbl) for lbl in labels)
 
         # Strict taxonomic group constraints from questionnaire.
         if wants_virus and not has_virus:
@@ -377,17 +383,17 @@ def _score_db_entry(
         return True
 
     def _score_scope(
-        envo_tag: str | None, host_tag: str | None, db_obj: dict | None
+        envo_tags: list | None, host_tags: list | None, db_obj: dict | None
     ) -> int:
         score = 0
-        if envo_key and envo_tag == envo_key:
+        if envo_key and envo_tags and envo_key in envo_tags:
             score += 4
-        if host_key and host_tag == host_key:
+        if host_key and host_tags and host_key in host_tags:
             score += 4
         # Keep truly global catalogues as fallback when user asks a specific context.
-        if (envo_key or host_key) and envo_tag is None and host_tag is None:
+        if (envo_key or host_key) and (not envo_tags) and (not host_tags):
             score += 1
-        if envo_key is None and host_key is None and envo_tag is None:
+        if envo_key is None and host_key is None and (not envo_tags):
             score += 1
 
         # Slightly prefer composite catalogues (e.g. GlobDB) over a single
@@ -416,18 +422,18 @@ def _score_db_entry(
         return score
 
     db_obj = databases.get(db_id, {})
-    envo_tag, host_tag = db_scope(db_id, databases)
+    envo_tags, host_tags = db_scope(db_id, databases)
 
     # Broad survey (multi-env / "autre"): do not rank host-specific
     # catalogues (meteor animal guts, human gut, etc.) — their sample may not
-    # be ENVO/FOODON so envo_tag is None, which used to wrongly get a +2 "broad"
+    # be ENVO/FOODON so envo_tags empty, which used to wrongly get a +2 "broad"
     # bonus via _score_scope.
-    if envo_key is None and host_key is None and host_tag is not None:
+    if envo_key is None and host_key is None and host_tags:
         return -1
 
     best_score = (
-        _score_scope(envo_tag, host_tag, db_obj)
-        if _matches_constraints(envo_tag, host_tag, db_obj)
+        _score_scope(envo_tags, host_tags, db_obj)
+        if _matches_constraints(envo_tags, host_tags, db_obj)
         else -1
     )
     parent_release = _release_as_int(db_obj.get("latest_release") or db_obj.get("release"))
@@ -443,7 +449,7 @@ def _score_db_entry(
             continue
         part_db = databases.get(p["@id"], {})
         p_envo, p_host = db_scope(p["@id"], databases)
-        if envo_key is None and host_key is None and p_host is not None:
+        if envo_key is None and host_key is None and p_host:
             continue
         if not _matches_constraints(p_envo, p_host, part_db):
             continue

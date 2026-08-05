@@ -19,10 +19,16 @@
       "@id": "globdb"
     }
   ],
-  "sample": {
-    "@id": "obo:ENVO_00002003",
-    "label": "caecum and rectum"
-  },
+  "sample": [
+    {
+      "@id": "obo:GENEPIO_0100899",
+      "label": "caecal content"
+    },
+    {
+      "@id": "obo:ENVO_00002003",
+      "label": "fecal material"
+    }
+  ],
   "origin": {
     "@id": "obo:NCBITaxon_9796",
     "label": "Equus caballus"
