@@ -13,8 +13,32 @@
     "@id": "obo:NCBITaxon_2759",
     "label": "Eukaryota"
   },
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00002006",
+    "label": "liquid water"
+  },
+  "origin": [
+    {
+      "@id": "obo:MESH_D0101409",
+      "label": "Pacific Ocean"
+    },
+    {
+      "@id": "obo:MESH_D001267",
+      "label": "Atlantic Ocean"
+    },
+    {
+      "@id": "obo:MESH_D019156",
+      "label": "Indian Ocean"
+    },
+    {
+      "@id": "obo:MESH_D001110",
+      "label": "Arctic Regions"
+    },
+    {
+      "@id": "obo:MESH_D008522",
+      "label": "Mediterranean Sea"
+    }
+  ],
   "is_about": null,
   "isPartOf": null
 }
