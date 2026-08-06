@@ -1,8 +1,13 @@
 """ """
 
+import sys
 from pathlib import Path
 
 import streamlit as st
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 
 # Helper: display images only if the file exists to avoid Streamlit media errors
@@ -31,7 +36,10 @@ def _maybe_image(path: str, *args, **kwargs):
 # CONFIG — doit être le premier appel Streamlit
 # ─────────────────────────────────────────────────────────────────────────────
 SCHEMA_DIR = Path(__file__).parent.parent / "data" / "schemas"
-from catalogue_utils import inject_jsonld_schemas  # noqa: E402
+try:
+    from src.catalogue_utils import inject_jsonld_schemas  # noqa: E402
+except ModuleNotFoundError:  # pragma: no cover - fallback for streamlit run src/app.py
+    from catalogue_utils import inject_jsonld_schemas  # noqa: E402
 
 st.set_page_config(
     page_title="Profiling Taxonomique — Catalogue",
@@ -67,11 +75,18 @@ TOOLS_DIR = PROJECT_ROOT / "data" / "tools"
 # ─────────────────────────────────────────────────────────────────────────────
 # IMPORTS
 # ─────────────────────────────────────────────────────────────────────────────
-from catalogue_utils import (SAMPLE_CATEGORIES, SAMPLE_FILTER,  # noqa: E402
-                             TAXON_IRI, _to_list, db_release_str,
-                             is_about_label, load_catalogue, origin_label,
-                             recommend, sample_label, seq_scope_label,
-                             taxon_labels, taxonomy_badge)
+try:
+    from src.catalogue_utils import (SAMPLE_CATEGORIES, SAMPLE_FILTER,  # noqa: E402
+                                 TAXON_IRI, _to_list, db_release_str,
+                                 is_about_label, load_catalogue, origin_label,
+                                 recommend, sample_label, seq_scope_label,
+                                 taxon_labels, taxonomy_badge)
+except ModuleNotFoundError:  # pragma: no cover - fallback for streamlit run src/app.py
+    from catalogue_utils import (SAMPLE_CATEGORIES, SAMPLE_FILTER,  # noqa: E402
+                                 TAXON_IRI, _to_list, db_release_str,
+                                 is_about_label, load_catalogue, origin_label,
+                                 recommend, sample_label, seq_scope_label,
+                                 taxon_labels, taxonomy_badge)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DATA

@@ -63,6 +63,9 @@ def _part_available_since_release(part: dict, parent_release: int | None) -> boo
 
 def _normalize(obj: dict) -> dict:
     obj = dict(obj)
+    # rétrocompat sample_type → sample
+    if obj.get("sample") is None and obj.get("sample_type"):
+        obj["sample"] = obj["sample_type"]
     for f in _LIST_FIELDS:
         obj[f] = _to_list(obj.get(f))
     obj["compatible_tools"] = [
@@ -71,9 +74,6 @@ def _normalize(obj: dict) -> dict:
     obj["isPartOf"] = [
         ip if isinstance(ip, dict) else {"@id": str(ip)} for ip in obj["isPartOf"]
     ]
-    # rétrocompat sample_type → sample
-    if obj.get("sample") is None and obj.get("sample_type"):
-        obj["sample"] = obj["sample_type"]
     return obj
 
 
@@ -181,7 +181,7 @@ def db_scope(db_id: str, databases: dict) -> tuple:
 # HELPERS D'AFFICHAGE
 # ─────────────────────────────────────────────────────────────────────────────
 def _iri_key(iri: str) -> str:
-    for sep in ("obo/", "obo_"):
+    for sep in ("obo/", "obo_", "obo:", "NCBITaxon_", "NCBITaxon:"):
         if sep in iri:
             return iri.split(sep)[-1]
     return iri.split("/")[-1].split("#")[-1]
@@ -273,10 +273,10 @@ SAMPLE_FILTER: dict[str, tuple] = {
     "Mouse gut (Mus musculus)": ("ENVO_00002003", "NCBITaxon_10090"),
     "Rat gut (Rattus norvegicus)": ("ENVO_00002003", "NCBITaxon_10116"),
     "Dog gut (Canis lupus)": ("ENVO_00002003", "NCBITaxon_9615"),
-    "Cat gut(Felis catus)": ("ENVO_00002003", "NCBITaxon_9685"),
+    "Cat gut (Felis catus)": ("ENVO_00002003", "NCBITaxon_9685"),
     "Pig gut (Sus scrofa)": ("ENVO_00002003", "NCBITaxon_9825"),
     "Rabbit gut (Oryctolagus cuniculus)": ("ENVO_00002003", "NCBITaxon_9986"),
-    "Chicken caecum (Gallus gallus)": ("ENVO_00002003", "NCBITaxon_9031"),
+    "Chicken caecum (Gallus gallus)": ("GENEPIO_0100899", "NCBITaxon_9031"),
     "Goat gut (Capra hircus)": ("ENVO_00002003", "NCBITaxon_9925"),
     "Sheep gut (Ovis aries)": ("ENVO_00002003", "NCBITaxon_9940"),
     "Soil": ("ENVO_00001998", None),
@@ -328,10 +328,20 @@ TAXON_IRI: dict[str, str] = {
 
 SPECIAL_SCOPE_TAGS = {"virus", "fungi", "eukaryota", "plasmid"}
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # MOTEUR DE RECOMMANDATION
 # ─────────────────────────────────────────────────────────────────────────────
+def _flag_true(v) -> bool:
+    if v is None:
+        return False
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, (int, float)):
+        return bool(v)
+    s = str(v).strip().lower()
+    return s in ("1", "true", "yes", "y", "supported", "ok")
+
+
 def _score_db_entry(
     db_id: str,
     databases: dict,
@@ -362,8 +372,9 @@ def _score_db_entry(
         is_global_scope = (not envo_tags) and (not host_tags)
 
         # Strict environment/host constraints from questionnaire.
-        if envo_key and (not envo_tags or envo_key not in envo_tags) and not is_global_scope:
-            return False
+        if envo_key and not is_global_scope:
+            if not envo_tags or envo_key not in envo_tags:
+                return False
         if host_key and (not host_tags or host_key not in host_tags) and not is_global_scope:
             return False
 
@@ -488,16 +499,6 @@ def recommend(
     wants_archaea = "Archaea" in selected_orgs
     taxon_keys = [TAXON_IRI[o] for o in selected_orgs]
 
-    def _flag_true(v) -> bool:
-        if v is None:
-            return False
-        if isinstance(v, bool):
-            return v
-        if isinstance(v, (int, float)):
-            return bool(v)
-        s = str(v).strip().lower()
-        return s in ("1", "true", "yes", "y", "supported", "ok")
-
     def _tool_supports(tool: dict, candidates: list[str]) -> bool:
         for k in candidates:
             if _flag_true(tool.get(k)):
@@ -614,6 +615,37 @@ def recommend(
         return (-r["score"], -broad_boost, -part_count)
 
     return sorted(results, key=_rank_tuple)
+
+
+def recommend(
+    databases: dict,
+    tools: dict,
+    envo_key: str | None,
+    host_key: str | None,
+    selected_orgs: list[str],
+    reads_key: str,
+    pref_taxo: str,
+    wants_strain: bool,
+    wants_func: bool,
+    max_ram: int,
+) -> list[dict]:
+    try:
+        from .recommender import recommend as _recommend_refactored
+    except ImportError:  # pragma: no cover - fallback for direct execution
+        from recommender import recommend as _recommend_refactored
+
+    return _recommend_refactored(
+        databases,
+        tools,
+        envo_key,
+        host_key,
+        selected_orgs,
+        reads_key,
+        pref_taxo,
+        wants_strain,
+        wants_func,
+        max_ram,
+    )
 
 
 def inject_jsonld_schemas(*schema_paths: Path):
