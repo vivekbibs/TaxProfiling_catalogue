@@ -21,6 +21,7 @@ import streamlit as st
 _LIST_FIELDS = [
     "taxonomic_scope",
     "sample",
+    "origin",
     "uses_databases",
     "hasPart",
     "isPartOf",
