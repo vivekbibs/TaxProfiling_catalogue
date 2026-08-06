@@ -7,7 +7,7 @@ rewriting the whole recommender.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 try:
@@ -34,7 +34,64 @@ except ImportError:  # pragma: no cover - fallback for direct execution
     from recommender_config import PREFERENCE_ALIASES, SCORE_WEIGHTS
 
 
-@dataclass
+@dataclass(slots=True)
+class CatalogDatabase:
+    id: str
+    raw: dict[str, Any]
+    sample: list[dict[str, Any]] = field(default_factory=list)
+    origin: list[dict[str, Any]] = field(default_factory=list)
+    taxonomic_scope: list[dict[str, Any]] = field(default_factory=list)
+    has_part: list[dict[str, Any]] = field(default_factory=list)
+    is_part_of: list[dict[str, Any]] = field(default_factory=list)
+    compatible_tools: list[dict[str, Any]] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, db_id: str, payload: dict[str, Any]) -> "CatalogDatabase":
+        return cls(
+            id=db_id,
+            raw=payload,
+            sample=_to_list(payload.get("sample")),
+            origin=_to_list(payload.get("origin")),
+            taxonomic_scope=_to_list(payload.get("taxonomic_scope")),
+            has_part=_to_list(payload.get("hasPart")),
+            is_part_of=_to_list(payload.get("isPartOf")),
+            compatible_tools=_to_list(payload.get("compatible_tools")),
+        )
+
+
+@dataclass(slots=True)
+class CatalogTool:
+    id: str
+    raw: dict[str, Any]
+    supports_shortreads: bool = False
+    supports_longreads: bool = False
+    strain_level: bool = False
+    functional_profiling: bool = False
+    ram: int | None = None
+    uses_databases: list[dict[str, Any]] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, tool_id: str, payload: dict[str, Any]) -> "CatalogTool":
+        return cls(
+            id=tool_id,
+            raw=payload,
+            supports_shortreads=bool(payload.get("supports_shortreads", False)),
+            supports_longreads=bool(payload.get("supports_longreads", False)),
+            strain_level=bool(payload.get("strain_level", False)),
+            functional_profiling=bool(payload.get("functional_profiling", False)),
+            ram=payload.get("ram"),
+            uses_databases=_to_list(payload.get("uses_databases")),
+        )
+
+    def supports_reads(self, reads_key: str) -> bool:
+        if reads_key == "Short Reads":
+            return self.supports_shortreads
+        if reads_key == "Long Reads":
+            return self.supports_longreads
+        return False
+
+
+@dataclass(slots=True)
 class RecommendationContext:
     envo_key: str | None
     host_key: str | None
@@ -76,7 +133,20 @@ def _normalize_pref(pref_taxo: str | None) -> str:
     return PREFERENCE_ALIASES.get(str(pref_taxo).strip().lower(), str(pref_taxo).strip().lower())
 
 
-def tool_is_compatible(tool: dict[str, Any], ctx: RecommendationContext) -> bool:
+def tool_is_compatible(tool: dict[str, Any] | CatalogTool, ctx: RecommendationContext) -> bool:
+    if isinstance(tool, CatalogTool):
+        if ctx.reads_key == "Short Reads" and not tool.supports_shortreads:
+            return False
+        if ctx.reads_key == "Long Reads" and not tool.supports_longreads:
+            return False
+        if ctx.wants_strain and not tool.strain_level:
+            return False
+        if ctx.wants_func and not tool.functional_profiling:
+            return False
+        if tool.ram and isinstance(tool.ram, (int, float)) and tool.ram > ctx.max_ram:
+            return False
+        return True
+
     if ctx.reads_key == "Short Reads" and not tool.get("supports_shortreads"):
         return False
     if ctx.reads_key == "Long Reads" and not tool.get("supports_longreads"):
@@ -96,6 +166,12 @@ def _tool_supports(tool: dict[str, Any], candidates: list[str]) -> bool:
         if _flag_true(tool.get(k)):
             return True
     return False
+
+
+def _to_catalog_wrapper(databases: dict[str, Any], tools: dict[str, Any]) -> tuple[dict[str, CatalogDatabase], dict[str, CatalogTool]]:
+    wrapped_databases = {k: CatalogDatabase.from_dict(k, v) for k, v in databases.items()}
+    wrapped_tools = {k: CatalogTool.from_dict(k, v) for k, v in tools.items()}
+    return wrapped_databases, wrapped_tools
 
 
 def _weighted_rank_tuple(result: dict[str, Any], databases: dict[str, Any], ctx: RecommendationContext) -> tuple[Any, ...]:
@@ -118,8 +194,9 @@ def recommend(databases: dict[str, Any], tools: dict[str, Any], envo_key: str | 
         max_ram=max_ram,
     )
 
+    wrapped_databases, wrapped_tools = _to_catalog_wrapper(databases, tools)
     results: list[dict[str, Any]] = []
-    for tool_id, tool in tools.items():
+    for tool_id, tool in wrapped_tools.items():
         if not tool_is_compatible(tool, ctx):
             continue
 
@@ -128,7 +205,7 @@ def recommend(databases: dict[str, Any], tools: dict[str, Any], envo_key: str | 
         best_db_ts = None
         best_db_rel = None
 
-        for u in _to_list(tool.get("uses_databases")):
+        for u in _to_list(tool.uses_databases):
             if not isinstance(u, dict):
                 continue
             db_id = u.get("@id", "")
@@ -166,16 +243,16 @@ def recommend(databases: dict[str, Any], tools: dict[str, Any], envo_key: str | 
         if best_db_score <= 0:
             continue
 
-        db_obj = databases.get(best_db_id, {})
+        db_obj = wrapped_databases.get(best_db_id, None)
         dl_info = []
         if db_obj:
-            for ct in db_obj.get("compatible_tools", []):
+            for ct in db_obj.compatible_tools:
                 if isinstance(ct, dict) and ct.get("@id") == tool_id:
                     dl_info = [v for v in ct.get("DB", []) if isinstance(v, dict)]
                     break
 
         releases = []
-        for u in _to_list(tool.get("uses_databases")):
+        for u in _to_list(tool.uses_databases):
             if isinstance(u, dict) and u.get("@id") == best_db_id:
                 r = _to_list(u.get("release"))
                 releases = [str(x) for x in r if x is not None]
@@ -183,9 +260,9 @@ def recommend(databases: dict[str, Any], tools: dict[str, Any], envo_key: str | 
         results.append(
             {
                 "tool_id": tool_id,
-                "tool": tool,
+                "tool": tool.raw,
                 "db_id": best_db_id,
-                "db": db_obj,
+                "db": db_obj.raw if db_obj else {},
                 "db_ts": best_db_ts,
                 "db_rel": best_db_rel,
                 "score": best_db_score,

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from src.catalogue_utils import load_catalogue, recommend
+from src.recommender import CatalogDatabase, CatalogTool
 
 
 def test_recommend_returns_results_for_basic_catalogue(tmp_path):
@@ -53,3 +54,35 @@ def test_recommend_returns_results_for_basic_catalogue(tmp_path):
     assert results
     assert results[0]["tool_id"] == "tool1"
     assert results[0]["db_id"] == "db1"
+
+
+def test_catalog_database_and_tool_are_dataclasses():
+    db = CatalogDatabase.from_dict(
+        "db1",
+        {
+            "@id": "db1",
+            "sample": [{"@id": "obo:ENVO_00002003", "label": "gut"}],
+            "origin": [{"@id": "obo:NCBITaxon_9606", "label": "human"}],
+            "taxonomic_scope": [{"@id": "NCBITaxon_2", "label": "Bacteria"}],
+            "hasPart": [],
+            "isPartOf": [],
+        },
+    )
+    tool = CatalogTool.from_dict(
+        "tool1",
+        {
+            "@id": "tool1",
+            "supports_shortreads": True,
+            "supports_longreads": False,
+            "strain_level": True,
+            "functional_profiling": False,
+            "ram": 32,
+            "uses_databases": [{"@id": "db1", "taxonomy_system": "GTDB"}],
+        },
+    )
+
+    assert isinstance(db, CatalogDatabase)
+    assert isinstance(tool, CatalogTool)
+    assert db.id == "db1"
+    assert tool.supports_shortreads is True
+    assert tool.supports_reads("Short Reads") is True
