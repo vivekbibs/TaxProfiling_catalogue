@@ -3,7 +3,7 @@
   "name": "mOTUs",
   "@id": "motus",
   "type": "Taxonomic Profiler",
-  "latest_release": "4.0.4",
+  "latest_release": "4.1.0",
   "curated_release": "",
   "citations_count": 31,
   "issues_count": null,
