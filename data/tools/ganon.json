@@ -24,8 +24,52 @@
     {
       "name": "GTDB",
       "@id": "gtdb",
-      "release": "226",
+      "release": [
+        "226",
+        "232"
+      ],
       "taxonomy_system": "gtdb"
+    },
+    {
+      "name": "RefSeq",
+      "@id": "refseq",
+      "taxonomy_system": [
+        "ncbi",
+        "gtdb"
+      ]
+    },
+    {
+      "name": "GenBank",
+      "@id": "genbank",
+      "taxonomy_system": [
+        "ncbi",
+        "gtdb"
+      ]
+    },
+    {
+      "name": "MGnify genome catalogues",
+      "@id": "mgnify",
+      "taxonomy_system": "gtdb"
+    },
+    {
+      "name": "Centrifuger RefSeq Bacteria, Archaea, Human, Virus, SARS-CoV-2",
+      "@id": "centrifuger_refseq_bact_arch_human_virus_sarscov",
+      "taxonomy_system": "ncbi"
+    },
+    {
+      "name": "NCBI Core NT",
+      "@id": "ncbi_core_nt",
+      "taxonomy_system": "ncbi"
+    },
+    {
+      "name": "Centrifuger RefSeq Bacteria, Archaea, Human, Virus, SARS-CoV-2",
+      "@id": "centrifuger_refseq_bact_arch_human_virus_sarscov",
+      "taxonomy_system": "ncbi"
+    },
+    {
+      "name": "NCBI Core NT",
+      "@id": "ncbi_core_nt",
+      "taxonomy_system": "ncbi"
     }
   ],
   "github_last_fetched": "2026-03-19T13:48:54Z"

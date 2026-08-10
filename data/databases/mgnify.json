@@ -1,6 +1,6 @@
 {
   "@context": "https://raw.githubusercontent.com/vivekbibs/TaxProfiling_catalogue/main/schemas/database_schema.json",
-  "name": "MGnify Genomes",
+  "name": "MGnify genome catalogues",
   "@id": "mgnify",
   "taxonomic_scope": [
     {
@@ -14,12 +14,72 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    { "@id": "globdb" }
+    {
+      "@id": "globdb"
+    }
   ],
   "sample": null,
   "origin": null,
-  "compatible_tools":
-  [
+  "hasPart": [
+    {
+      "@id": "mgnify_zebrafish_fecal_v1_0"
+    },
+    {
+      "@id": "mgnify_human_gut_v2_0_2"
+    },
+    {
+      "@id": "mgnify_human_skin_v1_0"
+    },
+    {
+      "@id": "mgnify_human_vaginal_v1_0"
+    },
+    {
+      "@id": "mgnify_maize_rhizosphere_v1_0"
+    },
+    {
+      "@id": "mgnify_marine_v2_0"
+    },
+    {
+      "@id": "mgnify_marine_sediment_v1_0"
+    },
+    {
+      "@id": "mgnify_mouse_gut_v1_0"
+    },
+    {
+      "@id": "mgnify_pig_gut_v1_0"
+    },
+    {
+      "@id": "mgnify_cow_rumen_v1_0_1"
+    },
+    {
+      "@id": "mgnify_sheep_rumen_v1_0"
+    },
+    {
+      "@id": "mgnify_soil_v1_0"
+    },
+    {
+      "@id": "mgnify_tomato_rhizosphere_v1_0"
+    },
+    {
+      "@id": "mgnify_human_oral_v1_0_1"
+    },
+    {
+      "@id": "mgnify_barley_rhizosphere_v2_0"
+    },
+    {
+      "@id": "mgnify_honeybee_gut_v1_0_1"
+    },
+    {
+      "@id": "mgnify_non_model_fish_gut_v2_0"
+    },
+    {
+      "@id": "mgnify_chicken_gut_v1_0_1"
+    },
+    {
+      "@id": "mgnify_marine_eukaryotes_vbeta"
+    }
+  ],
+  "compatible_tools": [
     {
       "@id": "kraken",
       "DB": [
@@ -27,7 +87,10 @@
           "name": "",
           "download": "",
           "size": 0,
-          "ifb_server": { "name": "core-cluster", "path": "" }
+          "ifb_server": {
+            "name": "core-cluster",
+            "path": ""
+          }
         }
       ]
     },
