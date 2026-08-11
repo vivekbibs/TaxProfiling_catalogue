@@ -343,6 +343,25 @@ def _flag_true(v) -> bool:
     return s in ("1", "true", "yes", "y", "supported", "ok")
 
 
+def _composite_ancestry_bonus(db_id: str, databases: dict, seen: set | None = None) -> int:
+    """Return an extra bonus for composite ancestors that span multiple levels."""
+    if seen is None:
+        seen = set()
+    if db_id in seen:
+        return 0
+    seen.add(db_id)
+
+    db_obj = databases.get(db_id, {})
+    parts = _to_list(db_obj.get("hasPart")) if isinstance(db_obj, dict) else []
+    for part in parts:
+        if not isinstance(part, dict) or not part.get("@id"):
+            continue
+        child_db = databases.get(part["@id"], {})
+        if isinstance(child_db, dict) and _to_list(child_db.get("hasPart")):
+            return 1
+    return 0
+
+
 def _score_db_entry(
     db_id: str,
     databases: dict,
@@ -470,7 +489,10 @@ def _score_db_entry(
             best_part_score = part_score
 
     if best_part_score >= 0:
-        inherited = max(best_part_score - 1, 0)
+        inherited = best_part_score
+        if isinstance(db_obj, dict) and _to_list(db_obj.get("hasPart")):
+            inherited += 1
+        inherited += _composite_ancestry_bonus(db_id, databases)
         if inherited > best_score:
             best_score = inherited
 

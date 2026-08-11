@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.catalogue_utils import load_catalogue, recommend
+from src.catalogue_utils import _score_db_entry, load_catalogue, recommend
 from src.recommender import CatalogDatabase, CatalogTool
 
 
@@ -86,6 +86,64 @@ def test_catalog_database_and_tool_are_dataclasses():
     assert db.id == "db1"
     assert tool.supports_shortreads is True
     assert tool.supports_reads("Short Reads") is True
+
+
+def test_composite_grandparent_receives_extra_bonus():
+    databases = {
+        "globdb": {"@id": "globdb", "hasPart": [{"@id": "mgnify"}]},
+        "mgnify": {"@id": "mgnify", "hasPart": [{"@id": "human_gut"}]},
+        "human_gut": {
+            "@id": "human_gut",
+            "sample": [{"@id": "obo:ENVO_00002003", "label": "gut"}],
+            "origin": [{"@id": "obo:NCBITaxon_9606", "label": "human"}],
+        },
+    }
+
+    score_leaf = _score_db_entry(
+        "human_gut",
+        databases,
+        "ENVO_00002003",
+        "NCBITaxon_9606",
+        [],
+        "Any",
+        False,
+        False,
+        False,
+        False,
+        False,
+        None,
+    )
+    score_mgnify = _score_db_entry(
+        "mgnify",
+        databases,
+        "ENVO_00002003",
+        "NCBITaxon_9606",
+        [],
+        "Any",
+        False,
+        False,
+        False,
+        False,
+        False,
+        None,
+    )
+    score_globdb = _score_db_entry(
+        "globdb",
+        databases,
+        "ENVO_00002003",
+        "NCBITaxon_9606",
+        [],
+        "Any",
+        False,
+        False,
+        False,
+        False,
+        False,
+        None,
+    )
+
+    assert score_mgnify > score_leaf
+    assert score_globdb > score_mgnify
 
 
 def test_recommend_handles_origin_list(tmp_path):
