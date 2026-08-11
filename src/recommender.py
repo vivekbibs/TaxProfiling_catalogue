@@ -1,12 +1,4 @@
-"""Refactored recommendation engine.
-
-The original logic lived inside catalogue_utils.py. This module splits the
-concerns into smaller helpers so users can tweak matching rules without
-rewriting the whole recommender.
-"""
-
 from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -93,8 +85,8 @@ class CatalogTool:
 
 @dataclass(slots=True)
 class RecommendationContext:
-    envo_key: str | None
-    host_key: str | None
+    sample_key: str | None #formerly envo_key
+    origin_key: str | None #formerly host_key
     selected_orgs: list[str]
     reads_key: str
     pref_taxo: str
@@ -178,14 +170,14 @@ def _weighted_rank_tuple(result: dict[str, Any], databases: dict[str, Any], ctx:
     db_id = result.get("db_id")
     db_obj = databases.get(db_id, {}) if db_id else {}
     part_count = len([p for p in _to_list(db_obj.get("hasPart")) if isinstance(p, dict) and p.get("@id")])
-    broad_boost = 1 if (ctx.envo_key is None and ctx.host_key is None and part_count > 0) else 0
+    broad_boost = 1 if (ctx.sample_key is None and ctx.origin_key is None and part_count > 0) else 0
     return (-result["score"], -broad_boost, -part_count)
 
 
-def recommend(databases: dict[str, Any], tools: dict[str, Any], envo_key: str | None, host_key: str | None, selected_orgs: list[str], reads_key: str, pref_taxo: str, wants_strain: bool, wants_func: bool, max_ram: int) -> list[dict[str, Any]]:
+def recommend(databases: dict[str, Any], tools: dict[str, Any], sample_key: str | None, origin_key: str | None, selected_orgs: list[str], reads_key: str, pref_taxo: str, wants_strain: bool, wants_func: bool, max_ram: int) -> list[dict[str, Any]]:
     ctx = RecommendationContext(
-        envo_key=envo_key,
-        host_key=host_key,
+        sample_key=sample_key,
+        origin_key=origin_key,
         selected_orgs=selected_orgs,
         reads_key=reads_key,
         pref_taxo=pref_taxo,
@@ -223,8 +215,8 @@ def recommend(databases: dict[str, Any], tools: dict[str, Any], envo_key: str | 
             sc = _score_db_entry(
                 db_id,
                 databases,
-                envo_key,
-                host_key,
+                sample_key,
+                origin_key,
                 ctx.taxon_keys,
                 pref_taxo,
                 ctx.wants_virus,
