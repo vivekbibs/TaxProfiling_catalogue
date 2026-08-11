@@ -18,8 +18,14 @@
       "@id": "mgnify"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:MESH_D012417",
+    "label": "rumen"
+  },
+  "origin": {
+    "@id": "obo:NCBITaxon_9940",
+    "label": "Ovis aries"
+  },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",
   "homepage": "https://www.ebi.ac.uk/metagenomics/genome-catalogues/sheep-rumen-v1-0"

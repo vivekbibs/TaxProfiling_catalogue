@@ -19,7 +19,10 @@
     }
   ],
   "sample": null,
-  "origin": null,
+  "origin": {
+    "@id": "obo:ENVO_00001998",
+    "label": "soil"
+  },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",
   "homepage": "https://www.ebi.ac.uk/metagenomics/genome-catalogues/soil-v1-0"

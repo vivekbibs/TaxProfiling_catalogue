@@ -14,17 +14,18 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    { "@id": "globdb" }
+    {
+      "@id": "globdb"
+    }
   ],
   "sample": {
     "@id": "obo:ENVO_00002006",
     "label": "liquid water"
   },
   "origin": {
-    "@id": "obo:ENVO_00002149",
-    "label": "sea water"
+    "@id": "obo:MESH_D009792",
+    "label": "Oceans and Seas"
   },
   "doi": "https://doi.org/10.1038/s41586-024-07891-2",
   "homepage": "https://doi.org/10.1038/s41586-024-07891-2"
 }
-

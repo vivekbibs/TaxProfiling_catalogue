@@ -14,13 +14,15 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    { "@id": "globdb" }
+    {
+      "@id": "globdb"
+    }
   ],
-  "sample": {
+  "sample": null,
+  "origin": {
     "@id": "obo:ENVO_00001998",
     "label": "soil"
   },
-  "origin": null,
   "doi": "https://doi.org/10.1038/s41467-023-43000-z",
   "homepage": "https://doi.org/10.1038/s41467-023-43000-z"
 }
