@@ -15,7 +15,10 @@
     }
   ],
   "sample": null,
-  "origin": null,
+  "origin": {
+    "@id": "obo:MESH_D009792",
+    "label": "Oceans and Seas"
+  },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",
   "homepage": "https://www.ebi.ac.uk/metagenomics/genome-catalogues/marine-eukaryotes-vbeta"

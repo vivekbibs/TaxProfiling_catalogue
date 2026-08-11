@@ -24,8 +24,8 @@
   },
   "origin": [
     {
-      "@id": "obo:NCBITaxon_381124",
-      "label": "maize"
+      "@id": "obo:NCBITaxon_4081",
+      "label": "Solanum lycopersicum"
     },
     {
       "@id": "obo:MESH_D058441",
