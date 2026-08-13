@@ -653,11 +653,10 @@ def _tab_graph():
     import plotly.express as px
     import plotly.graph_objects as go
 
-    v_ego, v_matrix, v_sunburst, v_cards = st.tabs(
+    v_ego, v_matrix,v_cards = st.tabs(
         [
             "🕸️ Ego-graph",
             "🔲 Matrix",
-            "🌞 Sunburst",
             "🃏 Cards",
         ]
     )
@@ -941,109 +940,6 @@ def _tab_graph():
             "</div>",
             unsafe_allow_html=True,
         )
-
-    # ── VUE 3 : SUNBURST ──────────────────────────────────────────────────────
-    with v_sunburst:
-        st.markdown("Hiérarchie **GlobDB → sous-BDs → outils** qui les utilisent.")
-
-        ids_, labels_, parents_, values_, colors_ = [], [], [], [], []
-
-        def add(id_, label, parent, value, color):
-            ids_.append(id_)
-            labels_.append(label)
-            parents_.append(parent)
-            values_.append(value)
-            colors_.append(color)
-
-        add("__root__", "Catalogue", "", 1, "#1A1F2E")
-
-        root_dbs = [
-            did
-            for did, db in databases.items()
-            if not any(
-                ip.get("@id") in databases
-                for ip in _to_list(db.get("isPartOf"))
-                if isinstance(ip, dict)
-            )
-        ]
-
-        for did in root_dbs:
-            db = databases[did]
-            dname = db.get("name", did)
-            parts = _to_list(db.get("hasPart"))
-            add(did, dname, "__root__", max(len(parts), 1), "#1D9E75")
-
-            for part in parts:
-                if not isinstance(part, dict) or not part.get("@id"):
-                    continue
-                pid = part["@id"]
-                pdb = databases.get(pid)
-                plabel = pdb.get("name", pid) if pdb else pid
-                add(f"sub_{pid}", plabel, did, 1, "#0F6E56")
-
-                for tid, tool in tools.items():
-                    for u in _to_list(tool.get("uses_databases")):
-                        if isinstance(u, dict) and u.get("@id") == pid:
-                            tname = tool.get("name", tid)
-                            add(
-                                f"tool_{tid}_sub_{pid}",
-                                tname,
-                                f"sub_{pid}",
-                                1,
-                                "#534AB7",
-                            )
-
-            for tid, tool in tools.items():
-                for u in _to_list(tool.get("uses_databases")):
-                    if isinstance(u, dict) and u.get("@id") == did:
-                        tname = tool.get("name", tid)
-                        uid = f"tool_{tid}_db_{did}"
-                        if uid not in ids_:
-                            add(uid, tname, did, 1, "#7B5EA7")
-
-        orphan_dbs = [
-            did
-            for did, db in databases.items()
-            if did not in root_dbs
-            and not any(
-                ip.get("@id") in databases
-                for ip in _to_list(db.get("isPartOf"))
-                if isinstance(ip, dict)
-            )
-        ]
-        if orphan_dbs:
-            add("__other__", "Autres BDs", "__root__", 1, "#333")
-            for did in orphan_dbs:
-                db = databases[did]
-                add(did + "_o", db.get("name", did), "__other__", 1, "#1D9E75")
-
-        fig = go.Figure(
-            go.Sunburst(
-                ids=ids_,
-                labels=labels_,
-                parents=parents_,
-                values=values_,
-                branchvalues="total",
-                marker=dict(colors=colors_, line=dict(color="#0D1117", width=1.5)),
-                hovertemplate="<b>%{label}</b><extra></extra>",
-                textfont=dict(size=12, color="#FFFFFF"),
-                insidetextorientation="radial",
-                maxdepth=3,
-            )
-        )
-        fig.update_layout(
-            paper_bgcolor="#0D1117",
-            margin=dict(l=0, r=0, t=10, b=10),
-            height=560,
-            font=dict(color="#CCC"),
-        )
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            config=dict(displayModeBar=False),
-            key="sunburst_fig",
-        )
-        st.caption("Click on a sector to zoom. Double-click to go back.")
 
     # ── VUE 4 : CARDS ─────────────────────────────────────────────────────────
     with v_cards:

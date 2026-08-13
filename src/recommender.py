@@ -112,7 +112,7 @@ class CatalogTool:
 
 
 @dataclass(slots=True)
-class RecommendationContext:
+class SurveyContext:
     """Regroupe en un seul objet toutes les réponses du questionnaire utilisateur
     (app.py) pour un appel à recommend(). Évite de faire passer 9 paramètres
     séparés à chaque fonction interne du moteur — on passe `ctx` partout à la
@@ -172,7 +172,7 @@ def _normalize_pref(pref_taxo: str | None) -> str:
     return PREFERENCE_ALIASES.get(str(pref_taxo).strip().lower(), str(pref_taxo).strip().lower())
 
 
-def tool_is_compatible(tool: dict[str, Any] | CatalogTool, ctx: RecommendationContext) -> bool:
+def tool_is_compatible(tool: dict[str, Any] | CatalogTool, ctx: SurveyContext) -> bool:
     """Filtre grossier appliqué à un outil AVANT même de regarder ses BDs :
     reads courts/longs, capacités requises (strain-level, functional
     profiling) et RAM disponible. Si un de ces critères ne matche pas,
@@ -195,30 +195,30 @@ def tool_is_compatible(tool: dict[str, Any] | CatalogTool, ctx: RecommendationCo
             return False
         return True
 
-    if ctx.reads_key == "Short Reads" and not tool.get("supports_shortreads"):
-        return False
-    if ctx.reads_key == "Long Reads" and not tool.get("supports_longreads"):
-        return False
-    if ctx.wants_strain and not _flag_true(tool.get("strain_level")):
-        return False
-    if ctx.wants_func and not _flag_true(tool.get("functional_profiling")):
-        return False
-    ram = tool.get("ram")
-    if ram and isinstance(ram, (int, float)) and ram > ctx.max_ram:
-        return False
-    return True
+    # if ctx.reads_key == "Short Reads" and not tool.get("supports_shortreads"):
+    #     return False
+    # if ctx.reads_key == "Long Reads" and not tool.get("supports_longreads"):
+    #     return False
+    # if ctx.wants_strain and not _flag_true(tool.get("strain_level")):
+    #     return False
+    # if ctx.wants_func and not _flag_true(tool.get("functional_profiling")):
+    #     return False
+    # ram = tool.get("ram")
+    # if ram and isinstance(ram, (int, float)) and ram > ctx.max_ram:
+    #     return False
+    # return True
 
 
-def _tool_supports(tool: dict[str, Any], candidates: list[str]) -> bool:
-    """Vrai si au moins une des clés de `candidates` est un flag "vrai" (via
-    _flag_true) dans le dict brut `tool`. Utilitaire générique non utilisé
-    actuellement dans le flux principal de ce fichier (recommend() teste les
-    attributs CatalogTool directement) — gardée pour compatibilité/tests sur
-    des tools encore sous forme de dict."""
-    for k in candidates:
-        if _flag_true(tool.get(k)):
-            return True
-    return False
+# def _tool_supports(tool: dict[str, Any], candidates: list[str]) -> bool:
+#     """Vrai si au moins une des clés de `candidates` est un flag "vrai" (via
+#     _flag_true) dans le dict brut `tool`. Utilitaire générique non utilisé
+#     actuellement dans le flux principal de ce fichier (recommend() teste les
+#     attributs CatalogTool directement) — gardée pour compatibilité/tests sur
+#     des tools encore sous forme de dict."""
+#     for k in candidates:
+#         if _flag_true(tool.get(k)):
+#             return True
+#     return False
 
 
 def _to_catalog_wrapper(databases: dict[str, Any], tools: dict[str, Any]) -> tuple[dict[str, CatalogDatabase], dict[str, CatalogTool]]:
@@ -231,7 +231,7 @@ def _to_catalog_wrapper(databases: dict[str, Any], tools: dict[str, Any]) -> tup
     return wrapped_databases, wrapped_tools
 
 
-def _weighted_rank_tuple(result: dict[str, Any], databases: dict[str, Any], ctx: RecommendationContext) -> tuple[Any, ...]:
+def _weighted_rank_tuple(result: dict[str, Any], databases: dict[str, Any], ctx: SurveyContext) -> tuple[Any, ...]:
     """Construit la clé de tri utilisée par sorted(results, key=...) dans recommend().
 
     Ne calcule PAS un score : produit un tuple comparé élément par élément,
@@ -252,7 +252,9 @@ def _weighted_rank_tuple(result: dict[str, Any], databases: dict[str, Any], ctx:
     db_id = result.get("db_id")
     db_obj = databases.get(db_id, {}) if db_id else {}
     part_count = len([p for p in _to_list(db_obj.get("hasPart")) if isinstance(p, dict) and p.get("@id")])
-    broad_boost = 1 if (ctx.sample_key is None and ctx.origin_key is None and part_count > 0) else 0
+    # broad_boost = SCORE_WEIGHTS["broad_context_bonus"] if (ctx.sample_key is None and ctx.origin_key is None and part_count > 0) else 0
+    broad_boost = SCORE_WEIGHTS["broad_context_bonus"] if (ctx.sample_key is None and ctx.origin_key is None and db_obj.get("sample") is None and db_obj.get("origin") is None else 0
+
     return (-result["score"], -broad_boost, -part_count)
 
 
@@ -275,7 +277,7 @@ def _extension_chain(
     wrapped_databases: dict[str, CatalogDatabase],
     databases: dict[str, Any],
     base_db_id: str,
-    ctx: RecommendationContext,
+    ctx: SurveyContext,
     max_levels: int = 2,
 ) -> list[dict[str, Any]]:
     """
@@ -361,9 +363,9 @@ def recommend(databases: dict[str, Any], tools: dict[str, Any], sample_key: str 
 
     Appelée depuis app.py (render_questionnaire) avec les réponses brutes du
     questionnaire ; construit ctx en interne pour ne pas exposer
-    RecommendationContext à l'appelant.
+    SurveyContext à l'appelant.
     """
-    ctx = RecommendationContext(
+    ctx = SurveyContext(
         sample_key=sample_key,
         origin_key=origin_key,
         selected_orgs=selected_orgs,
