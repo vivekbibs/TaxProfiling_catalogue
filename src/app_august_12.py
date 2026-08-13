@@ -295,6 +295,25 @@ def render_questionnaire():
 
     st.success(f"**{len(recs)} outil(s)** trouvé(s).")
 
+    # Detect if a recommended DB is included in another recommended DB.
+    rec_db_ids = {r.get("db_id") for r in recs if r.get("db_id")}
+    parent_db_by_child: dict[str, list[str]] = {}
+    for child_id in rec_db_ids:
+        parents = []
+        for parent_id in rec_db_ids:
+            if parent_id == child_id:
+                continue
+            parent_db = databases.get(parent_id, {})
+            part_ids = [
+                p.get("@id")
+                for p in _to_list(parent_db.get("hasPart"))
+                if isinstance(p, dict) and p.get("@id")
+            ]
+            if child_id in part_ids:
+                parents.append(parent_id)
+        if parents:
+            parent_db_by_child[child_id] = parents
+
     for i, rec in enumerate(recs):
         tool = rec["tool"]
         db = rec["db"]
@@ -304,18 +323,11 @@ def render_questionnaire():
         rel = rec.get("db_rel") or {}
         releases = rec["releases"]
 
-        ext_of = rec.get("extension_of")
-        ext_level = rec.get("extension_level")
-
         badges = []
         if tool.get("strain_level"):
             badges.append("🔬 strain-level")
         if tool.get("functional_profiling"):
             badges.append("⚙️ functional")
-        if ext_of:
-            badges.append(
-                "🔗 extension (parent)" if ext_level == "parent" else "🔗🔗 extension (grand-parent)"
-            )
         badge_str = "  ·  ".join(badges)
 
         with st.expander(
@@ -396,12 +408,14 @@ def render_questionnaire():
                         f"ℹ️ `{db_id}.json` absent from `data/databases/` "
                         "— add it for more complete details."
                     )
-                if ext_of:
-                    child_name = databases.get(ext_of, {}).get("name", ext_of)
-                    level_txt = "parent" if ext_level == "parent" else "grand-parent"
+                if db_id in parent_db_by_child:
+                    parent_names = [
+                        databases.get(pid, {}).get("name", pid)
+                        for pid in parent_db_by_child[db_id]
+                    ]
                     st.info(
-                        f"ℹ️ La base **{child_name}** est comprise dans **{db_name}**, "
-                        f"et l'outil **{t_name}** peut aussi utiliser **{db_name}** ({level_txt})."
+                        "ℹ️ This database is included in : "
+                        + ", ".join(f"**{n}**" for n in parent_names)
                     )
                 dl = rec["dl"]
                 if dl:

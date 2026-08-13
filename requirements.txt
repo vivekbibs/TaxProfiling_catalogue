@@ -23,3 +23,9 @@ networkx
 # ── Tests ─────────────────────────────────────────
 pytest
 pytest-cov
+
+# ── Graph ─────────────────────────────────────────
+rdflib
+oxigraph
+fastapi
+uvicorn

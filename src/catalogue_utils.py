@@ -293,7 +293,7 @@ def _composite_ancestry_bonus(db_id: str, databases: dict, seen: set | None = No
             continue
         child_db = databases.get(part["@id"], {})
         if isinstance(child_db, dict) and _to_list(child_db.get("hasPart")):
-            return 1
+            return SCORE_WEIGHTS["composite_bonus"]
     return 0
 
 
@@ -353,14 +353,14 @@ def _score_db_entry(
     ) -> int:
         score = 0
         if envo_key and envo_tags and envo_key in envo_tags:
-            score += 4
+            score += SCORE_WEIGHTS["match_envo"]
         if host_key and host_tags and host_key in host_tags:
-            score += 4
+            score += SCORE_WEIGHTS["match_host"]
         # Keep truly global catalogues as fallback when user asks a specific context.
         if (envo_key or host_key) and (not envo_tags) and (not host_tags):
-            score += 1
+            score += SCORE_WEIGHTS["broad_context_bonus"]
         if envo_key is None and host_key is None and (not envo_tags):
-            score += 1
+            score += SCORE_WEIGHTS["global_fallback"]
 
         # Slightly prefer composite catalogues (e.g. GlobDB) over a single
         # contained catalogue when both satisfy constraints similarly.
@@ -384,7 +384,7 @@ def _score_db_entry(
             ts_vals = _to_list(rel_taxonomy_system)
             ts_lower = [str(x).strip().lower() for x in ts_vals if x is not None]
             if "gtdb" in ts_lower:
-                score += 2
+                score += SCORE_WEIGHTS["gtdb_bonus"]
         return score
 
     db_obj = databases.get(db_id, {})
@@ -426,14 +426,14 @@ def _score_db_entry(
     if best_part_score >= 0:
         inherited = best_part_score
         if isinstance(db_obj, dict) and _to_list(db_obj.get("hasPart")):
-            inherited += 1
+            inherited += SCORE_WEIGHTS["part_score_inheritance"]
         inherited += _composite_ancestry_bonus(db_id, databases)
         if inherited > best_score:
             best_score = inherited
 
     # Prefer GlobDB for broad/no-specific-context selections.
     if db_id == "globdb" and envo_key is None and host_key is None:
-        best_score += 3
+        best_score += SCORE_WEIGHTS["globdb_bonus"]
 
     return best_score
 
