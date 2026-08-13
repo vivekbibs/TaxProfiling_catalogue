@@ -1160,11 +1160,9 @@ def _tool_card(tool: dict):
 # TAB BASES DE DONNÉES
 # ─────────────────────────────────────────────────────────────────────────────
 def _tab_databases():
-    import pandas as pd
-
     st.markdown("### 🗄️ Databases")
 
-    col_a, col_b = st.columns(2)
+    col_a, col_b, col_c = st.columns([2, 2, 1])
     with col_a:
         f_taxon = st.multiselect(
             "Covered Taxons",
@@ -1175,43 +1173,96 @@ def _tab_databases():
         search_db = st.text_input(
             "🔍 Search", "", key="search_db", placeholder="name, sample, origin…"
         )
-
-    rows = []
-    for db_id, db in sorted(databases.items()):
-        rows.append(
-            {
-                "Name": db.get("name", db_id),
-                "Taxons": ", ".join(taxon_labels(db)) or "—",
-                "Sample": sample_label(db),
-                "Origin": origin_label(db),
-                "Sequences (SO)": seq_scope_label(db),
-                "is_about": is_about_label(db),
-                "Release": db_release_str(db),
-                "Sub-databases": len(_to_list(db.get("hasPart"))),
-                "Part of": ", ".join(
-                    ip.get("@id", "")
-                    for ip in _to_list(db.get("isPartOf"))
-                    if isinstance(ip, dict)
-                )
-                or "—",
-            }
+    with col_c:
+        sort_by = st.selectbox(
+            "Sort by",
+            ["Name (A→Z)", "Sub-dbs (↓)"],
+            key="db_cards_sort",
         )
 
-    df = pd.DataFrame(rows)
+    # Filtrage et préparation des données
+    filtered_dbs = []
+    for db_id, db in databases.items():
+        taxa_list = taxon_labels(db)
+        taxa_str = ", ".join(taxa_list)
+        sample_str = sample_label(db)
+        origin_str = origin_label(db)
+        name_str = db.get("name", db_id)
 
-    if f_taxon:
-        df = df[df["Taxons"].apply(lambda t: any(fx in t for fx in f_taxon))]
-    if search_db:
-        m = (
-            df["Name"].str.contains(search_db, case=False, na=False)
-            | df["Sample"].str.contains(search_db, case=False, na=False)
-            | df["Origin"].str.contains(search_db, case=False, na=False)
-        )
-        df = df[m]
+        # Filtre Taxons
+        if f_taxon and not any(fx in taxa_str for fx in f_taxon):
+            continue
 
-    st.caption(f"{len(df)} Databases shown")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+        # Filtre Recherche
+        if search_db:
+            q = search_db.lower()
+            if not (
+                q in name_str.lower()
+                or q in sample_str.lower()
+                or q in origin_str.lower()
+                or q in db_id.lower()
+            ):
+                continue
 
+        filtered_dbs.append((db_id, db))
+
+    # Tri
+    if sort_by == "Name (A→Z)":
+        filtered_dbs.sort(key=lambda x: x[1].get("name", x[0]).lower())
+    elif sort_by == "Sub-dbs (↓)":
+        filtered_dbs.sort(key=lambda x: -len(_to_list(x[1].get("hasPart"))))
+
+    st.caption(f"{len(filtered_dbs)} Databases shown")
+
+    # Affichage sous forme de cartes
+    cols = st.columns(3)
+    for i, (db_id, db) in enumerate(filtered_dbs):
+        name = db.get("name", db_id)
+        release = db_release_str(db)
+        taxa = taxon_labels(db)
+        sample = sample_label(db)
+        origin = origin_label(db)
+        parts = _to_list(db.get("hasPart"))
+
+        # Badges pour les taxons
+        taxa_badges = "".join(
+            f"<span style='background:#1D9E7522;border:1px solid #1D9E75;padding:1px 6px;border-radius:6px;font-size:10px;color:#2ECC8A;margin-right:4px'>{t}</span>"
+            for t in taxa
+        ) if taxa else "<span style='color:#666;font-size:11px'>—</span>"
+
+        # Détails métadonnées
+        details_html = []
+        if sample != "—":
+            details_html.append(f"<span style='color:#aaa;font-size:11px'>🧪 {sample}</span>")
+        if origin != "—":
+            details_html.append(f"<span style='color:#aaa;font-size:11px'>🌍 {origin}</span>")
+        if parts:
+            details_html.append(f"<span style='color:#17C3B2;font-size:11px'>📦 {len(parts)} sub-dbs</span>")
+
+        details_str = "<br>".join(details_html) if details_html else "<span style='color:#444;font-size:11px'>No metadata</span>"
+
+        # Liens
+        links = ""
+        if db.get("homepage"):
+            links += f"<a href='{db['homepage']}' target='_blank' style='color:#888;font-size:11px'>Website</a> &nbsp;"
+        if db.get("doi"):
+            links += f"<a href='{db['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+
+        card_html = f"""
+<div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
+padding:14px 16px;margin-bottom:12px;font-family:sans-serif;display:flex;flex-direction:column;justify-content:space-between;min-height:180px'>
+  <div>
+    <div style='font-size:15px;font-weight:600;color:#E0DFFF;margin-bottom:4px'>{name}</div>
+    <div style='font-size:11px;color:#666;margin-bottom:8px'>Release: {release}</div>
+    <div style='margin-bottom:8px;display:flex;flex-wrap:wrap;gap:4px'>{taxa_badges}</div>
+    <div style='margin-bottom:8px'>{details_str}</div>
+  </div>
+  <div style='margin-top:6px'>{links}</div>
+</div>"""
+        with cols[i % 3]:
+            st.markdown(card_html, unsafe_allow_html=True)
+
+    # Vue détaillée au choix
     st.markdown("---")
     selected_db = st.selectbox(
         "Details view",
@@ -1225,48 +1276,6 @@ def _tab_databases():
         )
         if db_id:
             _db_card(databases[db_id], db_id)
-
-
-def _db_card(db: dict, db_id: str):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"**Name** : {db.get('name', db_id)}")
-        st.markdown(f"**Release** : {db_release_str(db)}")
-        taxa = taxon_labels(db)
-        if taxa:
-            st.markdown(f"**Taxons** : {', '.join(taxa)}")
-        for label, fn in [
-            ("Sample", sample_label),
-            ("Origin", origin_label),
-            ("Sequences (SO)", seq_scope_label),
-            ("is_about", is_about_label),
-        ]:
-            val = fn(db)
-            if val != "—":
-                st.markdown(f"**{label}** : {val}")
-    with col2:
-        parents = [
-            ip.get("@id", "")
-            for ip in _to_list(db.get("isPartOf"))
-            if isinstance(ip, dict)
-        ]
-        if parents:
-            st.markdown(f"**Part of** : {', '.join(parents)}")
-        parts = _to_list(db.get("hasPart"))
-        if parts:
-            st.markdown(f"**Contains {len(parts)} sub-database(s) :**")
-            for p in parts[:12]:
-                if isinstance(p, dict):
-                    rel = f" · r{p['release']}" if p.get("release") else ""
-                    st.markdown(f"  - `{p.get('@id','?')}` {p.get('name','')}{rel}")
-            if len(parts) > 12:
-                st.caption(f"… et {len(parts) - 12} autres.")
-        if db.get("homepage"):
-            st.markdown(f"🌐 [Official Website]({db['homepage']})")
-        if db.get("doi"):
-            st.markdown(f"📄 [Publication]({db['doi']})")
-
-
 # ═════════════════════════════════════════════════════════════════════════════
 # DISPATCH
 # ═════════════════════════════════════════════════════════════════════════════
