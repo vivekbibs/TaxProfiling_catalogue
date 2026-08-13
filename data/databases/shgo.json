@@ -14,7 +14,9 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    { "@id": "globdb" }
+    {
+      "@id": "globdb"
+    }
   ],
   "sample": {
     "@id": "obo:ENVO_00002003",
@@ -23,11 +25,11 @@
   "origin": [
     {
       "@id": "obo:NCBITaxon_9925",
-      "label": "Capra hircus"
+      "label": "Goat"
     },
     {
       "@id": "obo:NCBITaxon_9940",
-      "label": "Ovis aries"
+      "label": "Sheep"
     }
   ],
   "doi": "https://doi.org/10.1186/s40168-024-01806-z",

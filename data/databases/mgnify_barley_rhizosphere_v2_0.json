@@ -25,7 +25,7 @@
   "origin": [
     {
       "@id": "obo:NCBITaxon_4513",
-      "label": "Hordeum vulgare"
+      "label": "barley"
     },
     {
       "@id": "obo:MESH_D058441",

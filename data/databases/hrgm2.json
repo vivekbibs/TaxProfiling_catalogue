@@ -14,7 +14,9 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    { "@id": "globdb" }
+    {
+      "@id": "globdb"
+    }
   ],
   "sample": {
     "@id": "obo:ENVO_00002003",
@@ -22,7 +24,7 @@
   },
   "origin": {
     "@id": "http://purl.bioontology.org/ontology/NCBITAXON/9606",
-    "label": "Homo sapiens"
+    "label": "Human"
   },
   "doi": "https://doi.org/10.1038/s41564-025-02206-1",
   "homepage": "https://www.decodebiome.org/HRGM2/"

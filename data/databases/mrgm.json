@@ -10,7 +10,9 @@
   ],
   "release": "unknown",
   "isPartOf": [
-    { "@id": "globdb" }
+    {
+      "@id": "globdb"
+    }
   ],
   "sample": {
     "@id": "obo:ENVO_00002003",
@@ -18,7 +20,7 @@
   },
   "origin": {
     "@id": "obo:NCBITaxon_10090",
-    "label": "mus musculus"
+    "label": "Mouse"
   },
   "doi": "https://doi.org/10.1080/19490976.2024.2393791",
   "homepage": "https://doi.org/10.1080/19490976.2024.2393791"

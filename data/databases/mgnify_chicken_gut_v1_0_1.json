@@ -24,7 +24,7 @@
   },
   "origin": {
     "@id": "obo:NCBITaxon_9031",
-    "label": "Gallus gallus"    
+    "label": "Chicken"
   },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",

@@ -24,7 +24,7 @@
   },
   "origin": {
     "@id": "obo:NCBITaxon_7460",
-    "label": "Apis mellifera"
+    "label": "honeybee"
   },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",

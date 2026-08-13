@@ -1223,6 +1223,7 @@ def _tab_databases():
         sample = sample_label(db)
         origin = origin_label(db)
         parts = _to_list(db.get("hasPart"))
+        parents = _to_list(db.get("isPartOf"))
 
         # Badges pour les taxons
         taxa_badges = "".join(
@@ -1238,6 +1239,25 @@ def _tab_databases():
             details_html.append(f"<span style='color:#aaa;font-size:11px'>🌍 {origin}</span>")
         if parts:
             details_html.append(f"<span style='color:#17C3B2;font-size:11px'>📦 {len(parts)} sub-dbs</span>")
+        if parents:
+            parent_names = []
+            for p in parents:
+                if isinstance(p, dict):
+                    pid = p.get("@id", "")
+                    # Priorité au champ name, sinon recherche dans le dictionnaire databases, sinon identifiant
+                    parent_name = p.get("name") or databases.get(pid, {}).get("name", pid)
+                    if parent_name:
+                        parent_names.append(parent_name)
+                elif isinstance(p, str):
+                    parent_names.append(databases.get(p, {}).get("name", p))
+
+            if parent_names:
+                parents_lines = "<br>".join(
+                    f"&nbsp;&nbsp;• {pn}" for pn in parent_names
+                )
+                details_html.append(
+                    f"<span style='color:#AFA9EC;font-size:11px'>🔗 Part of:<br>{parents_lines}</span>"
+                )
 
         details_str = "<br>".join(details_html) if details_html else "<span style='color:#444;font-size:11px'>No metadata</span>"
 

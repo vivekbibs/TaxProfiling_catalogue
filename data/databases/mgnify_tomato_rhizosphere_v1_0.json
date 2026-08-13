@@ -25,7 +25,7 @@
   "origin": [
     {
       "@id": "obo:NCBITaxon_4081",
-      "label": "Solanum lycopersicum"
+      "label": "Tomato"
     },
     {
       "@id": "obo:MESH_D058441",

@@ -24,7 +24,7 @@
   },
   "origin": {
     "@id": "obo:NCBITaxon_10090",
-    "label": "mus musculus"
+    "label": "Mouse"
   },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",

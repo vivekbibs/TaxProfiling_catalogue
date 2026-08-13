@@ -18,8 +18,13 @@
       "@id": "mgnify"
     }
   ],
-  "sample": null,
-  "origin": null,
+  "sample": {
+    "@id": "obo:ENVO_00002003",
+    "label": "fecal material"
+  },
+  "origin": {
+    "label": "Non model fish"
+  },
   "compatible_tools": [],
   "doi": "https://doi.org/10.1093/nar/gkac1080",
   "homepage": "https://www.ebi.ac.uk/metagenomics/genome-catalogues/non-model-fish-gut-v2-0"

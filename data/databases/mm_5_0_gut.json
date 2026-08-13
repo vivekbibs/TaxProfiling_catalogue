@@ -23,7 +23,7 @@
   },
   "origin": {
     "@id": "obo:NCBITaxon_10090",
-    "label": "mus musculus"
+    "label": "Mouse"
   },
   "doi": "https://doi.org/10.5281/zenodo.10658547",
   "homepage": "https://doi.org/10.5281/zenodo.10658547",
