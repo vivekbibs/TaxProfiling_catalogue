@@ -1,5 +1,3 @@
-""" """
-
 import sys
 from pathlib import Path
 
@@ -245,8 +243,6 @@ def render_questionnaire():
         st.warning("Please select at least one organism group (section 3).")
         return
 
-    # Map English UI value for 'Any' back to the recommender's expected French token
-    # (the recommendation engine was written to check for "Indifférent").
     pref_taxo_for_reco = (
         "Indifférent"
         if str(pref_taxo).strip().lower() in ("any", "indifferent", "indifférent")
@@ -271,7 +267,6 @@ def render_questionnaire():
             "No tool matches your criteria exactly.\n"
             "Try loosening filters or check your JSON files."
         )
-        # Diagnostic help: show inputs passed to the recommender and dataset sizes
         try:
             st.markdown("---")
             st.markdown("**Debug: recommendation inputs**")
@@ -426,9 +421,6 @@ def render_questionnaire():
                                 f"`{v_ifb.get('path','')}`"
                             )
 
-    # ═══════════════════════════════════════════════════════════════════════
-    # SECTION IFB — Scripts SLURM et Notebooks Jupyter
-    # ═══════════════════════════════════════════════════════════════════════
     if recs:
         st.markdown("---")
         st.markdown("## 5 · Run on IFB cluster")
@@ -437,7 +429,6 @@ def render_questionnaire():
             "on the IFB core-cluster."
         )
 
-        # Choisir le couple outil/BD à exporter
         rec_labels = [
             f"{r['tool'].get('name', r['tool_id'])}  +  "
             f"{r['db'].get('name', r['db_id']) if r['db'] else r['db_id']}"
@@ -451,7 +442,6 @@ def render_questionnaire():
         )
         rec_sel = recs[chosen_idx]
 
-        # Paramètres utilisateur
         with st.expander("⚙️ Execution parameters", expanded=True):
             col_i1, col_i2 = st.columns(2)
             with col_i1:
@@ -498,7 +488,6 @@ def render_questionnaire():
             ["📄 SLURM script (sbatch)", "📓 Jupyter Notebook"]
         )
 
-        # ── Tab SLURM ──────────────────────────────────────────────────────
         with tab_sbatch:
             try:
                 from ifb_export import make_sbatch
@@ -519,29 +508,11 @@ def render_questionnaire():
                     mime="text/x-sh",
                     key="dl_sbatch",
                 )
-                st.markdown(
-                    """
-**How to use this script on IFB:**
-```bash
-# 1. Copy the script to the cluster
-scp """
-                    + fname
-                    + """ login@core.cluster.france-bioinformatique.fr:~/
-
-# 2. Connect and submit the job
-ssh login@core.cluster.france-bioinformatique.fr
-sbatch """
-                    + fname
-                    + """
-```
-"""
-                )
             except ImportError:
                 st.error(
                     "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
                 )
 
-        # ── Tab Notebook ───────────────────────────────────────────────────
         with tab_nb:
             try:
                 from ifb_export import make_notebook, notebook_to_json
@@ -554,12 +525,6 @@ sbatch """
                     user_params=user_params,
                 )
                 nb_json = notebook_to_json(nb)
-                tool_name_nb = rec_sel["tool"].get("name", rec_sel["tool_id"])
-                db_name_nb = (
-                    rec_sel["db"].get("name", rec_sel["db_id"])
-                    if rec_sel["db"]
-                    else rec_sel["db_id"]
-                )
                 nb_fname = f"tutorial_{rec_sel['tool_id']}_{rec_sel['db_id']}.ipynb"
 
                 st.download_button(
@@ -569,31 +534,6 @@ sbatch """
                     mime="application/x-ipynb+json",
                     key="dl_nb",
                 )
-                st.markdown(f"""
-**How to open this notebook on IFB OpenOnDemand:**
-
-1. Download the file `{nb_fname}` above
-2. Log in to https://ondemand.cluster.france-bioinformatique.fr
-3. Go to **Files** → upload `{nb_fname}` into your home directory
-4. Open **Jupyter Notebook** from the menu and navigate to the file
-5. Activate your conda environment/kernel before running the notebook
-
-> **Tip:** Edit the `INPUT_FASTQ` and `DB_PATH` cells to your paths before executing.
-""")
-                # Aperçu des cellules
-                with st.expander("👁️ Notebook preview", expanded=False):
-                    for cell in nb.get("cells", []):
-                        if cell["cell_type"] == "markdown":
-                            src = cell["source"]
-                            if src.startswith("#"):
-                                st.markdown(src.split("\n")[0])
-                        elif cell["cell_type"] == "code":
-                            st.code(
-                                cell["source"][:300]
-                                + ("..." if len(cell["source"]) > 300 else ""),
-                                language="python",
-                            )
-
             except ImportError:
                 st.error(
                     "Module `ifb_export.py` not found — place it in the same directory as `app.py`."
@@ -607,18 +547,6 @@ sbatch """
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE 2 — CATALOGUE
 # ═════════════════════════════════════════════════════════════════════════════
-
-_C = {
-    "tool": "#534AB7",
-    "db": "#1D9E75",
-    "db_miss": "#555566",
-    "edge_gtdb": "#1D9E75",
-    "edge_ncbi": "#534AB7",
-    "edge_part": "#888780",
-    "text": "#FFFFFF",
-    "bg": "#1A1A2E",
-}
-
 
 def render_catalogue():
     st.markdown("# 📊 Catalog — Tools & Databases")
@@ -646,11 +574,7 @@ def render_catalogue():
 # ─────────────────────────────────────────────────────────────────────────────
 def _tab_graph():
     import math
-
-    import networkx as nx
     import numpy as np
-    import pandas as pd
-    import plotly.express as px
     import plotly.graph_objects as go
 
     v_ego, v_matrix = st.tabs(
@@ -660,7 +584,6 @@ def _tab_graph():
         ]
     )
 
-    # ── VUE 1 : EGO-GRAPH ─────────────────────────────────────────────────────
     with v_ego:
         st.markdown("Select a tool or database to see **its direct connections**.")
         BG = "#0D1117"
@@ -834,7 +757,6 @@ def _tab_graph():
             )
             st.caption(f"{len(nodes)-1} direct connection(s) from « {chosen} »")
 
-    # ── VUE 2 : MATRICE ───────────────────────────────────────────────────────
     with v_matrix:
         st.markdown(
             "Each cell shows the **taxonomy** (GTDB / NCBI) "
@@ -930,157 +852,167 @@ def _tab_graph():
             config=dict(displayModeBar=False),
             key="matrix_fig",
         )
-        st.markdown(
-            "<div style='font-size:12px;color:#888'>"
-            "<span style='background:#17C3B2;padding:2px 10px;border-radius:4px;color:#000'>GTDB</span> &nbsp;"
-            "<span style='background:#AFA9EC;padding:2px 10px;border-radius:4px;color:#000'>NCBI</span> &nbsp;"
-            "<span style='background:#F5A623;padding:2px 10px;border-radius:4px;color:#000'>GTDB + NCBI</span> &nbsp;"
-            "<span style='background:#1A1F2E;padding:2px 10px;border-radius:4px;border:1px solid #444;color:#888'>—</span>"
-            "</div>",
-            unsafe_allow_html=True,
-        )
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# TAB TOOLS
+# ─────────────────────────────────────────────────────────────────────────────
 def _tab_tools():
-    st.markdown("### 🔧 Outils")
-    st.markdown("Tools sorted by citations, with their databases.")
+    st.markdown("### 🔧 Tools")
 
-    sort_by = st.selectbox(
-        "Sort by",
-        ["Citations (↓)", "Name (A→Z)", "Version"],
-        key="cards_sort",
-    )
-
-    sorted_tools = list(tools.items())
-    if sort_by == "Citations (↓)":
-        sorted_tools.sort(key=lambda x: -(x[1].get("citations_count") or 0))
-    elif sort_by == "Name (A→Z)":
-        sorted_tools.sort(key=lambda x: x[1].get("name", x[0]).lower())
-    elif sort_by == "Version":
-        sorted_tools.sort(key=lambda x: x[1].get("latest_release") or "")
-
-    cols = st.columns(3)
-    for i, (tid, tool) in enumerate(sorted_tools):
-        cit = tool.get("citations_count") or 0
-        name = tool.get("name", tid)
-        version = tool.get("latest_release") or "—"
-        sr = "✅" if tool.get("supports_shortreads") else "❌"
-        lr = "✅" if tool.get("supports_longreads") else "❌"
-        strain = "✅" if tool.get("strain_level") else "❌"
-
-        dbs_used = []
-        for u in _to_list(tool.get("uses_databases")):
-            if not isinstance(u, dict):
-                continue
-            did = u.get("@id", "")
-            dname = databases[did].get("name", did) if did in databases else did
-            ts = taxonomy_badge(u.get("taxonomy_system"))
-            col_ts = "#17C3B2" if "GTDB" in ts else "#AFA9EC"
-            dbs_used.append(
-                f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>"
-            )
-
-        links = ""
-        if tool.get("repo"):
-            links += f"<a href='{tool['repo']}' target='_blank' style='color:#888;font-size:11px'>GitHub</a> &nbsp;"
-        if tool.get("doi"):
-            links += f"<a href='{tool['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
-
-        bar_w = int(
-            160
-            * cit
-            / max(max(t.get("citations_count") or 0 for _, t in sorted_tools), 1)
-        )
-
-        card_html = f"""
-<div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
-padding:14px 16px;margin-bottom:6px;font-family:sans-serif'>
-  <div style='font-size:15px;font-weight:600;color:#E0DFFF;margin-bottom:4px'>{name}</div>
-  <div style='font-size:11px;color:#666;margin-bottom:8px'>v{version}</div>
-  <div style='display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap'>
-    <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>SR {sr}</span>
-    <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>LR {lr}</span>
-    <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>Strain {strain}</span>
-  </div>
-  <div style='margin-bottom:6px'>{"<br>".join(dbs_used) or "<span style='color:#444;font-size:11px'>aucune BD renseignée</span>"}</div>
-  <div style='margin-top:8px'>
-    <div style='background:#1A1F2E;border-radius:3px;height:4px;width:160px'>
-      <div style='background:#534AB7;height:4px;border-radius:3px;width:{bar_w}px'></div>
-    </div>
-    <span style='font-size:10px;color:#555'>{cit} citations</span>
-  </div>
-  <div style='margin-top:6px'>{links}</div>
-</div>"""
-        with cols[i % 3]:
-            st.markdown(card_html, unsafe_allow_html=True)
-
-    st.markdown("---")
-    selected = st.selectbox(
+    # Vue détaillée au choix
+    selected_tool = st.selectbox(
         "Details view",
         ["—"] + sorted(t.get("name", k) for k, t in tools.items()),
         key="sel_tool",
     )
-    if selected != "—":
-        tid = next((k for k, v in tools.items() if v.get("name", k) == selected), None)
+    if selected_tool != "—":
+        tid = next((k for k, v in tools.items() if v.get("name", k) == selected_tool), None)
         if tid:
-            _tool_card(tools[tid])
+            detail_col, _, _ = st.columns(3)
+            with detail_col:
+                st.markdown(_tool_card_html(tid, tools[tid], databases, tools), unsafe_allow_html=True)
 
+    st.markdown("---")
+    st.markdown("#### Filter")
 
-def _tool_card(tool: dict):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"**Name** : {tool.get('name','—')}")
-        st.markdown(f"**Type** : {tool.get('type','—')}")
-        st.markdown(f"**Version** : {tool.get('latest_release') or '—'}")
-        st.markdown(f"**RAM** : {tool.get('ram') or '—'} GB")
-        st.markdown(
-            f"**Short reads** : {'✅' if tool.get('supports_shortreads') else '❌'}"
+    col_a, col_b, col_c = st.columns([2, 2, 1])
+    with col_a:
+        f_features = st.multiselect(
+            "Capabilities / Features",
+            ["Short Reads", "Long Reads", "Strain-level", "Functional profiling"],
+            key="f_tool_features",
         )
-        st.markdown(
-            f"**Long reads** : {'✅' if tool.get('supports_longreads') else '❌'}"
+    with col_b:
+        search_tool = st.text_input(
+            "🔍 Search", "", key="search_tool", placeholder="name, description, database…"
         )
-        st.markdown(f"**Strain-level** : {'✅' if tool.get('strain_level') else '❌'}")
-        st.markdown(
-            f"**Functional** : {'✅' if tool.get('functional_profiling') else '❌'}"
+    with col_c:
+        sort_by = st.selectbox(
+            "Sort by",
+            ["Citations (↓)", "Name (A→Z)", "Version"],
+            key="cards_sort",
         )
-        st.markdown(f"**Citations** : {tool.get('citations_count') or '—'}")
+
+    # Filtrage des outils
+    filtered_tools = []
+    for tid, tool in tools.items():
+        name = tool.get("name", tid)
         desc = tool.get("description") or tool.get("approach_detail") or ""
-        if desc:
-            st.markdown(f"**Approach** : {desc}")
-        sm = tool.get("sub_module")
-        if sm and isinstance(sm, dict):
-            st.markdown(f"**Submodule** : {sm.get('name', sm.get('@id',''))}")
-    with col2:
-        links = []
-        if tool.get("repo"):
-            links.append(f"[GitHub]({tool['repo']})")
-        if tool.get("doc"):
-            links.append(f"[Documentation]({tool['doc']})")
-        if tool.get("bio_tools"):
-            links.append(f"[bio.tools]({tool['bio_tools']})")
-        if tool.get("doi"):
-            links.append(f"[Publication]({tool['doi']})")
-        if links:
-            st.markdown("🔗 " + "  ·  ".join(links))
-        st.markdown("**Databases used :**")
+
+        # Récupération des bases de données utilisées
+        db_names = []
         for u in _to_list(tool.get("uses_databases")):
-            if not isinstance(u, dict):
+            if isinstance(u, dict):
+                did = u.get("@id", "")
+                dname = databases[did].get("name", did) if did in databases else did
+                db_names.append(dname)
+        dbs_str = ", ".join(db_names)
+
+        # Filtre Fonctionnalités
+        if f_features:
+            if "Short Reads" in f_features and not tool.get("supports_shortreads"):
                 continue
-            name = u.get("name") or u.get("@id", "?")
-            ts = taxonomy_badge(u.get("taxonomy_system"))
-            rels = ", ".join(str(r) for r in _to_list(u.get("release")) if r)
-            color = "#1D9E75" if "GTDB" in ts else "#534AB7"
-            badge = (
-                f"<span style='background:{color};color:white;"
-                f"padding:1px 7px;border-radius:8px;font-size:11px'>{ts}</span>"
-                if ts != "—"
-                else ""
-            )
-            rel_str = f" · r{rels}" if rels else ""
-            st.markdown(
-                f"- **{name}** &nbsp;{badge}{rel_str}",
-                unsafe_allow_html=True,
-            )
+            if "Long Reads" in f_features and not tool.get("supports_longreads"):
+                continue
+            if "Strain-level" in f_features and not tool.get("strain_level"):
+                continue
+            if "Functional profiling" in f_features and not tool.get("functional_profiling"):
+                continue
+
+        # Filtre Recherche textuelle
+        if search_tool:
+            q = search_tool.lower()
+            if not (
+                q in name.lower()
+                or q in desc.lower()
+                or q in tid.lower()
+                or q in dbs_str.lower()
+            ):
+                continue
+
+        filtered_tools.append((tid, tool))
+
+    # Tri
+    if sort_by == "Citations (↓)":
+        filtered_tools.sort(key=lambda x: -(x[1].get("citations_count") or 0))
+    elif sort_by == "Name (A→Z)":
+        filtered_tools.sort(key=lambda x: x[1].get("name", x[0]).lower())
+    elif sort_by == "Version":
+        filtered_tools.sort(key=lambda x: x[1].get("latest_release") or "", reverse=True)
+
+    st.caption(f"{len(filtered_tools)} Tools shown")
+
+    # Affichage sous forme de cartes
+    cols = st.columns(3)
+    for i, (tid, tool) in enumerate(filtered_tools):
+        with cols[i % 3]:
+            st.markdown(_tool_card_html(tid, tool, databases, tools), unsafe_allow_html=True)
+
+
+def _tool_card_html(tid: str, tool: dict, databases: dict, tools: dict) -> str:
+    """Construit le HTML d'une carte "outil" — badges fonctionnalités, BD utilisées,
+    barre de citations et liens externes.
+
+    Identique dans sa conception à _db_card_html().
+    """
+    cit = tool.get("citations_count") or 0
+    name = tool.get("name", tid)
+    version = tool.get("latest_release") or "—"
+    sr = "✅" if tool.get("supports_shortreads") else "❌"
+    lr = "✅" if tool.get("supports_longreads") else "❌"
+    strain = "✅" if tool.get("strain_level") else "❌"
+    func = "✅" if tool.get("functional_profiling") else "❌"
+
+    max_citations = max((t.get("citations_count") or 0 for t in tools.values()), default=1)
+    bar_w = int(160 * cit / max(max_citations, 1))
+
+    dbs_used = []
+    for u in _to_list(tool.get("uses_databases")):
+        if not isinstance(u, dict):
+            continue
+        did = u.get("@id", "")
+        dname = databases[did].get("name", did) if did in databases else did
+        ts = taxonomy_badge(u.get("taxonomy_system"))
+        col_ts = "#17C3B2" if "GTDB" in ts else "#AFA9EC"
+        dbs_used.append(
+            f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>"
+        )
+
+    dbs_html = "<br>".join(dbs_used) if dbs_used else "<span style='color:#444;font-size:11px'>aucune BD renseignée</span>"
+
+    links = ""
+    if tool.get("repo"):
+        links += f"<a href='{tool['repo']}' target='_blank' style='color:#888;font-size:11px'>GitHub</a> &nbsp;"
+    if tool.get("doc"):
+        links += f"<a href='{tool['doc']}' target='_blank' style='color:#888;font-size:11px'>Doc</a> &nbsp;"
+    if tool.get("doi"):
+        links += f"<a href='{tool['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+
+    return f"""
+<div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
+padding:14px 16px;margin-bottom:12px;font-family:sans-serif;display:flex;flex-direction:column;justify-content:space-between;min-height:220px'>
+  <div>
+    <div style='font-size:15px;font-weight:600;color:#E0DFFF;margin-bottom:4px'>{name}</div>
+    <div style='font-size:11px;color:#666;margin-bottom:8px'>v{version}</div>
+    <div style='display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap'>
+      <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>SR {sr}</span>
+      <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>LR {lr}</span>
+      <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>Strain {strain}</span>
+      <span style='background:#222;padding:1px 7px;border-radius:6px;font-size:11px;color:#aaa'>Func {func}</span>
+    </div>
+    <div style='margin-bottom:6px'>{dbs_html}</div>
+  </div>
+  <div>
+    <div style='margin-top:8px'>
+      <div style='background:#1A1F2E;border-radius:3px;height:4px;width:160px'>
+        <div style='background:#534AB7;height:4px;border-radius:3px;width:{bar_w}px'></div>
+      </div>
+      <span style='font-size:10px;color:#555'>{cit} citations</span>
+    </div>
+    <div style='margin-top:6px'>{links}</div>
+  </div>
+</div>"""
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1088,7 +1020,6 @@ def _tool_card(tool: dict):
 # ─────────────────────────────────────────────────────────────────────────────
 def _tab_databases():
     st.markdown("### 🗄️ Databases")
-        # Vue détaillée au choix
     st.markdown("---")
     selected_db = st.selectbox(
         "Select",
@@ -1165,16 +1096,9 @@ def _tab_databases():
             st.markdown(_db_card_html(db_id, db, databases, tools), unsafe_allow_html=True)
 
 
-
-
 def _db_card_html(db_id: str, db: dict, databases: dict, tools: dict) -> str:
     """Construit le HTML d'une carte "base de données" — badges taxons, sample/
     origin, sous-BDs, parents (isPartOf), outils compatibles, liens.
-
-    Fonction unique appelée à la fois par la grille de _tab_databases (une
-    carte par résultat filtré) ET par la vue "Details view" (une carte seule,
-    pleine largeur) : le rendu est donc garanti identique entre les deux,
-    par construction — pas deux styles à maintenir séparément.
     """
     name = db.get("name", db_id)
     release = db_release_str(db)
@@ -1204,7 +1128,6 @@ def _db_card_html(db_id: str, db: dict, databases: dict, tools: dict) -> str:
         for p in parents:
             if isinstance(p, dict):
                 pid = p.get("@id", "")
-                # Priorité au champ name, sinon recherche dans le dictionnaire databases, sinon identifiant
                 parent_name = p.get("name") or databases.get(pid, {}).get("name", pid)
                 if parent_name:
                     parent_names.append(parent_name)
