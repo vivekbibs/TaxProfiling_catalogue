@@ -1,6 +1,9 @@
 import sys
 from pathlib import Path
-
+try:
+    from src.recommender import CatalogDatabase, CatalogTool
+except ModuleNotFoundError:
+    from recommender import CatalogDatabase, CatalogTool
 import streamlit as st
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -859,19 +862,21 @@ def _tab_graph():
 # ─────────────────────────────────────────────────────────────────────────────
 def _tab_tools():
     st.markdown("### 🔧 Tools")
+    
+    # Transformation des dictionnaires bruts en objets typés
+    wrapped_tools = {tid: CatalogTool.from_dict(tid, t) for tid, t in tools.items()}
 
-    # Vue détaillée au choix
     selected_tool = st.selectbox(
-        "Details view",
-        ["—"] + sorted(t.get("name", k) for k, t in tools.items()),
+        "Select",
+        ["—"] + sorted(t.raw.get("name", tid) for tid, t in wrapped_tools.items()),
         key="sel_tool",
     )
     if selected_tool != "—":
-        tid = next((k for k, v in tools.items() if v.get("name", k) == selected_tool), None)
+        tid = next((k for k, v in wrapped_tools.items() if v.raw.get("name", k) == selected_tool), None)
         if tid:
             detail_col, _, _ = st.columns(3)
             with detail_col:
-                st.markdown(_tool_card_html(tid, tools[tid], databases, tools), unsafe_allow_html=True)
+                st.markdown(_tool_card_html(tid, wrapped_tools[tid], databases, tools), unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("#### Filter")
@@ -894,100 +899,86 @@ def _tab_tools():
             key="cards_sort",
         )
 
-    # Filtrage des outils
     filtered_tools = []
-    for tid, tool in tools.items():
-        name = tool.get("name", tid)
-        desc = tool.get("description") or tool.get("approach_detail") or ""
+    for tid, tool in wrapped_tools.items():
+        name = tool.raw.get("name", tid)
+        desc = tool.raw.get("description") or tool.raw.get("approach_detail") or ""
 
-        # Récupération des bases de données utilisées
+        # Utilisation de l'attribut typé tool.uses_databases
         db_names = []
-        for u in _to_list(tool.get("uses_databases")):
+        for u in tool.uses_databases:
             if isinstance(u, dict):
                 did = u.get("@id", "")
-                dname = databases[did].get("name", did) if did in databases else did
+                dname = databases.get(did, {}).get("name", did)
                 db_names.append(dname)
         dbs_str = ", ".join(db_names)
 
-        # Filtre Fonctionnalités
+        # Filtre Fonctionnalités via les booléens de la dataclass
         if f_features:
-            if "Short Reads" in f_features and not tool.get("supports_shortreads"):
+            if "Short Reads" in f_features and not tool.supports_shortreads:
                 continue
-            if "Long Reads" in f_features and not tool.get("supports_longreads"):
+            if "Long Reads" in f_features and not tool.supports_longreads:
                 continue
-            if "Strain-level" in f_features and not tool.get("strain_level"):
+            if "Strain-level" in f_features and not tool.strain_level:
                 continue
-            if "Functional profiling" in f_features and not tool.get("functional_profiling"):
+            if "Functional profiling" in f_features and not tool.functional_profiling:
                 continue
 
-        # Filtre Recherche textuelle
         if search_tool:
             q = search_tool.lower()
-            if not (
-                q in name.lower()
-                or q in desc.lower()
-                or q in tid.lower()
-                or q in dbs_str.lower()
-            ):
+            if not (q in name.lower() or q in desc.lower() or q in tid.lower() or q in dbs_str.lower()):
                 continue
 
         filtered_tools.append((tid, tool))
 
-    # Tri
     if sort_by == "Citations (↓)":
-        filtered_tools.sort(key=lambda x: -(x[1].get("citations_count") or 0))
+        filtered_tools.sort(key=lambda x: -(x[1].raw.get("citations_count") or 0))
     elif sort_by == "Name (A→Z)":
-        filtered_tools.sort(key=lambda x: x[1].get("name", x[0]).lower())
+        filtered_tools.sort(key=lambda x: x[1].raw.get("name", x[0]).lower())
     elif sort_by == "Version":
-        filtered_tools.sort(key=lambda x: x[1].get("latest_release") or "", reverse=True)
+        filtered_tools.sort(key=lambda x: x[1].raw.get("latest_release") or "", reverse=True)
 
     st.caption(f"{len(filtered_tools)} Tools shown")
 
-    # Affichage sous forme de cartes
     cols = st.columns(3)
     for i, (tid, tool) in enumerate(filtered_tools):
         with cols[i % 3]:
             st.markdown(_tool_card_html(tid, tool, databases, tools), unsafe_allow_html=True)
 
-
-def _tool_card_html(tid: str, tool: dict, databases: dict, tools: dict) -> str:
-    """Construit le HTML d'une carte "outil" — badges fonctionnalités, BD utilisées,
-    barre de citations et liens externes.
-
-    Identique dans sa conception à _db_card_html().
-    """
-    cit = tool.get("citations_count") or 0
-    name = tool.get("name", tid)
-    version = tool.get("latest_release") or "—"
-    sr = "✅" if tool.get("supports_shortreads") else "❌"
-    lr = "✅" if tool.get("supports_longreads") else "❌"
-    strain = "✅" if tool.get("strain_level") else "❌"
-    func = "✅" if tool.get("functional_profiling") else "❌"
+def _tool_card_html(tid: str, tool: CatalogTool, databases: dict, tools: dict) -> str:
+    cit = tool.raw.get("citations_count") or 0
+    name = tool.raw.get("name", tid)
+    version = tool.raw.get("latest_release") or "—"
+    
+    # Utilisation directe des booléens garantis par CatalogTool
+    sr = "✅" if tool.supports_shortreads else "❌"
+    lr = "✅" if tool.supports_longreads else "❌"
+    strain = "✅" if tool.strain_level else "❌"
+    func = "✅" if tool.functional_profiling else "❌"
 
     max_citations = max((t.get("citations_count") or 0 for t in tools.values()), default=1)
     bar_w = int(160 * cit / max(max_citations, 1))
 
     dbs_used = []
-    for u in _to_list(tool.get("uses_databases")):
+    # Plus besoin de _to_list() grâce à tool.uses_databases
+    for u in tool.uses_databases:
         if not isinstance(u, dict):
             continue
         did = u.get("@id", "")
         dname = databases[did].get("name", did) if did in databases else did
         ts = taxonomy_badge(u.get("taxonomy_system"))
         col_ts = "#17C3B2" if "GTDB" in ts else "#AFA9EC"
-        dbs_used.append(
-            f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>"
-        )
+        dbs_used.append(f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>")
 
     dbs_html = "<br>".join(dbs_used) if dbs_used else "<span style='color:#444;font-size:11px'>aucune BD renseignée</span>"
 
     links = ""
-    if tool.get("repo"):
-        links += f"<a href='{tool['repo']}' target='_blank' style='color:#888;font-size:11px'>GitHub</a> &nbsp;"
-    if tool.get("doc"):
-        links += f"<a href='{tool['doc']}' target='_blank' style='color:#888;font-size:11px'>Doc</a> &nbsp;"
-    if tool.get("doi"):
-        links += f"<a href='{tool['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+    if tool.raw.get("repo"):
+        links += f"<a href='{tool.raw['repo']}' target='_blank' style='color:#888;font-size:11px'>GitHub</a> &nbsp;"
+    if tool.raw.get("doc"):
+        links += f"<a href='{tool.raw['doc']}' target='_blank' style='color:#888;font-size:11px'>Doc</a> &nbsp;"
+    if tool.raw.get("doi"):
+        links += f"<a href='{tool.raw['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
 
     return f"""
 <div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
@@ -1021,20 +1012,24 @@ padding:14px 16px;margin-bottom:12px;font-family:sans-serif;display:flex;flex-di
 def _tab_databases():
     st.markdown("### 🗄️ Databases")
     st.markdown("---")
+    
+    # Transformation en objets typés
+    wrapped_dbs = {did: CatalogDatabase.from_dict(did, d) for did, d in databases.items()}
+
     selected_db = st.selectbox(
         "Select",
-        ["—"] + sorted(db.get("name", k) for k, db in databases.items()),
+        ["—"] + sorted(db.raw.get("name", k) for k, db in wrapped_dbs.items()),
         key="sel_db",
     )
     if selected_db != "—":
         db_id = next(
-            (k for k, v in databases.items() if v.get("name", k) == selected_db),
+            (k for k, v in wrapped_dbs.items() if v.raw.get("name", k) == selected_db),
             None,
         )
         if db_id:
             detail_col, _, _ = st.columns(3)
             with detail_col:
-                st.markdown(_db_card_html(db_id, databases[db_id], databases, tools), unsafe_allow_html=True)
+                st.markdown(_db_card_html(db_id, wrapped_dbs[db_id], databases, tools), unsafe_allow_html=True)
 
     st.markdown("####  Filter")
     col_a, col_b, col_c = st.columns([2, 2, 1])
@@ -1055,67 +1050,54 @@ def _tab_databases():
             key="db_cards_sort",
         )
 
-    # Filtrage et préparation des données
     filtered_dbs = []
-    for db_id, db in databases.items():
-        taxa_list = taxon_labels(db)
+    for db_id, db in wrapped_dbs.items():
+        taxa_list = taxon_labels(db.raw)
         taxa_str = ", ".join(taxa_list)
-        sample_str = sample_label(db)
-        origin_str = origin_label(db)
-        name_str = db.get("name", db_id)
+        sample_str = sample_label(db.raw)
+        origin_str = origin_label(db.raw)
+        name_str = db.raw.get("name", db_id)
 
-        # Filtre Taxons
         if f_taxon and not any(fx in taxa_str for fx in f_taxon):
             continue
 
-        # Filtre Recherche
         if search_db:
             q = search_db.lower()
-            if not (
-                q in name_str.lower()
-                or q in sample_str.lower()
-                or q in origin_str.lower()
-                or q in db_id.lower()
-            ):
+            if not (q in name_str.lower() or q in sample_str.lower() or q in origin_str.lower() or q in db_id.lower()):
                 continue
 
         filtered_dbs.append((db_id, db))
 
-    # Tri
     if sort_by == "Name (A→Z)":
-        filtered_dbs.sort(key=lambda x: x[1].get("name", x[0]).lower())
+        filtered_dbs.sort(key=lambda x: x[1].raw.get("name", x[0]).lower())
     elif sort_by == "Sub-dbs (↓)":
-        filtered_dbs.sort(key=lambda x: -len(_to_list(x[1].get("hasPart"))))
+        # Plus besoin de _to_list(db.get("hasPart"))
+        filtered_dbs.sort(key=lambda x: -len(x[1].has_part))
 
     st.caption(f"{len(filtered_dbs)} Databases shown")
 
-    # Affichage sous forme de cartes
     cols = st.columns(3)
     for i, (db_id, db) in enumerate(filtered_dbs):
         with cols[i % 3]:
             st.markdown(_db_card_html(db_id, db, databases, tools), unsafe_allow_html=True)
 
+def _db_card_html(db_id: str, db: CatalogDatabase, databases: dict, tools: dict) -> str:
+    name = db.raw.get("name", db_id)
+    release = db_release_str(db.raw)
+    taxa = taxon_labels(db.raw)
+    sample = sample_label(db.raw)
+    origin = origin_label(db.raw)
+    
+    # Utilisation directe des attributs de listes de CatalogDatabase
+    parts = db.has_part
+    parents = db.is_part_of
+    compatible_tools = db.compatible_tools
 
-def _db_card_html(db_id: str, db: dict, databases: dict, tools: dict) -> str:
-    """Construit le HTML d'une carte "base de données" — badges taxons, sample/
-    origin, sous-BDs, parents (isPartOf), outils compatibles, liens.
-    """
-    name = db.get("name", db_id)
-    release = db_release_str(db)
-    taxa = taxon_labels(db)
-    sample = sample_label(db)
-    origin = origin_label(db)
-    parts = _to_list(db.get("hasPart"))
-    parents = _to_list(db.get("isPartOf"))
-    compatible_tools = _to_list(db.get("compatible_tools"))
-
-    # Badges pour les taxons
     taxa_badges = "".join(
         f"<span style='background:#1D9E7522;border:1px solid #1D9E75;padding:1px 6px;border-radius:6px;font-size:10px;color:#2ECC8A;margin-right:4px'>{t}</span>"
         for t in taxa
     ) if taxa else "<span style='color:#666;font-size:11px'>—</span>"
 
-    # Détails métadonnées
     details_html = []
     if sample != "—":
         details_html.append(f"<span style='color:#aaa;font-size:11px'>🧪 {sample}</span>")
@@ -1159,12 +1141,11 @@ def _db_card_html(db_id: str, db: dict, databases: dict, tools: dict) -> str:
 
     details_str = "<br>".join(details_html) if details_html else "<span style='color:#444;font-size:11px'>No metadata</span>"
 
-    # Liens
     links = ""
-    if db.get("homepage"):
-        links += f"<a href='{db['homepage']}' target='_blank' style='color:#888;font-size:11px'>Website</a> &nbsp;"
-    if db.get("doi"):
-        links += f"<a href='{db['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+    if db.raw.get("homepage"):
+        links += f"<a href='{db.raw['homepage']}' target='_blank' style='color:#888;font-size:11px'>Website</a> &nbsp;"
+    if db.raw.get("doi"):
+        links += f"<a href='{db.raw['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
 
     return f"""
 <div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;

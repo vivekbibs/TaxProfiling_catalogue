@@ -253,7 +253,7 @@ def _weighted_rank_tuple(result: dict[str, Any], databases: dict[str, Any], ctx:
     db_obj = databases.get(db_id, {}) if db_id else {}
     part_count = len([p for p in _to_list(db_obj.get("hasPart")) if isinstance(p, dict) and p.get("@id")])
     # broad_boost = SCORE_WEIGHTS["broad_context_bonus"] if (ctx.sample_key is None and ctx.origin_key is None and part_count > 0) else 0
-    broad_boost = SCORE_WEIGHTS["broad_context_bonus"] if (ctx.sample_key is None and ctx.origin_key is None and db_obj.get("sample") is None and db_obj.get("origin") is None else 0
+    broad_boost = SCORE_WEIGHTS["broad_context_bonus"] if (ctx.sample_key is None and ctx.origin_key is None and db_obj.get("sample") is None and db_obj.get("origin") is None) else 0
 
     return (-result["score"], -broad_boost, -part_count)
 
