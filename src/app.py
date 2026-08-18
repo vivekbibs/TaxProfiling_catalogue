@@ -653,11 +653,10 @@ def _tab_graph():
     import plotly.express as px
     import plotly.graph_objects as go
 
-    v_ego, v_matrix,v_cards = st.tabs(
+    v_ego, v_matrix = st.tabs(
         [
             "🕸️ Ego-graph",
             "🔲 Matrix",
-            "🃏 Cards",
         ]
     )
 
@@ -941,58 +940,59 @@ def _tab_graph():
             unsafe_allow_html=True,
         )
 
-    # ── VUE 4 : CARDS ─────────────────────────────────────────────────────────
-    with v_cards:
-        st.markdown("Tools sorted by citations, with their databases.")
 
-        sort_by = st.selectbox(
-            "Sort by",
-            ["Citations (↓)", "Name (A→Z)", "Version"],
-            key="cards_sort",
-        )
+def _tab_tools():
+    st.markdown("### 🔧 Outils")
+    st.markdown("Tools sorted by citations, with their databases.")
 
-        sorted_tools = list(tools.items())
-        if sort_by == "Citations (↓)":
-            sorted_tools.sort(key=lambda x: -(x[1].get("citations_count") or 0))
-        elif sort_by == "Nom (A→Z)":
-            sorted_tools.sort(key=lambda x: x[1].get("name", x[0]).lower())
-        elif sort_by == "Version":
-            sorted_tools.sort(key=lambda x: x[1].get("latest_release") or "")
+    sort_by = st.selectbox(
+        "Sort by",
+        ["Citations (↓)", "Name (A→Z)", "Version"],
+        key="cards_sort",
+    )
 
-        cols = st.columns(3)
-        for i, (tid, tool) in enumerate(sorted_tools):
-            cit = tool.get("citations_count") or 0
-            name = tool.get("name", tid)
-            version = tool.get("latest_release") or "—"
-            sr = "✅" if tool.get("supports_shortreads") else "❌"
-            lr = "✅" if tool.get("supports_longreads") else "❌"
-            strain = "✅" if tool.get("strain_level") else "❌"
+    sorted_tools = list(tools.items())
+    if sort_by == "Citations (↓)":
+        sorted_tools.sort(key=lambda x: -(x[1].get("citations_count") or 0))
+    elif sort_by == "Name (A→Z)":
+        sorted_tools.sort(key=lambda x: x[1].get("name", x[0]).lower())
+    elif sort_by == "Version":
+        sorted_tools.sort(key=lambda x: x[1].get("latest_release") or "")
 
-            dbs_used = []
-            for u in _to_list(tool.get("uses_databases")):
-                if not isinstance(u, dict):
-                    continue
-                did = u.get("@id", "")
-                dname = databases[did].get("name", did) if did in databases else did
-                ts = taxonomy_badge(u.get("taxonomy_system"))
-                col_ts = "#17C3B2" if "GTDB" in ts else "#AFA9EC"
-                dbs_used.append(
-                    f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>"
-                )
+    cols = st.columns(3)
+    for i, (tid, tool) in enumerate(sorted_tools):
+        cit = tool.get("citations_count") or 0
+        name = tool.get("name", tid)
+        version = tool.get("latest_release") or "—"
+        sr = "✅" if tool.get("supports_shortreads") else "❌"
+        lr = "✅" if tool.get("supports_longreads") else "❌"
+        strain = "✅" if tool.get("strain_level") else "❌"
 
-            links = ""
-            if tool.get("repo"):
-                links += f"<a href='{tool['repo']}' target='_blank' style='color:#888;font-size:11px'>GitHub</a> &nbsp;"
-            if tool.get("doi"):
-                links += f"<a href='{tool['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
-
-            bar_w = int(
-                160
-                * cit
-                / max(max(t.get("citations_count") or 0 for _, t in sorted_tools), 1)
+        dbs_used = []
+        for u in _to_list(tool.get("uses_databases")):
+            if not isinstance(u, dict):
+                continue
+            did = u.get("@id", "")
+            dname = databases[did].get("name", did) if did in databases else did
+            ts = taxonomy_badge(u.get("taxonomy_system"))
+            col_ts = "#17C3B2" if "GTDB" in ts else "#AFA9EC"
+            dbs_used.append(
+                f"<span style='color:{col_ts};font-size:11px'>● {dname}</span>"
             )
 
-            card_html = f"""
+        links = ""
+        if tool.get("repo"):
+            links += f"<a href='{tool['repo']}' target='_blank' style='color:#888;font-size:11px'>GitHub</a> &nbsp;"
+        if tool.get("doi"):
+            links += f"<a href='{tool['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+
+        bar_w = int(
+            160
+            * cit
+            / max(max(t.get("citations_count") or 0 for _, t in sorted_tools), 1)
+        )
+
+        card_html = f"""
 <div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
 padding:14px 16px;margin-bottom:6px;font-family:sans-serif'>
   <div style='font-size:15px;font-weight:600;color:#E0DFFF;margin-bottom:4px'>{name}</div>
@@ -1011,81 +1011,8 @@ padding:14px 16px;margin-bottom:6px;font-family:sans-serif'>
   </div>
   <div style='margin-top:6px'>{links}</div>
 </div>"""
-            with cols[i % 3]:
-                st.markdown(card_html, unsafe_allow_html=True)
-
-
-def _tab_tools():
-    import pandas as pd
-
-    st.markdown("### 🔧 Outils")
-
-    col_a, col_b, col_c, col_d = st.columns(4)
-    with col_a:
-        f_sr = st.selectbox("Short reads", ["All", "✅", "❌"], key="f_sr")
-    with col_b:
-        f_lr = st.selectbox("Long reads", ["All", "✅", "❌"], key="f_lr")
-    with col_c:
-        f_strain = st.selectbox("Strain-level", ["All", "✅", "❌"], key="f_strain")
-    with col_d:
-        f_taxo = st.selectbox("Taxonomie BD", ["All", "GTDB", "NCBI"], key="f_taxo")
-    search_t = st.text_input(
-        "🔍 Recherche", "", key="search_t", placeholder="nom, approche, BD…"
-    )
-
-    rows = []
-    for tid, t in sorted(tools.items()):
-        dbs_all = _to_list(t.get("uses_databases"))
-        db_names = ", ".join(
-            u.get("name") or u.get("@id", "") for u in dbs_all if isinstance(u, dict)
-        )
-        taxo_set = {
-            taxonomy_badge(u.get("taxonomy_system"))
-            for u in dbs_all
-            if isinstance(u, dict)
-        }
-        taxo_str = " + ".join(sorted(x for x in taxo_set if x != "—")) or "—"
-        rows.append(
-            {
-                "Name": t.get("name", tid),
-                "Type": t.get("type", "—"),
-                "Version": t.get("latest_release") or "—",
-                "Short reads": "✅" if t.get("supports_shortreads") else "❌",
-                "Long reads": "✅" if t.get("supports_longreads") else "❌",
-                "Strain-level": "✅" if t.get("strain_level") else "❌",
-                "Functional": "✅" if t.get("functional_profiling") else "❌",
-                "RAM (GB)": str(t.get("ram") or "—"),
-                "DB Taxonomy ": taxo_str,
-                "Citations": t.get("citations_count") or 0,
-                "DBs used": db_names,
-                "Approach": t.get("approach_detail") or "—",
-            }
-        )
-
-    df = pd.DataFrame(rows)
-    if f_sr != "All":
-        df = df[df["Short reads"] == f_sr]
-    if f_lr != "All":
-        df = df[df["Long reads"] == f_lr]
-    if f_strain != "All":
-        df = df[df["Strain-level"] == f_strain]
-    if f_taxo != "All":
-        df = df[df["DB Taxonomy "].str.contains(f_taxo, na=False)]
-    if search_t:
-        m = (
-            df["Name"].str.contains(search_t, case=False, na=False)
-            | df["Approach"].str.contains(search_t, case=False, na=False)
-            | df["DBs used"].str.contains(search_t, case=False, na=False)
-        )
-        df = df[m]
-
-    st.caption(f"{len(df)} Tools shown")
-    display_df = (
-        df.sort_values("Citations", ascending=False)
-        if not df.empty and "Citations" in df.columns
-        else df
-    )
-    st.dataframe(display_df, use_container_width=True, hide_index=True)
+        with cols[i % 3]:
+            st.markdown(card_html, unsafe_allow_html=True)
 
     st.markdown("---")
     selected = st.selectbox(
@@ -1161,7 +1088,24 @@ def _tool_card(tool: dict):
 # ─────────────────────────────────────────────────────────────────────────────
 def _tab_databases():
     st.markdown("### 🗄️ Databases")
+        # Vue détaillée au choix
+    st.markdown("---")
+    selected_db = st.selectbox(
+        "Select",
+        ["—"] + sorted(db.get("name", k) for k, db in databases.items()),
+        key="sel_db",
+    )
+    if selected_db != "—":
+        db_id = next(
+            (k for k, v in databases.items() if v.get("name", k) == selected_db),
+            None,
+        )
+        if db_id:
+            detail_col, _, _ = st.columns(3)
+            with detail_col:
+                st.markdown(_db_card_html(db_id, databases[db_id], databases, tools), unsafe_allow_html=True)
 
+    st.markdown("####  Filter")
     col_a, col_b, col_c = st.columns([2, 2, 1])
     with col_a:
         f_taxon = st.multiselect(
@@ -1217,58 +1161,89 @@ def _tab_databases():
     # Affichage sous forme de cartes
     cols = st.columns(3)
     for i, (db_id, db) in enumerate(filtered_dbs):
-        name = db.get("name", db_id)
-        release = db_release_str(db)
-        taxa = taxon_labels(db)
-        sample = sample_label(db)
-        origin = origin_label(db)
-        parts = _to_list(db.get("hasPart"))
-        parents = _to_list(db.get("isPartOf"))
+        with cols[i % 3]:
+            st.markdown(_db_card_html(db_id, db, databases, tools), unsafe_allow_html=True)
 
-        # Badges pour les taxons
-        taxa_badges = "".join(
-            f"<span style='background:#1D9E7522;border:1px solid #1D9E75;padding:1px 6px;border-radius:6px;font-size:10px;color:#2ECC8A;margin-right:4px'>{t}</span>"
-            for t in taxa
-        ) if taxa else "<span style='color:#666;font-size:11px'>—</span>"
 
-        # Détails métadonnées
-        details_html = []
-        if sample != "—":
-            details_html.append(f"<span style='color:#aaa;font-size:11px'>🧪 {sample}</span>")
-        if origin != "—":
-            details_html.append(f"<span style='color:#aaa;font-size:11px'>🌍 {origin}</span>")
-        if parts:
-            details_html.append(f"<span style='color:#17C3B2;font-size:11px'>📦 {len(parts)} sub-dbs</span>")
-        if parents:
-            parent_names = []
-            for p in parents:
-                if isinstance(p, dict):
-                    pid = p.get("@id", "")
-                    # Priorité au champ name, sinon recherche dans le dictionnaire databases, sinon identifiant
-                    parent_name = p.get("name") or databases.get(pid, {}).get("name", pid)
-                    if parent_name:
-                        parent_names.append(parent_name)
-                elif isinstance(p, str):
-                    parent_names.append(databases.get(p, {}).get("name", p))
 
-            if parent_names:
-                parents_lines = "<br>".join(
-                    f"&nbsp;&nbsp;• {pn}" for pn in parent_names
-                )
-                details_html.append(
-                    f"<span style='color:#AFA9EC;font-size:11px'>🔗 Part of:<br>{parents_lines}</span>"
-                )
 
-        details_str = "<br>".join(details_html) if details_html else "<span style='color:#444;font-size:11px'>No metadata</span>"
+def _db_card_html(db_id: str, db: dict, databases: dict, tools: dict) -> str:
+    """Construit le HTML d'une carte "base de données" — badges taxons, sample/
+    origin, sous-BDs, parents (isPartOf), outils compatibles, liens.
 
-        # Liens
-        links = ""
-        if db.get("homepage"):
-            links += f"<a href='{db['homepage']}' target='_blank' style='color:#888;font-size:11px'>Website</a> &nbsp;"
-        if db.get("doi"):
-            links += f"<a href='{db['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+    Fonction unique appelée à la fois par la grille de _tab_databases (une
+    carte par résultat filtré) ET par la vue "Details view" (une carte seule,
+    pleine largeur) : le rendu est donc garanti identique entre les deux,
+    par construction — pas deux styles à maintenir séparément.
+    """
+    name = db.get("name", db_id)
+    release = db_release_str(db)
+    taxa = taxon_labels(db)
+    sample = sample_label(db)
+    origin = origin_label(db)
+    parts = _to_list(db.get("hasPart"))
+    parents = _to_list(db.get("isPartOf"))
+    compatible_tools = _to_list(db.get("compatible_tools"))
 
-        card_html = f"""
+    # Badges pour les taxons
+    taxa_badges = "".join(
+        f"<span style='background:#1D9E7522;border:1px solid #1D9E75;padding:1px 6px;border-radius:6px;font-size:10px;color:#2ECC8A;margin-right:4px'>{t}</span>"
+        for t in taxa
+    ) if taxa else "<span style='color:#666;font-size:11px'>—</span>"
+
+    # Détails métadonnées
+    details_html = []
+    if sample != "—":
+        details_html.append(f"<span style='color:#aaa;font-size:11px'>🧪 {sample}</span>")
+    if origin != "—":
+        details_html.append(f"<span style='color:#aaa;font-size:11px'>🌍 {origin}</span>")
+    if parts:
+        details_html.append(f"<span style='color:#17C3B2;font-size:11px'>📦 {len(parts)} sub-dbs</span>")
+    if parents:
+        parent_names = []
+        for p in parents:
+            if isinstance(p, dict):
+                pid = p.get("@id", "")
+                # Priorité au champ name, sinon recherche dans le dictionnaire databases, sinon identifiant
+                parent_name = p.get("name") or databases.get(pid, {}).get("name", pid)
+                if parent_name:
+                    parent_names.append(parent_name)
+            elif isinstance(p, str):
+                parent_names.append(databases.get(p, {}).get("name", p))
+
+        if parent_names:
+            parents_lines = "<br>".join(f"&nbsp;&nbsp;• {pn}" for pn in parent_names)
+            details_html.append(
+                f"<span style='color:#AFA9EC;font-size:11px'>🔗 Part of:<br>{parents_lines}</span>"
+            )
+
+    if compatible_tools:
+        tool_names = []
+        for t in compatible_tools:
+            if isinstance(t, dict):
+                tid = t.get("@id", "")
+                tool_name = t.get("name") or tools.get(tid, {}).get("name", tid)
+                if tool_name:
+                    tool_names.append(tool_name)
+            elif isinstance(t, str):
+                tool_names.append(tools.get(t, {}).get("name", t))
+
+        if tool_names:
+            tools_lines = "<br>".join(f"&nbsp;&nbsp;• {tn}" for tn in tool_names)
+            details_html.append(
+                f"<span style='color:#F5A623;font-size:11px'>🛠️ Compatible with:<br>{tools_lines}</span>"
+            )
+
+    details_str = "<br>".join(details_html) if details_html else "<span style='color:#444;font-size:11px'>No metadata</span>"
+
+    # Liens
+    links = ""
+    if db.get("homepage"):
+        links += f"<a href='{db['homepage']}' target='_blank' style='color:#888;font-size:11px'>Website</a> &nbsp;"
+    if db.get("doi"):
+        links += f"<a href='{db['doi']}' target='_blank' style='color:#888;font-size:11px'>Publication</a>"
+
+    return f"""
 <div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
 padding:14px 16px;margin-bottom:12px;font-family:sans-serif;display:flex;flex-direction:column;justify-content:space-between;min-height:180px'>
   <div>
@@ -1279,23 +1254,7 @@ padding:14px 16px;margin-bottom:12px;font-family:sans-serif;display:flex;flex-di
   </div>
   <div style='margin-top:6px'>{links}</div>
 </div>"""
-        with cols[i % 3]:
-            st.markdown(card_html, unsafe_allow_html=True)
 
-    # Vue détaillée au choix
-    st.markdown("---")
-    selected_db = st.selectbox(
-        "Details view",
-        ["—"] + sorted(db.get("name", k) for k, db in databases.items()),
-        key="sel_db",
-    )
-    if selected_db != "—":
-        db_id = next(
-            (k for k, v in databases.items() if v.get("name", k) == selected_db),
-            None,
-        )
-        if db_id:
-            _db_card(databases[db_id], db_id)
 # ═════════════════════════════════════════════════════════════════════════════
 # DISPATCH
 # ═════════════════════════════════════════════════════════════════════════════
