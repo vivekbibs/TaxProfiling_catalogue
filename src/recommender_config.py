@@ -75,7 +75,7 @@ TAXON_IRI: dict[str, str] = {
     "Bacteria": "NCBITaxon_2",
     "Archaea": "NCBITaxon_2157",
     "Eukaryota": "NCBITaxon_2759",
-    "Virus": "NCBITaxon_10239",
+    "Viruses": "NCBITaxon_10239",
     "Fungi": "NCBITaxon_4751",
 }
 

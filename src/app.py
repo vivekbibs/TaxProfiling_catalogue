@@ -137,7 +137,62 @@ def render_home():
         st.markdown("\n")
         st.caption("Select '🔍 Survey' to get personalized recommendations.")
 
+def _reco_card_html(rec: dict, small: bool = False) -> str:
+    tool = rec["tool"]
+    db = rec["db"]
+    t_name = tool.get("name", rec["tool_id"])
+    db_id = rec["db_id"]
+    db_name = db.get("name", db_id) if db else db_id
 
+    # Caractéristiques
+    sr = "✅" if tool.get("supports_shortreads") else "❌"
+    lr = "✅" if tool.get("supports_longreads") else "❌"
+    strain = "✅" if tool.get("strain_level") else "❌"
+    func = "✅" if tool.get("functional_profiling") else "❌"
+
+    # Badge Taxonomie
+    ts_display = taxonomy_badge(rec.get("db_ts"))
+    color = "#1D9E75" if "GTDB" in ts_display else ("#534AB7" if ts_display != "—" else "#444")
+    taxo_html = f"<span style='background:{color};color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:bold'>{ts_display}</span>" if ts_display != "—" else ""
+
+    # Releases compatibles
+    rels = rec.get("releases", [])
+    rels_str = f"<div style='font-size:11px;color:#888;margin-bottom:6px'>Releases: {', '.join(rels)}</div>" if rels else ""
+
+    html = f"""
+    <div style='background:#161B27;border:1px solid #2A2F42;border-radius:10px;
+    padding:14px 16px;margin-bottom:12px;font-family:sans-serif;display:flex;flex-direction:column;min-height:{'160' if small else '200'}px'>
+      <div style='display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px'>
+        <div style='font-size:15px;font-weight:600;color:#E0DFFF'>🔧 {t_name}</div>
+        {taxo_html}
+      </div>
+      <div style='font-size:13px;font-weight:600;color:#1D9E75;margin-bottom:4px'>🗄️ {db_name}</div>
+      {rels_str}
+      <div style='display:flex;gap:4px;flex-wrap:wrap;margin-top:auto'>
+        <span style='background:#222;padding:2px 6px;border-radius:4px;font-size:10px;color:#aaa'>SR {sr}</span>
+        <span style='background:#222;padding:2px 6px;border-radius:4px;font-size:10px;color:#aaa'>LR {lr}</span>
+        <span style='background:#222;padding:2px 6px;border-radius:4px;font-size:10px;color:#aaa'>Strain {strain}</span>
+        <span style='background:#222;padding:2px 6px;border-radius:4px;font-size:10px;color:#aaa'>Func {func}</span>
+      </div>
+    </div>"""
+    return html
+
+# Helper pour remonter parents et grand-parents
+def get_all_ancestors(db_id: str, databases: dict) -> list:
+    ancestors = set()
+    queue = [db_id]
+    while queue:
+        current = queue.pop(0)
+        db_obj = databases.get(current, {})
+        parents = _to_list(db_obj.get("isPartOf", []))
+        for p in parents:
+            if isinstance(p, dict) and p.get("@id"):
+                pid = p["@id"]
+                if pid not in ancestors:
+                    ancestors.add(pid)
+                    queue.append(pid)
+    return list(ancestors)
+    
 def render_questionnaire():
     st.markdown("# 🧬 Recommendation Assistant — Taxonomic Profiling")
     st.markdown(
@@ -239,7 +294,7 @@ def render_questionnaire():
             max_ram = st.slider("Available RAM (GB)", 2, 512, 512, 2)
     st.markdown("---")
 
-    # Recommendations
+# Recommendations
     st.markdown("## 4 · Recommendations")
 
     if not selected_orgs:
@@ -253,298 +308,60 @@ def render_questionnaire():
     )
 
     recs = recommend(
-        databases,
-        tools,
-        envo_key,
-        host_key,
-        selected_orgs,
-        reads_key,
-        pref_taxo_for_reco,
-        wants_strain,
-        wants_func,
-        max_ram,
+        databases, tools, envo_key, host_key, selected_orgs, reads_key,
+        pref_taxo_for_reco, wants_strain, wants_func, max_ram
     )
 
     if not recs:
-        st.warning(
-            "No tool matches your criteria exactly.\n"
-            "Try loosening filters or check your JSON files."
-        )
-        try:
-            st.markdown("---")
-            st.markdown("**Debug: recommendation inputs**")
-            st.write(
-                {
-                    "envo_key": envo_key,
-                    "host_key": host_key,
-                    "selected_orgs": selected_orgs,
-                    "reads_key": reads_key,
-                    "pref_taxo": pref_taxo,
-                    "wants_strain": wants_strain,
-                    "wants_func": wants_func,
-                    "max_ram": max_ram,
-                }
-            )
-            st.markdown("**Loaded counts**")
-            st.write({"databases": len(databases), "tools": len(tools)})
-        except Exception:
-            pass
+        st.warning("No tool matches your criteria exactly. Try loosening filters.")
         return
 
-    st.success(f"**{len(recs)} outil(s)** trouvé(s).")
+    # 1. Dédoublonnage global (outil, BD) pour éviter les répétitions
+    unique_recs = {}
+    for r in recs:
+        key = (r["tool_id"], r["db_id"])
+        # On privilégie la recommandation native par rapport à une entrée "extension"
+        if key not in unique_recs or not r.get("extension_of"):
+            unique_recs[key] = r
 
-    for i, rec in enumerate(recs):
-        tool = rec["tool"]
-        db = rec["db"]
-        db_id = rec["db_id"] or "—"
-        t_name = tool.get("name", rec["tool_id"])
-        db_name = db.get("name", db_id) if db else db_id
-        rel = rec.get("db_rel") or {}
-        releases = rec["releases"]
+    # 2. On isole les recommandations "Racines" (qui ne sont pas des extensions de parent)
+    base_recs = [r for r in recs if not r.get("extension_of")]
 
-        ext_of = rec.get("extension_of")
-        ext_level = rec.get("extension_level")
+    st.success(f"**{len(base_recs)} recommandation(s) principale(s)** trouvée(s).")
 
-        badges = []
-        if tool.get("strain_level"):
-            badges.append("🔬 strain-level")
-        if tool.get("functional_profiling"):
-            badges.append("⚙️ functional")
-        if ext_of:
-            badges.append(
-                "🔗 extension (parent)" if ext_level == "parent" else "🔗🔗 extension (grand-parent)"
-            )
-        badge_str = "  ·  ".join(badges)
-
-        with st.expander(
-            f"{'⭐ ' if i == 0 else ''}"
-            f"**{t_name}**  +  **{db_name}**"
-            f"{'  ·  ' + badge_str if badge_str else ''}",
-            expanded=(i == 0),
-        ):
-            col_t, col_d = st.columns(2)
-            with col_t:
-                st.markdown(f"### 🔧 {t_name}")
-                desc = tool.get("description") or tool.get("approach_detail") or ""
-                if desc:
-                    st.markdown(f"*{desc}*")
-                sr_v = "✅" if tool.get("supports_shortreads") else "❌"
-                lr_v = "✅" if tool.get("supports_longreads") else "❌"
-                col_p1, col_p2 = st.columns(2)
-                with col_p1:
-                    st.markdown(f"**Version** : {tool.get('latest_release') or '—'}")
-                    st.markdown(f"**Short reads** : {sr_v}")
-                    st.markdown(f"**Long reads** : {lr_v}")
-                    st.markdown(f"**RAM** : {tool.get('ram') or '—'} GB")
-                with col_p2:
-                    st.markdown(
-                        f"**Strain-level** : {'✅' if tool.get('strain_level') else '❌'}"
-                    )
-                    st.markdown(
-                        f"**Functional profiling** : {'✅' if tool.get('functional_profiling') else '❌'}"
-                    )
-                    st.markdown(f"**Citations** : {tool.get('citations_count') or '—'}")
-                    st.markdown(f"**Taxonomy** : {tool.get('taxonomy') or '—'}")
-                links = []
-                if tool.get("repo"):
-                    links.append(f"[GitHub]({tool['repo']})")
-                if tool.get("doc"):
-                    links.append(f"[Doc]({tool['doc']})")
-                if tool.get("bio_tools"):
-                    links.append(f"[bio.tools]({tool['bio_tools']})")
-                if tool.get("doi"):
-                    links.append(f"[Publication]({tool['doi']})")
-                if links:
-                    st.markdown("🔗 " + "  ·  ".join(links))
-
-            with col_d:
-                st.markdown(f"### 🗄️ {db_name}")
-                ts_display = taxonomy_badge(rel.get("taxonomy_system"))
-                if ts_display != "—":
-                    color = "#1D9E75" if "GTDB" in ts_display else "#534AB7"
-                    st.markdown(
-                        f"<span style='background:{color};color:white;"
-                        f"padding:2px 10px;border-radius:12px;font-weight:bold;"
-                        f"font-size:13px'>{ts_display}</span>",
-                        unsafe_allow_html=True,
-                    )
-                    st.markdown("")
-                if releases:
-                    st.markdown(f"**Compatible releases**: {', '.join(releases)}")
-                if db:
-                    taxa = taxon_labels(db)
-                    if taxa:
-                        st.markdown(f"**Taxons** : {', '.join(taxa)}")
-                    for label, fn in [
-                        ("Sample", sample_label),
-                        ("Origin", origin_label),
-                        ("Sequences", seq_scope_label),
-                        ("is_about", is_about_label),
-                    ]:
-                        val = fn(db)
-                        if val != "—":
-                            st.markdown(f"**{label}** : {val}")
-                    st.markdown(f"**Release** : {db_release_str(db)}")
-                    if db.get("homepage"):
-                        st.markdown(f"🌐 [Official site]({db['homepage']})")
-                    if db.get("doi"):
-                        st.markdown(f"📄 [Publication]({db['doi']})")
-                else:
-                    st.caption(
-                        f"ℹ️ `{db_id}.json` absent from `data/databases/` "
-                        "— add it for more complete details."
-                    )
-                if ext_of:
-                    child_name = databases.get(ext_of, {}).get("name", ext_of)
-                    level_txt = "parent" if ext_level == "parent" else "grand-parent"
-                    st.info(
-                        f"ℹ️ La base **{child_name}** est comprise dans **{db_name}**, "
-                        f"et l'outil **{t_name}** peut aussi utiliser **{db_name}** ({level_txt})."
-                    )
-                dl = rec["dl"]
-                if dl:
-                    st.markdown("#### 💾 Downloads")
-                    for v in dl:
-                        v_name = v.get("name", "default")
-                        v_size = v.get("size")
-                        v_url = v.get("download", "")
-                        v_ifb = v.get("ifb_server")
-                        v_access = v.get("access_method", "url")
-                        size_str = f" — **{v_size} GB**" if v_size else ""
-                        st.markdown(f"**{v_name}**{size_str}")
-                        if v_access == "cli" or (
-                            v_url and not v_url.startswith("http")
-                        ):
-                            st.code(v_url, language="bash")
-                        elif v_url:
-                            st.markdown(f"⬇️ [Download]({v_url})")
-                        if v_ifb and isinstance(v_ifb, dict):
-                            st.markdown(
-                                f"🖥️ **IFB {v_ifb.get('name','')}** :  \n"
-                                f"`{v_ifb.get('path','')}`"
-                            )
-
-    if recs:
-        st.markdown("---")
-        st.markdown("## 5 · Run on IFB cluster")
-        st.markdown(
-            "Generate a SLURM sbatch script or a Jupyter notebook to run the analysis "
-            "on the IFB core-cluster."
-        )
-
-        rec_labels = [
-            f"{r['tool'].get('name', r['tool_id'])}  +  "
-            f"{r['db'].get('name', r['db_id']) if r['db'] else r['db_id']}"
-            for r in recs
-        ]
-        chosen_idx = st.selectbox(
-            "Tool / database pair",
-            range(len(recs)),
-            format_func=lambda i: rec_labels[i],
-            key="ifb_rec_sel",
-        )
-        rec_sel = recs[chosen_idx]
-
-        with st.expander("⚙️ Execution parameters", expanded=True):
-            col_i1, col_i2 = st.columns(2)
-            with col_i1:
-                input_fastq = st.text_input(
-                    "Input FASTQ path",
-                    value="/path/to/sample.fastq.gz",
-                    key="ifb_fq",
-                )
-                db_path_override = st.text_input(
-                    "Database path (leave empty = auto-detect IFB path)",
-                    value="",
-                    key="ifb_db",
-                    placeholder="Auto-detected from the JSON",
-                )
-            with col_i2:
-                tool_key_sel = (
-                    rec_sel["tool_id"].lower().replace("-", "").replace("_", "")
-                )
-                _defaults = {
-                    "sylph": (8, 32, "02:00:00"),
-                    "singlem": (8, 8, "04:00:00"),
-                    "meteor": (16, 64, "08:00:00"),
-                    "kraken": (16, 128, "04:00:00"),
-                    "kraken2": (16, 128, "04:00:00"),
-                    "metaphlan": (8, 32, "04:00:00"),
-                    "metabuli": (16, 64, "06:00:00"),
-                }.get(tool_key_sel, (8, 32, "04:00:00"))
-                n_cpus = st.slider("CPUs", 1, 64, _defaults[0], key="ifb_cpu")
-                n_mem = st.slider("RAM (GB)", 4, 512, _defaults[1], key="ifb_mem")
-                walltime = st.text_input(
-                    "Walltime (HH:MM:SS)", _defaults[2], key="ifb_time"
-                )
-
-        user_params = {
-            "input_fastq": input_fastq,
-            "cpus": n_cpus,
-            "mem": n_mem,
-            "time": walltime,
-        }
-        if db_path_override.strip():
-            user_params["db_path"] = db_path_override.strip()
-
-        tab_sbatch, tab_nb = st.tabs(
-            ["📄 SLURM script (sbatch)", "📓 Jupyter Notebook"]
-        )
-
-        with tab_sbatch:
-            try:
-                from ifb_export import make_sbatch
-
-                script = make_sbatch(
-                    tool=rec_sel["tool"],
-                    db=rec_sel["db"],
-                    db_id=rec_sel["db_id"],
-                    db_rel=rec_sel.get("db_rel") or {},
-                    user_params=user_params,
-                )
-                st.code(script, language="bash")
-                fname = f"{rec_sel['tool_id']}_{rec_sel['db_id']}.sh"
-                st.download_button(
-                    label="⬇️ Download .sh script",
-                    data=script,
-                    file_name=fname,
-                    mime="text/x-sh",
-                    key="dl_sbatch",
-                )
-            except ImportError:
-                st.error(
-                    "Module `ifb_export.py` introuvable — placez-le dans le même dossier que `app.py`."
-                )
-
-        with tab_nb:
-            try:
-                from ifb_export import make_notebook, notebook_to_json
-
-                nb = make_notebook(
-                    tool=rec_sel["tool"],
-                    db=rec_sel["db"],
-                    db_id=rec_sel["db_id"],
-                    db_rel=rec_sel.get("db_rel") or {},
-                    user_params=user_params,
-                )
-                nb_json = notebook_to_json(nb)
-                nb_fname = f"tutorial_{rec_sel['tool_id']}_{rec_sel['db_id']}.ipynb"
-
-                st.download_button(
-                    label=f"⬇️ Download notebook {nb_fname}",
-                    data=nb_json,
-                    file_name=nb_fname,
-                    mime="application/x-ipynb+json",
-                    key="dl_nb",
-                )
-            except ImportError:
-                st.error(
-                    "Module `ifb_export.py` not found — place it in the same directory as `app.py`."
-                )
-
-    st.markdown("---")
-    if st.button("🔄 Reset"):
-        st.rerun()
+    # 3. Affichage en grille horizontale (3 colonnes)
+    cols = st.columns(3)
+    
+    for i, rec in enumerate(base_recs):
+        with cols[i % 3]:
+            # Affichage de la carte principale
+            st.markdown(_reco_card_html(rec), unsafe_allow_html=True)
+            
+            # Recherche des parents et grand-parents (ex: globdb)
+            ancestors = get_all_ancestors(rec["db_id"], databases)
+            
+            if ancestors:
+                # On récupère toutes les recos compatibles avec ces bases parentes
+                composite_recs = [ur for ur in unique_recs.values() if ur["db_id"] in ancestors]
+                
+                if composite_recs:
+                    # Extraction propre des noms pour la phrase d'explication
+                    parent_dbs = {cr["db_id"]: cr["db"].get("name", cr["db_id"]) for cr in composite_recs}
+                    p_names_str = ", ".join(parent_dbs.values())
+                    t_names_str = ", ".join(list(set([cr["tool"].get("name", cr["tool_id"]) for cr in composite_recs])))
+                    
+                    with st.expander(f"📦 Alternatives via {p_names_str}"):
+                        st.markdown(
+                            f"<div style='font-size:13px; color:#bbb; margin-bottom:12px; line-height:1.4'>"
+                            f"💡 <b>{rec['db'].get('name', rec['db_id'])}</b> est intégrée dans le catalogue <b>{p_names_str}</b>, "
+                            f"base(s) utilisée(s) par <b>{t_names_str}</b>. "
+                            f"Nous suggérons d'utiliser ces couples (compatibles avec vos filtres) :"
+                            f"</div>",
+                            unsafe_allow_html=True
+                        )
+                        # Affichage des cartes composites (en mode "small")
+                        for cr in composite_recs:
+                            st.markdown(_reco_card_html(cr, small=True), unsafe_allow_html=True)
 
 
 # ═════════════════════════════════════════════════════════════════════════════

@@ -20,12 +20,12 @@
     }
   ],
   "sample": {
-    "@id": "obo:ENVO_00002006",
-    "label": "lake water (Tibetan Plateau)"
+    "@id": "obo:ENVO_04000007",
+    "label": "lake water"
   },
   "origin": {
-    "@id": "obo:ENVO_00010483",
-    "label": "lakes on the Tibetan Plateau"
+    "@id": "obo:GAZ_00011732",
+    "label": "Tibetan Plateau"
   },
   "doi": "https://doi.org/10.1186/s40168-024-01979-7",
   "description": "Functional traits and adaptation of Tibetan Plateau lake microbiomes."

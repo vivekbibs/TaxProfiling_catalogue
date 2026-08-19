@@ -24,8 +24,8 @@
     "label": "sediment"
   },
   "origin": {
-    "@id": "obo:ENVO_00010483",
-    "label": "Tibetan Plateau (sediments from saline lakes, freshwater lakes, rivers, wetlands)"
+    "@id": "obo:GAZ_00011732",
+    "label": "Tibetan Plateau"
   },
   "doi": "https://doi.org/10.34133/research.1213",
   "description": "Tibetan Plateau sediment microbiomes revealing ancient lineages and Asgardarchaeota adaptive evolution."

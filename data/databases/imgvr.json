@@ -7,8 +7,8 @@
   "latest_release": null,
   "to_update": false,
   "description": "IMG/VR viral reference database (IMG/VR).",
-  "doi": null,
-  "homepage": null,
+  "doi": "10.1093/nar/gkac1037",
+  "homepage": "https://genome.jgi.doe.gov/portal/IMG_VR/IMG_VR.home.html",
   "license": null,
   "taxonomic_scope": {
     "@id": "obo:NCBITaxon_10239",
@@ -16,6 +16,14 @@
   },
   "sample": null,
   "origin": null,
+  "compatible_tools": {
+    "@id": "sylph",
+    "DB": {
+      "name": "-c 200",
+      "download": "http://faust.compbio.cs.cmu.edu/sylph-stuff/imgvr_c200_v0.3.0.syldb",
+      "size": 2
+    }
+  },
   "is_about": null,
   "isPartOf": null
 }
